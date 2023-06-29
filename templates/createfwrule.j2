@@ -1,0 +1,50 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add">
+       <FirewallRule transactionid="">
+        <Name>{{ rulename }}</Name>
+        <Description/>
+        <IPFamily>IPv4</IPFamily>
+        <Status>Enable</Status>
+        <Position>After</Position>
+        <PolicyType>Network</PolicyType>
+        <After>
+            <Name>{{ after_rulename }}</Name>
+        </After>
+        <NetworkPolicy>
+            <Action>{{ action }}</Action>
+            <LogTraffic>{{ log }}</LogTraffic>
+            <SkipLocalDestined>Disable</SkipLocalDestined>
+            <SourceZones>
+                {% for zone in src_zones %}
+                <Zone>{{ zone }}</Zone>
+                {% endfor %}
+            </SourceZones>
+            <DestinationZones>
+                {% for zone in dst_zones %}
+                <Zone>{{ zone }}</Zone>
+                {% endfor %}
+            </DestinationZones>
+            <Schedule>All The Time</Schedule>
+            <SourceNetworks>
+                {% for network in src_networks %}
+                <Network>{{ network }}</Network>
+                {% endfor %}
+            </SourceNetworks>
+            <DestinationNetworks>
+                {% for network in dst_networks %}
+                <Network>{{ network }}</Network>
+                {% endfor %}
+            </DestinationNetworks>
+            <Services>
+                {% for service in service_list %}
+                <Service>{{ service }}</Service>
+                {% endfor %}
+            </Services>
+        </NetworkPolicy>
+      </FirewallRule>
+    </Set>
+</Request>

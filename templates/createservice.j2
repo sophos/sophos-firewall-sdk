@@ -1,0 +1,19 @@
+<Request>
+    <Login>
+        <Username>{{username}}</Username>
+        <Password>{{password}}</Password>
+    </Login>
+    <Set operation="add">
+        <Services transactionid="">
+            <Name>{{ name }}</Name>
+            <Type>TCPorUDP</Type>
+            <ServiceDetails>
+                <ServiceDetail>
+                    <SourcePort>1:65535</SourcePort>
+                    <DestinationPort>{{ port }}</DestinationPort>
+                    <Protocol>{{ protocol }}</Protocol>
+                </ServiceDetail>
+            </ServiceDetails>
+        </Services>
+    </Set>
+</Request>

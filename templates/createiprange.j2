@@ -1,0 +1,15 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add"> 
+    <IPHost>
+        <Name>{{ name }}</Name>
+        <IPFamily>IPv4</IPFamily>
+        <HostType>IPRange</HostType>
+        <StartIPAddress>{{ start_ip }}</StartIPAddress>
+        <EndIPAddress>{{ end_ip }}</EndIPAddress>
+    </IPHost>
+   </Set>
+</Request>

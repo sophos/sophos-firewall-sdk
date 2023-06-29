@@ -1,0 +1,15 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add"> 
+    <IPHost transactionid="">
+        <Name>{{ name }}</Name>
+        <IPFamily>IPv4</IPFamily>
+        <HostType>Network</HostType>
+        <IPAddress>{{ ip_network }}</IPAddress>
+        <Subnet>{{ mask }}</Subnet>
+    </IPHost>
+   </Set>
+</Request>
