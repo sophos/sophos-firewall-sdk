@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sophosfirewall &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall-python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sophosfirewall</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sophosfirewall</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">xmltodict</span>
+<span class="kn">import</span> <span class="nn">urllib3</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span>
+<span class="kn">from</span> <span class="nn">ipaddress</span> <span class="kn">import</span> <span class="n">IPv4Network</span><span class="p">,</span> <span class="n">IPv4Address</span>
+
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+
+<div class="viewcode-block" id="IPAddressingError"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.IPAddressingError">[docs]</a><span class="k">class</span> <span class="nc">IPAddressingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AuthFailure"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.AuthFailure">[docs]</a><span class="k">class</span> <span class="nc">AuthFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="APIError"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.APIError">[docs]</a><span class="k">class</span> <span class="nc">APIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ZeroRecords"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.ZeroRecords">[docs]</a><span class="k">class</span> <span class="nc">ZeroRecords</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="OperatorError"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.OperatorError">[docs]</a><span class="k">class</span> <span class="nc">OperatorError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SophosFirewall"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall">[docs]</a><span class="k">class</span> <span class="nc">SophosFirewall</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">/webconsole/APIController&quot;</span>
+
+    <span class="c1"># INTERNAL UTILITY CLASS METHODS</span>
+
+<div class="viewcode-block" id="SophosFirewall.validate_ip_network"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.validate_ip_network">[docs]</a>    <span class="k">def</span> <span class="nf">validate_ip_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_subnet</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate IP network and mask</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ip_subnet (str): IP network address</span>
+<span class="sd">            mask (str): Subnet mask</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IPAddressingError: Custom error class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">IPv4Network</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ip_subnet</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">IPAddressingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid network or mask provided - </span><span class="si">{</span><span class="n">ip_subnet</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.validate_ip_address"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.validate_ip_address">[docs]</a>    <span class="k">def</span> <span class="nf">validate_ip_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate IP network and mask</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ip_subnet (str): IP network address</span>
+<span class="sd">            mask (str): Subnet mask</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IPAddressingError: Custom error class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">IPv4Address</span><span class="p">(</span><span class="n">ip_address</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">IPAddressingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid IP address provided - </span><span class="si">{</span><span class="n">ip_address</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmldata</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post XML request to the firewall returning response as a dict object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xmldata (str): XML payload</span>
+<span class="sd">            verify (bool):  SSL certificate verification. Default=True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/xml&quot;</span>
+        <span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">reqxml</span><span class="o">=</span><span class="n">xmldata</span><span class="p">),</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;Login&#39;</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Authentication Failure&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AuthFailure</span><span class="p">(</span><span class="s2">&quot;Login failed!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span>
+    
+<div class="viewcode-block" id="SophosFirewall.submit_template"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.submit_template">[docs]</a>    <span class="k">def</span> <span class="nf">submit_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Submits XML payload stored as a Jinja2 file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Jinja2 template filename (must be in a directory called &quot;templates&quot;)</span>
+<span class="sd">            vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.</span>
+<span class="sd">            verify (bool, optional): SSL certificate verification. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode to display XML payload. Defaults to False. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">trim_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lstrip_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="s2">&quot;templates&quot;</span><span class="p">))</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="nb">vars</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;REQUEST: </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+
+        <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;Status&#39;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;@code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;200&#39;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_tag"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_tag">[docs]</a>    <span class="k">def</span> <span class="nf">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a get for a specified XML tag. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): XML tag for the request</span>
+<span class="sd">            format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict. </span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        &lt;Request&gt;</span>
+<span class="s1">            &lt;Login&gt;</span>
+<span class="s1">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s1">&lt;/Username&gt;</span>
+<span class="s1">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s1">&lt;/Password&gt;</span>
+<span class="s1">            &lt;/Login&gt;</span>
+<span class="s1">            &lt;Get&gt;</span>
+<span class="s1">                &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s1">&gt;</span>
+<span class="s1">                &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s1">&gt;</span>
+<span class="s1">            &lt;/Get&gt;</span>
+<span class="s1">        &lt;/Request&gt;</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_tag_with_filter"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_tag_with_filter">[docs]</a>    <span class="k">def</span> <span class="nf">get_tag_with_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+            <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;like&quot;</span><span class="p">,</span> 
+            <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span> 
+            <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a get for a specified XML tag with filter criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): XML tag for the request.</span>
+<span class="sd">            key (str): Search key</span>
+<span class="sd">            value (str): Search value</span>
+<span class="sd">            operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to &quot;like&quot;.</span>
+<span class="sd">            format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">            verify (bool): SSL certificate checking. Defaults to True. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">valid_operators</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="s2">&quot;like&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">operator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_operators</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OperatorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&#39;!  Supported operators: [ </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_operators</span><span class="p">)</span><span class="si">}</span><span class="s2"> ]&quot;</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        &lt;Request&gt;</span>
+<span class="s1">            &lt;Login&gt;</span>
+<span class="s1">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s1">&lt;/Username&gt;</span>
+<span class="s1">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s1">&lt;/Password&gt;</span>
+<span class="s1">            &lt;/Login&gt;</span>
+<span class="s1">            &lt;Get&gt;</span>
+<span class="s1">                &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s1">&gt;</span>
+<span class="s1">                    &lt;Filter&gt;</span>
+<span class="s1">                        &lt;key name=&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot; criteria=&quot;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&lt;/key&gt;</span>
+<span class="s1">                    &lt;/Filter&gt;</span>
+<span class="s1">                &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s1">&gt;</span>
+<span class="s1">            &lt;/Get&gt;</span>
+<span class="s1">        &lt;/Request&gt;</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.error_check"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.error_check">[docs]</a>    <span class="k">def</span> <span class="nf">error_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_response</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for errors in the API response and raise exception if present</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_response (Requests.response): The response object returned from the requests module</span>
+<span class="sd">            xml_tag (str): The XML tag being operated on</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ZeroRecords: Error raised when there are no records matching the request parameters</span>
+<span class="sd">            APIError: Error raised when there is a problem with the request parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">xml_tag</span> <span class="ow">in</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s1">&#39;Response&#39;</span><span class="p">]:</span>
+            <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="n">xml_tag</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;Status&#39;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;No. of records Zero.&quot;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ZeroRecords</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())))</span></div>
+
+    <span class="c1"># METHODS FOR OBJECT RETRIEVAL (GET)</span>
+    
+<div class="viewcode-block" id="SophosFirewall.get_fw_rule"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_fw_rule">[docs]</a>    <span class="k">def</span> <span class="nf">get_fw_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get firewall rule(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Firewall Rule name.  Returns all rules if not specified.</span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">            debug(bool, optional): Enable debug mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_ip_host"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_ip_host">[docs]</a>    <span class="k">def</span> <span class="nf">get_ip_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get IP Host object(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): IP object name. Returns all objects if not specified. </span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHost&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ip_address</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHost&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;IPAddress&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHost&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_ip_hostgroup"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_ip_hostgroup">[docs]</a>    <span class="k">def</span> <span class="nf">get_ip_hostgroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get IP hostgroup(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of IP host group. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHostGroup&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHostGroup&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_fqdn_host"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_fqdn_host">[docs]</a>    <span class="k">def</span> <span class="nf">get_fqdn_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Get FQDN object(s)</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                name (str, optional): FQDN object name. Returns all objects if not specified. </span>
+<span class="sd">                verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FQDNHost&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FQDNHost&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+
+    
+<div class="viewcode-block" id="SophosFirewall.get_acl_rule"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_acl_rule">[docs]</a>    <span class="k">def</span> <span class="nf">get_acl_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ACL rules </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of rule to retrieve. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_user"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get local users </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of user. Retrieves all users if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_admin_profile"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_admin_profile">[docs]</a>    <span class="k">def</span> <span class="nf">get_admin_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get admin profiles</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of profile. Returns all if not specified. </span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_zone"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_zone">[docs]</a>    <span class="k">def</span> <span class="nf">get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get zone(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of zone to query. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Zone&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Zone&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_admin_authen"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_admin_authen">[docs]</a>    <span class="k">def</span> <span class="nf">get_admin_authen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get admin authentication settings</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdminAuthentication&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_ips_policy"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_ips_policy">[docs]</a>    <span class="k">def</span> <span class="nf">get_ips_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get IPS policy </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of a policy to filter on. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPSPolicy&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPSPolicy&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_syslog_server"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_syslog_server">[docs]</a>    <span class="k">def</span> <span class="nf">get_syslog_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get syslog server. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of syslog server. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;SyslogServers&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;SyslogServers&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_notification"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_notification">[docs]</a>    <span class="k">def</span> <span class="nf">get_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get notification. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of notification. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Notification&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Notification&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_notification_list"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_notification_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_notification_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get notification list. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of notification list. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;NotificationList&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;NotificationList&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_backup"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_backup">[docs]</a>    <span class="k">def</span> <span class="nf">get_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get backup details. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of backup schedule. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;BackupRestore&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;BackupRestore&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SophosFirewall.get_reports_retention"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_reports_retention">[docs]</a>    <span class="k">def</span> <span class="nf">get_reports_retention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Reports retention period. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of backup schedule. Returns all if not specified.</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;DataManagement&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;DataManagement&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_admin_settings"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_admin_settings">[docs]</a>    <span class="k">def</span> <span class="nf">get_admin_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Web Admin Settings (Administration &gt; Settings)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SophosFirewall.get_dns_forwarders"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_dns_forwarders">[docs]</a>    <span class="k">def</span> <span class="nf">get_dns_forwarders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get DNS forwarders. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;DNS&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_snmpv3_user"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_snmpv3_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_snmpv3_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get SNMP v3 Users</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verify (bool, optional):  Toggle on/off SSL certificate check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;SNMPv3User&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.get_urlgroup"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_urlgroup">[docs]</a>    <span class="k">def</span> <span class="nf">get_urlgroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get URLGroup(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Get URLGroup by name. Defaults to None.</span>
+<span class="sd">            verify (bool, optional): Toggle on/off SSL certificate check. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="SophosFirewall.get_service"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.get_service">[docs]</a>    <span class="k">def</span> <span class="nf">get_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dst_proto</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dst_port</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Service(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Get Service by name. Defaults to None.</span>
+<span class="sd">            dst_proto(str, optional): Specify TCP or UDP</span>
+<span class="sd">            dst_port(str, optional): Specify dest TCP or UDP port. Use : to specify ranges (ex. 67:68)</span>
+<span class="sd">            verify (bool, optional): Toggle on/off SSL certificate check. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Services&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dst_proto</span> <span class="ow">and</span> <span class="n">dst_port</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Services&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+            <span class="n">svc_list</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;Services&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">svc</span> <span class="ow">in</span> <span class="n">svc_list</span><span class="p">:</span>
+                <span class="n">matched</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+                    <span class="n">port</span> <span class="o">=</span> <span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DestinationPort&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s1">&#39;Protocol&#39;</span> <span class="ow">in</span> <span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">]:</span>
+                        <span class="n">proto</span> <span class="o">=</span> <span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">][</span><span class="s1">&#39;Protocol&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s1">&#39;ProtocolName&#39;</span> <span class="ow">in</span> <span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">]:</span>
+                        <span class="n">proto</span> <span class="o">=</span> <span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">][</span><span class="s1">&#39;ProtocolName&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">proto</span> <span class="o">==</span> <span class="n">dst_proto</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">port</span> <span class="o">==</span> <span class="n">dst_port</span><span class="p">:</span>
+                        <span class="n">matched</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">subsvc</span> <span class="ow">in</span> <span class="n">svc</span><span class="p">[</span><span class="s1">&#39;ServiceDetails&#39;</span><span class="p">][</span><span class="s1">&#39;ServiceDetail&#39;</span><span class="p">]:</span>
+                        <span class="n">port</span> <span class="o">=</span> <span class="n">subsvc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DestinationPort&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s1">&#39;Protocol&#39;</span> <span class="ow">in</span> <span class="n">subsvc</span><span class="p">:</span>
+                            <span class="n">proto</span> <span class="o">=</span> <span class="n">subsvc</span><span class="p">[</span><span class="s1">&#39;Protocol&#39;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="s1">&#39;ProtocolName&#39;</span> <span class="ow">in</span> <span class="n">subsvc</span><span class="p">:</span>
+                            <span class="n">proto</span> <span class="o">=</span> <span class="n">subsvc</span><span class="p">[</span><span class="s1">&#39;ProtocolName&#39;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">proto</span> <span class="o">==</span> <span class="n">dst_proto</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">port</span> <span class="o">==</span> <span class="n">dst_port</span><span class="p">:</span>
+                            <span class="n">matched</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">matched</span><span class="p">:</span>
+                    <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;Services&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">svc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">resp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Services&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span></div>
+
+    <span class="c1"># METHODS FOR OBJECT CREATION</span>
+    
+<div class="viewcode-block" id="SophosFirewall.create_rule"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.create_rule">[docs]</a>    <span class="k">def</span> <span class="nf">create_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a firewall rule</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rule_params (dict): Configuration parmeters for the rule, see Keyword Args for supported parameters.</span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">        </span>
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            rulename(str): Name of the firewall rule</span>
+<span class="sd">            after_rulename(str): Name of the rule to insert this rule after</span>
+<span class="sd">            action(str): Accept, Drop, Reject</span>
+<span class="sd">            description(str): Rule description</span>
+<span class="sd">            log(str): Enable, Disable</span>
+<span class="sd">            src_zones(list): Name(s) of the source zone(s)</span>
+<span class="sd">            dst_zones(list): Name(s) of the destination zone(s)</span>
+<span class="sd">            src_networks(list): Name(s) of the source network(s)</span>
+<span class="sd">            dst_networks(list): Name(s) of the destination network(s)</span>
+<span class="sd">            service_list(list): Name(s) of service(s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;createfwrule.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">rule_params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.create_ip_network"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.create_ip_network">[docs]</a>    <span class="k">def</span> <span class="nf">create_ip_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create IP address object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the object</span>
+<span class="sd">            ip_network (str): IP network address</span>
+<span class="sd">            mask (str): Subnet mask</span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_ip_network</span><span class="p">(</span><span class="n">ip_network</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">ip_network</span><span class="o">=</span><span class="n">ip_network</span><span class="p">,</span>
+            <span class="n">mask</span><span class="o">=</span><span class="n">mask</span>
+        <span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;createipnetwork.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.create_ip_host"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.create_ip_host">[docs]</a>    <span class="k">def</span> <span class="nf">create_ip_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create IP address object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the object</span>
+<span class="sd">            ip_address (str): Host IP address</span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_ip_address</span><span class="p">(</span><span class="n">ip_address</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">ip_address</span><span class="o">=</span><span class="n">ip_address</span>
+        <span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;createiphost.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.create_ip_range"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.create_ip_range">[docs]</a>    <span class="k">def</span> <span class="nf">create_ip_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="n">end_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create IP range object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the object</span>
+<span class="sd">            start_ip (str): Starting IP address</span>
+<span class="sd">            end_ip (str): Ending IP address</span>
+<span class="sd">            verify (bool, optional): SSL certificate checking. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_ip_address</span><span class="p">(</span><span class="n">start_ip</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_ip_address</span><span class="p">(</span><span class="n">end_ip</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">start_ip</span><span class="o">=</span><span class="n">start_ip</span><span class="p">,</span>
+            <span class="n">end_ip</span><span class="o">=</span><span class="n">end_ip</span>
+        <span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;createiprange.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.create_service"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.create_service">[docs]</a>    <span class="k">def</span> <span class="nf">create_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a TCP or UDP service</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Service name</span>
+<span class="sd">            port (str): TCP/UDP port</span>
+<span class="sd">            protocol (str): TCP or UDP</span>
+<span class="sd">            verify (bool, optional): SSL certificate verification. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
+            <span class="n">protocol</span><span class="o">=</span><span class="n">protocol</span>
+        <span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;createservice.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.create_hostgroup"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.create_hostgroup">[docs]</a>    <span class="k">def</span> <span class="nf">create_hostgroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="n">host_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a Host Group</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Host Group name</span>
+<span class="sd">            description (str): Host Group description</span>
+<span class="sd">            host_list (list): List of existing IP hosts to add to the group</span>
+<span class="sd">            verify (bool, optional): SSL certificate verification. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">host_list</span><span class="o">=</span><span class="n">host_list</span>
+        <span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;createhostgroup.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+    
+<div class="viewcode-block" id="SophosFirewall.update_urlgroup"><a class="viewcode-back" href="../sophosfirewall.html#sophosfirewall.SophosFirewall.update_urlgroup">[docs]</a>    <span class="k">def</span> <span class="nf">update_urlgroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a specified domain to a web URL Group</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): URL Group name</span>
+<span class="sd">            domain (str): Domain to be added to URL Group</span>
+<span class="sd">            verify (bool, optional): SSL certificate verification. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the existing URL list first, if any</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_urlgroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">)</span>
+        <span class="n">exist_list</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Response&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;URLlist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;URL&#39;</span><span class="p">)</span>
+        <span class="n">domain_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">exist_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">exist_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="n">domain_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exist_list</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">exist_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="n">domain_list</span> <span class="o">=</span> <span class="n">exist_list</span>
+        <span class="n">domain_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+        
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">domain_list</span><span class="o">=</span><span class="n">domain_list</span>
+        <span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="s2">&quot;updateurlgroup.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

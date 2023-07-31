@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sophosfirewall module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="sophosfirewall-python" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall-python</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">sophosfirewall module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sophosfirewall.APIError"><code class="docutils literal notranslate"><span class="pre">APIError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sophosfirewall.AuthFailure"><code class="docutils literal notranslate"><span class="pre">AuthFailure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sophosfirewall.IPAddressingError"><code class="docutils literal notranslate"><span class="pre">IPAddressingError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sophosfirewall.OperatorError"><code class="docutils literal notranslate"><span class="pre">OperatorError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sophosfirewall.SophosFirewall"><code class="docutils literal notranslate"><span class="pre">SophosFirewall</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.create_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_hostgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.create_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.create_ip_network"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.create_ip_range"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_range()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.create_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_rule()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.create_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.error_check"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.error_check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_acl_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_acl_rule()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_admin_authen"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_authen()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_admin_profile"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_admin_settings"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_backup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_backup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_dns_forwarders"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_dns_forwarders()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_fqdn_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fqdn_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_fw_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fw_rule()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_ip_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_hostgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_ips_policy"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ips_policy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_notification"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_notification_list"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_reports_retention"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_reports_retention()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_snmpv3_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_snmpv3_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_syslog_server"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_syslog_server()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_tag"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_tag_with_filter"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag_with_filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_urlgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.get_zone"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_zone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.submit_template"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.submit_template()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.update_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_urlgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.validate_ip_address"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.validate_ip_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sophosfirewall.SophosFirewall.validate_ip_network"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.validate_ip_network()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sophosfirewall.ZeroRecords"><code class="docutils literal notranslate"><span class="pre">ZeroRecords</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall-python</a></li>
+      <li class="breadcrumb-item active">sophosfirewall module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sophosfirewall.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-sophosfirewall">
+<span id="sophosfirewall-module"></span><h1>sophosfirewall module<a class="headerlink" href="#module-sophosfirewall" title="Permalink to this heading"></a></h1>
+<dl class="py exception">
+<dt class="sig sig-object py" id="sophosfirewall.APIError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sophosfirewall.</span></span><span class="sig-name descname"><span class="pre">APIError</span></span><a class="reference internal" href="_modules/sophosfirewall.html#APIError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.APIError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="sophosfirewall.AuthFailure">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sophosfirewall.</span></span><span class="sig-name descname"><span class="pre">AuthFailure</span></span><a class="reference internal" href="_modules/sophosfirewall.html#AuthFailure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.AuthFailure" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="sophosfirewall.IPAddressingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sophosfirewall.</span></span><span class="sig-name descname"><span class="pre">IPAddressingError</span></span><a class="reference internal" href="_modules/sophosfirewall.html#IPAddressingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.IPAddressingError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="sophosfirewall.OperatorError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sophosfirewall.</span></span><span class="sig-name descname"><span class="pre">OperatorError</span></span><a class="reference internal" href="_modules/sophosfirewall.html#OperatorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.OperatorError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sophosfirewall.</span></span><span class="sig-name descname"><span class="pre">SophosFirewall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.create_hostgroup">
+<span class="sig-name descname"><span class="pre">create_hostgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.create_hostgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.create_hostgroup" title="Permalink to this definition"></a></dt>
+<dd><p>Create a Host Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Host Group name</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Host Group description</p></li>
+<li><p><strong>host_list</strong> (<em>list</em>) – List of existing IP hosts to add to the group</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate verification. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.create_ip_host">
+<span class="sig-name descname"><span class="pre">create_ip_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.create_ip_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.create_ip_host" title="Permalink to this definition"></a></dt>
+<dd><p>Create IP address object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>ip_address</strong> (<em>str</em>) – Host IP address</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.create_ip_network">
+<span class="sig-name descname"><span class="pre">create_ip_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.create_ip_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.create_ip_network" title="Permalink to this definition"></a></dt>
+<dd><p>Create IP address object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>ip_network</strong> (<em>str</em>) – IP network address</p></li>
+<li><p><strong>mask</strong> (<em>str</em>) – Subnet mask</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.create_ip_range">
+<span class="sig-name descname"><span class="pre">create_ip_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.create_ip_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.create_ip_range" title="Permalink to this definition"></a></dt>
+<dd><p>Create IP range object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>start_ip</strong> (<em>str</em>) – Starting IP address</p></li>
+<li><p><strong>end_ip</strong> (<em>str</em>) – Ending IP address</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.create_rule">
+<span class="sig-name descname"><span class="pre">create_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.create_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.create_rule" title="Permalink to this definition"></a></dt>
+<dd><p>Create a firewall rule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rule_params</strong> (<em>dict</em>) – Configuration parmeters for the rule, see Keyword Args for supported parameters.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>rulename</strong> (<em>str</em>) – Name of the firewall rule</p></li>
+<li><p><strong>after_rulename</strong> (<em>str</em>) – Name of the rule to insert this rule after</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Accept, Drop, Reject</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Rule description</p></li>
+<li><p><strong>log</strong> (<em>str</em>) – Enable, Disable</p></li>
+<li><p><strong>src_zones</strong> (<em>list</em>) – Name(s) of the source zone(s)</p></li>
+<li><p><strong>dst_zones</strong> (<em>list</em>) – Name(s) of the destination zone(s)</p></li>
+<li><p><strong>src_networks</strong> (<em>list</em>) – Name(s) of the source network(s)</p></li>
+<li><p><strong>dst_networks</strong> (<em>list</em>) – Name(s) of the destination network(s)</p></li>
+<li><p><strong>service_list</strong> (<em>list</em>) – Name(s) of service(s)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.create_service">
+<span class="sig-name descname"><span class="pre">create_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.create_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.create_service" title="Permalink to this definition"></a></dt>
+<dd><p>Create a TCP or UDP service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Service name</p></li>
+<li><p><strong>port</strong> (<em>str</em>) – TCP/UDP port</p></li>
+<li><p><strong>protocol</strong> (<em>str</em>) – TCP or UDP</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate verification. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.error_check">
+<span class="sig-name descname"><span class="pre">error_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.error_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.error_check" title="Permalink to this definition"></a></dt>
+<dd><p>Check for errors in the API response and raise exception if present</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api_response</strong> (<em>Requests.response</em>) – The response object returned from the requests module</p></li>
+<li><p><strong>xml_tag</strong> (<em>str</em>) – The XML tag being operated on</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#sophosfirewall.ZeroRecords" title="sophosfirewall.ZeroRecords"><strong>ZeroRecords</strong></a> – Error raised when there are no records matching the request parameters</p></li>
+<li><p><a class="reference internal" href="#sophosfirewall.APIError" title="sophosfirewall.APIError"><strong>APIError</strong></a> – Error raised when there is a problem with the request parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_acl_rule">
+<span class="sig-name descname"><span class="pre">get_acl_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_acl_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_acl_rule" title="Permalink to this definition"></a></dt>
+<dd><p>Get ACL rules</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of rule to retrieve. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_admin_authen">
+<span class="sig-name descname"><span class="pre">get_admin_authen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_admin_authen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_admin_authen" title="Permalink to this definition"></a></dt>
+<dd><p>Get admin authentication settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_admin_profile">
+<span class="sig-name descname"><span class="pre">get_admin_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_admin_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_admin_profile" title="Permalink to this definition"></a></dt>
+<dd><p>Get admin profiles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of profile. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_admin_settings">
+<span class="sig-name descname"><span class="pre">get_admin_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_admin_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_admin_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Get Web Admin Settings (Administration &gt; Settings)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_backup">
+<span class="sig-name descname"><span class="pre">get_backup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_backup" title="Permalink to this definition"></a></dt>
+<dd><p>Get backup details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of backup schedule. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_dns_forwarders">
+<span class="sig-name descname"><span class="pre">get_dns_forwarders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_dns_forwarders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_dns_forwarders" title="Permalink to this definition"></a></dt>
+<dd><p>Get DNS forwarders.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_fqdn_host">
+<span class="sig-name descname"><span class="pre">get_fqdn_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_fqdn_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_fqdn_host" title="Permalink to this definition"></a></dt>
+<dd><p>Get FQDN object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – FQDN object name. Returns all objects if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_fw_rule">
+<span class="sig-name descname"><span class="pre">get_fw_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_fw_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_fw_rule" title="Permalink to this definition"></a></dt>
+<dd><p>Get firewall rule(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Firewall Rule name.  Returns all rules if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_ip_host">
+<span class="sig-name descname"><span class="pre">get_ip_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_ip_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_ip_host" title="Permalink to this definition"></a></dt>
+<dd><p>Get IP Host object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – IP object name. Returns all objects if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_ip_hostgroup">
+<span class="sig-name descname"><span class="pre">get_ip_hostgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_ip_hostgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_ip_hostgroup" title="Permalink to this definition"></a></dt>
+<dd><p>Get IP hostgroup(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of IP host group. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_ips_policy">
+<span class="sig-name descname"><span class="pre">get_ips_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_ips_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_ips_policy" title="Permalink to this definition"></a></dt>
+<dd><p>Get IPS policy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of a policy to filter on. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_notification">
+<span class="sig-name descname"><span class="pre">get_notification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_notification" title="Permalink to this definition"></a></dt>
+<dd><p>Get notification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of notification. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_notification_list">
+<span class="sig-name descname"><span class="pre">get_notification_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_notification_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_notification_list" title="Permalink to this definition"></a></dt>
+<dd><p>Get notification list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of notification list. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_reports_retention">
+<span class="sig-name descname"><span class="pre">get_reports_retention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_reports_retention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_reports_retention" title="Permalink to this definition"></a></dt>
+<dd><p>Get Reports retention period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of backup schedule. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_service">
+<span class="sig-name descname"><span class="pre">get_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_proto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_service" title="Permalink to this definition"></a></dt>
+<dd><p>Get Service(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Get Service by name. Defaults to None.</p></li>
+<li><p><strong>dst_proto</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify TCP or UDP</p></li>
+<li><p><strong>dst_port</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify dest TCP or UDP port. Use : to specify ranges (ex. 67:68)</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_snmpv3_user">
+<span class="sig-name descname"><span class="pre">get_snmpv3_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_snmpv3_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_snmpv3_user" title="Permalink to this definition"></a></dt>
+<dd><p>Get SNMP v3 Users</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_syslog_server">
+<span class="sig-name descname"><span class="pre">get_syslog_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_syslog_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_syslog_server" title="Permalink to this definition"></a></dt>
+<dd><p>Get syslog server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of syslog server. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_tag">
+<span class="sig-name descname"><span class="pre">get_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_tag" title="Permalink to this definition"></a></dt>
+<dd><p>Execute a get for a specified XML tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – XML tag for the request</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate checking. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_tag_with_filter">
+<span class="sig-name descname"><span class="pre">get_tag_with_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'like'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_tag_with_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_tag_with_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Execute a get for a specified XML tag with filter criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – XML tag for the request.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – Search key</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – Search value</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search (“=”,”!=”,”like”). Defaults to “like”.</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em>) – SSL certificate checking. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_urlgroup">
+<span class="sig-name descname"><span class="pre">get_urlgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_urlgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_urlgroup" title="Permalink to this definition"></a></dt>
+<dd><p>Get URLGroup(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Get URLGroup by name. Defaults to None.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_user">
+<span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_user" title="Permalink to this definition"></a></dt>
+<dd><p>Get local users</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of user. Retrieves all users if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.get_zone">
+<span class="sig-name descname"><span class="pre">get_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.get_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.get_zone" title="Permalink to this definition"></a></dt>
+<dd><p>Get zone(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of zone to query. Returns all if not specified.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – Toggle on/off SSL certificate check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.submit_template">
+<span class="sig-name descname"><span class="pre">submit_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.submit_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.submit_template" title="Permalink to this definition"></a></dt>
+<dd><p>Submits XML payload stored as a Jinja2 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Jinja2 template filename (must be in a directory called “templates”)</p></li>
+<li><p><strong>vars</strong> (<em>dict</em>) – Dictionary of variables to inject into the template. Username and password are passed in by default.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate verification. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode to display XML payload. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>requests.Response object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.update_urlgroup">
+<span class="sig-name descname"><span class="pre">update_urlgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.update_urlgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.update_urlgroup" title="Permalink to this definition"></a></dt>
+<dd><p>Adds a specified domain to a web URL Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – URL Group name</p></li>
+<li><p><strong>domain</strong> (<em>str</em>) – Domain to be added to URL Group</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL certificate verification. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.validate_ip_address">
+<span class="sig-name descname"><span class="pre">validate_ip_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.validate_ip_address"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.validate_ip_address" title="Permalink to this definition"></a></dt>
+<dd><p>Validate IP network and mask</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_subnet</strong> (<em>str</em>) – IP network address</p></li>
+<li><p><strong>mask</strong> (<em>str</em>) – Subnet mask</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#sophosfirewall.IPAddressingError" title="sophosfirewall.IPAddressingError"><strong>IPAddressingError</strong></a> – Custom error class</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sophosfirewall.SophosFirewall.validate_ip_network">
+<span class="sig-name descname"><span class="pre">validate_ip_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_subnet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sophosfirewall.html#SophosFirewall.validate_ip_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.SophosFirewall.validate_ip_network" title="Permalink to this definition"></a></dt>
+<dd><p>Validate IP network and mask</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_subnet</strong> (<em>str</em>) – IP network address</p></li>
+<li><p><strong>mask</strong> (<em>str</em>) – Subnet mask</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#sophosfirewall.IPAddressingError" title="sophosfirewall.IPAddressingError"><strong>IPAddressingError</strong></a> – Custom error class</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="sophosfirewall.ZeroRecords">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sophosfirewall.</span></span><span class="sig-name descname"><span class="pre">ZeroRecords</span></span><a class="reference internal" href="_modules/sophosfirewall.html#ZeroRecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sophosfirewall.ZeroRecords" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="sophosfirewall-python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
