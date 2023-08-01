@@ -1,0 +1,16 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="update"> 
+    <WebFilterURLGroup transactionid="">
+        <Name>{{ name }}</Name>
+        <URLlist>
+            {% for domain in domain_list %}
+            <URL>{{ domain }}</URL>
+            {% endfor %}
+        </URLlist>
+    </WebFilterURLGroup>
+   </Set>
+</Request>
