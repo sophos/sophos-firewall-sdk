@@ -189,7 +189,7 @@ When creating a firewall rule, first create a Python dict object storing the rul
 
 Create Using Template
 ^^^^^^^^^^^^^^^^^^^^^
-As not every possible object that can be configured on the firewall has a convenience method, the **submit_template()** method can be used
+As not every possible object that can be configured on the firewall has a convenience method available in this module, the **submit_template()** method can be used
 to post a Jinja2 template containing the required XML payload. The XML payload can be determined by looking at the `API documentation <https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html>`_. 
 Place the XML payload into a separate file, and then replace any values in the XML file with variables that will be passed in by your program.
 Variables should be surrounded by double brackets.  For example:  {{ my_var }}
@@ -240,7 +240,7 @@ at the same time if desired.
         </Set>
     </Request>
 
-Next we'll create a Python dict to store the variables we want to inject into the template, and use the **submit_template** method to
+Next, create a Python dict to store the variables to be injected into the template, and use the **submit_template** method to
 send the payload to the firewall. 
 
 .. code-block:: python
