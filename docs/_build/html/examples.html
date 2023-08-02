@@ -270,7 +270,7 @@ can be submitted using the <strong>submit_template()</strong> method as describe
 </section>
 <section id="create-using-template">
 <h3>Create Using Template<a class="headerlink" href="#create-using-template" title="Permalink to this heading"></a></h3>
-<p>As not every possible object that can be configured on the firewall has a convenience method, the <strong>submit_template()</strong> method can be used
+<p>As not every object that can be configured on the firewall has a convenience method available in this module, the <strong>submit_template()</strong> method can be used
 to post a Jinja2 template containing the required XML payload. The XML payload can be determined by looking at the <a class="reference external" href="https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html">API documentation</a>.
 Place the XML payload into a separate file, and then replace any values in the XML file with variables that will be passed in by your program.
 Variables should be surrounded by double brackets.  For example:  {{ my_var }}</p>
@@ -316,7 +316,7 @@ at the same time if desired.</p>
 <span class="nt">&lt;/Request&gt;</span>
 </pre></div>
 </div>
-<p>Next we’ll create a Python dict to store the variables we want to inject into the template, and use the <strong>submit_template</strong> method to
+<p>Next, create a Python dict to store the variables to be injected into the template, and use the <strong>submit_template</strong> method to
 send the payload to the firewall.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test URL group&quot;</span><span class="p">,</span>
@@ -343,6 +343,11 @@ send the payload to the firewall.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Create methods have an optional <strong>debug</strong> argument that can be used to print out the XML payload for troubleshooting purposes.
+Ex. fw.create_ip_host(name=”test-host”, ip_address=”10.0.0.1”, debug=True)</p>
 </div>
 </section>
 </section>

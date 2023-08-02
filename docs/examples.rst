@@ -245,13 +245,13 @@ send the payload to the firewall.
 
 .. code-block:: python
 
-    vars = dict(
+    template_vars = dict(
         name="Test URL group",
         url_list=["testdomain1.com", "testdomain2.com"],
         description="Test URL group created by Python",
         isdefault="No"
     )
-    response = fw.submit_template(filename="urlgroup_example.j2", vars=vars, template_dir=".")
+    response = fw.submit_template(filename="urlgroup_example.j2", template_vars=template_vars, template_dir=".")
 
     {
         "Response": {
