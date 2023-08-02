@@ -1,8 +1,5 @@
-# Sophos Firewall API Tool
-
-## Usage
-```
-from fwapi import SophosFirewall
-fw = SophosFirewall(username=username, password=password, hostname=hostname, port=port)
-```
+# Sophos Firewall Python SDK
+This repository contains source code for a Sophos Firewall SDK that includes convenience methods for working with the Sophos Firewall XML API. 
+  
+For usage details please see the [documentation](https://super-adventure-p1qp7jm.pages.github.io/)
 

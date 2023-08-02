@@ -4,15 +4,22 @@ Usage
 Installation
 ------------
 
-To use sophosfirewall-python, first install it using pip:
+To use sophosfirewall-python, first clone the repository:
 
 .. code-block:: console
 
-   (.venv) $ pip install [wheel]
+   $ git clone https://github.com/sophos-internal/it.netauto.sophos-firewall-api/ sophos-firewall
+
+Then install it using pip:
+
+.. code-block:: console
+
+   $ cd sophos-firewall
+   $ pip install dist/sophosfirewall_python-X.X.X-py3-none-any.whl
 
 Prerequisites
 -------------
-On the Sophos firewall to be managed, the IP address of the system using this utility must be configured under `Backup & firmware > API`.
+On the Sophos firewall to be managed, the IP address of the system using this utility must be configured in the UI under the section **Backup & firmware > API**.
 
 Quickstart
 -----------
@@ -21,7 +28,7 @@ Import the module and create a `SophosFirewall` object:
 
 .. code-block:: python
 
-    from sophosfirewall import SophosFirewall
+    from sophosfirewall_python.firewallapi import SophosFirewall
 
     fw = SophosFirewall(
         username=FIREWALL_USERNAME,
@@ -30,7 +37,7 @@ Import the module and create a `SophosFirewall` object:
         port=FIREWALL_PORT
         )
 
-Execute one of the available :doc:`sophosfirewall` methods. 
+Execute one of the available :doc:`firewallapi` methods. 
 
 .. code-block:: python
 

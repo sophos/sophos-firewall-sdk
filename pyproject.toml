@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "sophosfirewall-python"
+version = "0.1.3"
+description = "Python SDK for Sophos Firewall"
+authors = ["Matt Mullen <matt.mullen@sophos.com>"]
+readme = "README.md"
+packages = [{include = "sophosfirewall_python"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+xmltodict = "^0.13.0"
+requests = "^2.31.0"
+jinja2 = "^3.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

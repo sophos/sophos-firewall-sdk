@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="sophosfirewall-python" href="modules.html" />
+    <link rel="next" title="sophosfirewall_python" href="modules.html" />
     <link rel="prev" title="Usage" href="usage.html" /> 
 </head>
 
@@ -46,10 +46,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#get-functions">Get Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-functions">Get Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-all-ip-hosts">Get all IP Hosts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-ip-host-by-name">Get IP Host by Name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-ip-host-by-ip-address">Get IP Host by IP Address</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generic-get-functions">Generic Get Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">sophosfirewall-python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-functions">Create Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-ip-host">Create IP Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-firewall-rule">Create Firewall Rule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-using-template">Create Using Template</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">sophosfirewall_python</a></li>
 </ul>
 
         </div>
@@ -85,7 +97,8 @@
 <p class="admonition-title">Note</p>
 <p>Get methods will return all of the objects configured on the firewall if no filtering parameters are specified.</p>
 </div>
-<p><strong>Get all IP Hosts</strong></p>
+<section id="get-all-ip-hosts">
+<h3>Get all IP Hosts<a class="headerlink" href="#get-all-ip-hosts" title="Permalink to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fw</span><span class="o">.</span><span class="n">get_ip_host</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -94,7 +107,9 @@
 <p>Use <cite>verify=False</cite> if operating against a device that does not have a valid SSL certificate. For example, <cite>fw.get_ip_host(verify=False)</cite>.
 An SSLError will be thrown if certificate checking is enabled and the device does not have a valid certificate.</p>
 </div>
-<p><strong>Get IP Host by Name</strong></p>
+</section>
+<section id="get-ip-host-by-name">
+<h3>Get IP Host by Name<a class="headerlink" href="#get-ip-host-by-name" title="Permalink to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fw</span><span class="o">.</span><span class="n">get_ip_host</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;example_host&quot;</span><span class="p">)</span>
 
 <span class="p">{</span><span class="s1">&#39;Response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;@APIVersion&#39;</span><span class="p">:</span> <span class="s1">&#39;1905.1&#39;</span><span class="p">,</span>
@@ -107,7 +122,9 @@ An SSLError will be thrown if certificate checking is enabled and the device doe
     <span class="s1">&#39;IPAddress&#39;</span><span class="p">:</span> <span class="s1">&#39;10.0.0.1&#39;</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p><strong>Get IP Host by IP Address</strong></p>
+</section>
+<section id="get-ip-host-by-ip-address">
+<h3>Get IP Host by IP Address<a class="headerlink" href="#get-ip-host-by-ip-address" title="Permalink to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fw</span><span class="o">.</span><span class="n">get_ip_host</span><span class="p">(</span><span class="n">ip_address</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">)</span>
 
 <span class="p">{</span><span class="s1">&#39;Response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;@APIVersion&#39;</span><span class="p">:</span> <span class="s1">&#39;1905.1&#39;</span><span class="p">,</span>
@@ -121,6 +138,214 @@ An SSLError will be thrown if certificate checking is enabled and the device doe
 </pre></div>
 </div>
 </section>
+<section id="generic-get-functions">
+<h3>Generic Get Functions<a class="headerlink" href="#generic-get-functions" title="Permalink to this heading"></a></h3>
+<p>Although this module contains several convenience methods for commonly used operations, it does not include every possible firewall configuration.
+However, the information can be retrieved by looking up the associated XML tag in the <a class="reference external" href="https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html">API documentation</a>
+and using the XML tag with the <strong>get_tag()</strong> and <strong>get_tag_with_filter()</strong> methods.</p>
+<p>The <strong>get_tag()</strong> method returns all objects for the provided XML tag. It is not necessary to include the angle brackets around the tag.</p>
+<p>To get all interfaces using the XML tag <cite>&lt;Interface&gt;</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fw</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;Interface&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get a specific interface, the <strong>get_tag_with_filter()</strong> method can be used which allows for specification of query parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fw</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="s2">&quot;Interface&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Port1&quot;</span><span class="p">)</span>
+
+ <span class="p">{</span>
+     <span class="s2">&quot;Response&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;@APIVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1905.1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;@IPS_CAT_VER&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;Login&quot;</span><span class="p">:</span> <span class="p">{</span>
+             <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Authentication Successful&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;Interface&quot;</span><span class="p">:</span> <span class="p">{</span>
+             <span class="s2">&quot;@transactionid&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;IPv4Configuration&quot;</span><span class="p">:</span> <span class="s2">&quot;Enable&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;IPv6Configuration&quot;</span><span class="p">:</span> <span class="s2">&quot;Disable&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Hardware&quot;</span><span class="p">:</span> <span class="s2">&quot;Port1&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;Port1&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;NetworkZone&quot;</span><span class="p">:</span> <span class="s2">&quot;LAN&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;IPv4Assignment&quot;</span><span class="p">:</span> <span class="s2">&quot;Static&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;IPv6Assignment&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+             <span class="s2">&quot;DHCPRapidCommit&quot;</span><span class="p">:</span> <span class="s2">&quot;Disable&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;InterfaceSpeed&quot;</span><span class="p">:</span> <span class="s2">&quot;Auto Negotiate&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;AutoNegotiation&quot;</span><span class="p">:</span> <span class="s2">&quot;Enable&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;FEC&quot;</span><span class="p">:</span> <span class="s2">&quot;Off&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;BreakoutMembers&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;BreakoutSource&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+             <span class="s2">&quot;MTU&quot;</span><span class="p">:</span> <span class="s2">&quot;1500&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;MSS&quot;</span><span class="p">:</span> <span class="p">{</span>
+                 <span class="s2">&quot;OverrideMSS&quot;</span><span class="p">:</span> <span class="s2">&quot;Disable&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;MSSValue&quot;</span><span class="p">:</span> <span class="s2">&quot;1460&quot;</span>
+             <span class="p">},</span>
+             <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;Connected, 1000 Mbps - Full Duplex, FEC off&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;MACAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;Default&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;IPAddress&quot;</span><span class="p">:</span> <span class="s2">&quot;10.104.10.155&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Netmask&quot;</span><span class="p">:</span> <span class="s2">&quot;255.255.255.0&quot;</span>
+         <span class="p">}</span>
+     <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid operators for the <cite>operator</cite> parameter are “=”, “!=”, or “like”.</p>
+</div>
+</section>
+</section>
+<section id="create-functions">
+<h2>Create Functions<a class="headerlink" href="#create-functions" title="Permalink to this heading"></a></h2>
+<p>Submit an XML payload to create objects on the firewall.</p>
+<section id="create-ip-host">
+<h3>Create IP Host<a class="headerlink" href="#create-ip-host" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">create_ip_host</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test-host&quot;</span><span class="p">,</span> <span class="n">ip_address</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;Response&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;@APIVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1905.1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;@IPS_CAT_VER&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Login&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Authentication Successful&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;IPHost&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;@transactionid&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;@code&quot;</span><span class="p">:</span> <span class="s2">&quot;200&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;#text&quot;</span><span class="p">:</span> <span class="s2">&quot;Configuration applied successfully.&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The module parses the status code in the response. If the status code in the response payload is not in the 2XX range, a <cite>SophosFirewallAPIError</cite> will be raised indicating the failure reason.
+Below is an example error response if attempting to create an IP Host that already exists:</p>
+<p>sophosfirewall_python.firewallapi.SophosFirewallAPIError: <a class="reference external" href="mailto:{'&#37;&#52;&#48;transactionid">{‘<span>&#64;</span>transactionid</a>’: ‘’, ‘Status’: <a class="reference external" href="mailto:{'&#37;&#52;&#48;code">{‘<span>&#64;</span>code</a>’: ‘502’, ‘#text’: ‘Operation failed. Entity having same name already exists.’}}</p>
+</div>
+</section>
+<section id="create-firewall-rule">
+<h3>Create Firewall Rule<a class="headerlink" href="#create-firewall-rule" title="Permalink to this heading"></a></h3>
+<p>When creating a firewall rule, first create a Python dict object storing the rule parameters. Then pass the parameters to the <strong>create_rule</strong> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rule_params</span> <span class="o">=</span> <span class="n">rule_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">rulename</span><span class="o">=</span><span class="s2">&quot;Test from Python&quot;</span><span class="p">,</span>
+    <span class="n">after_rulename</span><span class="o">=</span><span class="s2">&quot;Security Data Platform – FluentD&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Test change automation&quot;</span><span class="p">,</span>
+    <span class="n">action</span><span class="o">=</span><span class="s2">&quot;Accept&quot;</span><span class="p">,</span>
+    <span class="n">log</span><span class="o">=</span><span class="s2">&quot;Enable&quot;</span><span class="p">,</span>
+    <span class="n">src_zones</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;LAN&quot;</span><span class="p">],</span>
+    <span class="n">dst_zones</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;WAN&quot;</span><span class="p">],</span>
+    <span class="n">src_networks</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ABN 10.151.210.0&quot;</span><span class="p">],</span>
+    <span class="n">dst_networks</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Internet IPv4 group&quot;</span><span class="p">],</span>
+    <span class="n">service_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;162 SNMP Trap&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">create_rule</span><span class="p">(</span><span class="n">rule_params</span><span class="o">=</span><span class="n">rule_params</span><span class="p">)</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;Response&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;@APIVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1905.1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;@IPS_CAT_VER&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Login&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Authentication Successful&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;FirewallRule&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;@transactionid&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;@code&quot;</span><span class="p">:</span> <span class="s2">&quot;200&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;#text&quot;</span><span class="p">:</span> <span class="s2">&quot;Configuration applied successfully.&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not every possible rule parameter that is configurable in the firewall UI is available to be configured with the <strong>create_rule()</strong> method.
+If additional parameters are needed, a template for the XML payload would need to be built to accept the additional parameters and
+can be submitted using the <strong>submit_template()</strong> method as described in the next section.</p>
+</div>
+</section>
+<section id="create-using-template">
+<h3>Create Using Template<a class="headerlink" href="#create-using-template" title="Permalink to this heading"></a></h3>
+<p>As not every possible object that can be configured on the firewall has a convenience method, the <strong>submit_template()</strong> method can be used
+to post a Jinja2 template containing the required XML payload. The XML payload can be determined by looking at the <a class="reference external" href="https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html">API documentation</a>.
+Place the XML payload into a separate file, and then replace any values in the XML file with variables that will be passed in by your program.
+Variables should be surrounded by double brackets.  For example:  {{ my_var }}</p>
+<p>Below is an example XML payload to create a URL Group on the firewall.</p>
+<div class="highlight-XML notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Request&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Login&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Username&gt;</span>username<span class="nt">&lt;/Username&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Password</span><span class="w"> </span><span class="nt">&gt;</span>password<span class="nt">&lt;/Password&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Login&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Set</span><span class="w"> </span><span class="na">operation=</span><span class="s">&quot;add&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;WebFilterURLGroup&gt;</span>
+<span class="w">            </span><span class="nt">&lt;Name&gt;</span>Name<span class="nt">&lt;/Name&gt;</span>
+<span class="w">            </span><span class="nt">&lt;URLlist&gt;</span>
+<span class="w">                </span><span class="nt">&lt;URL&gt;</span>URLs<span class="nt">&lt;/URL&gt;</span>
+<span class="w">                </span><span class="nt">&lt;URL&gt;</span>URLs<span class="nt">&lt;/URL&gt;</span>
+<span class="w">            </span><span class="nt">&lt;/URLlist&gt;</span>
+<span class="w">            </span><span class="nt">&lt;Description&gt;</span>Text<span class="nt">&lt;/Description&gt;</span>
+<span class="w">            </span><span class="nt">&lt;IsDefault&gt;</span>Yes/No<span class="nt">&lt;/IsDefault&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/WebFilterURLGroup&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Set&gt;</span>
+<span class="nt">&lt;/Request&gt;</span>
+</pre></div>
+</div>
+<p>Here is the XML payload using Jinja2 variable substitution. There is also a for loop which allows for multiple URLs to be configured
+at the same time if desired.</p>
+<div class="highlight-XML notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Request&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Login&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Username&gt;</span>{{username}}<span class="nt">&lt;/Username&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Password</span><span class="w"> </span><span class="nt">&gt;</span>{{password}}<span class="nt">&lt;/Password&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Login&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Set</span><span class="w"> </span><span class="na">operation=</span><span class="s">&quot;add&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;WebFilterURLGroup&gt;</span>
+<span class="w">            </span><span class="nt">&lt;Name&gt;</span>{{<span class="w"> </span>name<span class="w"> </span>}}<span class="w"> </span><span class="nt">&lt;/Name&gt;</span>
+<span class="w">            </span><span class="nt">&lt;URLlist&gt;</span>
+<span class="w">                </span>{%<span class="w"> </span>for<span class="w"> </span>url<span class="w"> </span>in<span class="w"> </span>url_list<span class="w"> </span>%}
+<span class="w">                </span><span class="nt">&lt;URL&gt;</span>{{<span class="w"> </span>url<span class="w"> </span>}}<span class="nt">&lt;/URL&gt;</span>
+<span class="w">                </span>{%<span class="w"> </span>endfor<span class="w"> </span>%}
+<span class="w">            </span><span class="nt">&lt;/URLlist&gt;</span>
+<span class="w">            </span><span class="nt">&lt;Description&gt;</span>{{<span class="w"> </span>description<span class="w"> </span>}}<span class="nt">&lt;/Description&gt;</span>
+<span class="w">            </span><span class="nt">&lt;IsDefault&gt;</span>{{<span class="w"> </span>isdefault<span class="w"> </span>}}<span class="nt">&lt;/IsDefault&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/WebFilterURLGroup&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Set&gt;</span>
+<span class="nt">&lt;/Request&gt;</span>
+</pre></div>
+</div>
+<p>Next we’ll create a Python dict to store the variables we want to inject into the template, and use the <strong>submit_template</strong> method to
+send the payload to the firewall.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test URL group&quot;</span><span class="p">,</span>
+    <span class="n">url_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;testdomain1.com&quot;</span><span class="p">,</span> <span class="s2">&quot;testdomain2.com&quot;</span><span class="p">],</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Test URL group created by Python&quot;</span><span class="p">,</span>
+    <span class="n">isdefault</span><span class="o">=</span><span class="s2">&quot;No&quot;</span>
+<span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;urlgroup_example.j2&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">vars</span><span class="p">,</span> <span class="n">template_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+<span class="p">{</span>
+    <span class="s2">&quot;Response&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;@APIVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1905.1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;@IPS_CAT_VER&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Login&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Authentication Successful&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;@transactionid&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;@code&quot;</span><span class="p">:</span> <span class="s2">&quot;200&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;#text&quot;</span><span class="p">:</span> <span class="s2">&quot;Configuration applied successfully.&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
 
@@ -128,7 +353,7 @@ An SSLError will be thrown if certificate checking is enabled and the device doe
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="modules.html" class="btn btn-neutral float-right" title="sophosfirewall-python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="sophosfirewall_python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

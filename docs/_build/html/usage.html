@@ -51,7 +51,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">sophosfirewall-python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">sophosfirewall_python</a></li>
 </ul>
 
         </div>
@@ -82,19 +82,24 @@
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h1>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
-<p>To use sophosfirewall-python, first install it using pip:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span><span class="o">[</span>wheel<span class="o">]</span>
+<p>To use sophosfirewall-python, first clone the repository:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/sophos-internal/it.netauto.sophos-firewall-api/<span class="w"> </span>sophos-firewall
+</pre></div>
+</div>
+<p>Then install it using pip:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>sophos-firewall
+<span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>dist/sophosfirewall_python-X.X.X-py3-none-any.whl
 </pre></div>
 </div>
 </section>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
-<p>On the Sophos firewall to be managed, the IP address of the system using this utility must be configured under <cite>Backup &amp; firmware &gt; API</cite>.</p>
+<p>On the Sophos firewall to be managed, the IP address of the system using this utility must be configured in the UI under the section <strong>Backup &amp; firmware &gt; API</strong>.</p>
 </section>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading"></a></h2>
 <p>Import the module and create a <cite>SophosFirewall</cite> object:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sophosfirewall</span> <span class="kn">import</span> <span class="n">SophosFirewall</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sophosfirewall_python.firewallapi</span> <span class="kn">import</span> <span class="n">SophosFirewall</span>
 
 <span class="n">fw</span> <span class="o">=</span> <span class="n">SophosFirewall</span><span class="p">(</span>
     <span class="n">username</span><span class="o">=</span><span class="n">FIREWALL_USERNAME</span><span class="p">,</span>
@@ -104,7 +109,7 @@
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>Execute one of the available <a class="reference internal" href="sophosfirewall.html"><span class="doc">sophosfirewall module</span></a> methods.</p>
+<p>Execute one of the available <a class="reference internal" href="firewallapi.html"><span class="doc">firewallapi module</span></a> methods.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fw</span><span class="o">.</span><span class="n">get_ip_host</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;example_host&quot;</span><span class="p">)</span>
 
 <span class="p">{</span><span class="s1">&#39;Response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;@APIVersion&#39;</span><span class="p">:</span> <span class="s1">&#39;1905.1&#39;</span><span class="p">,</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sophosfirewall-python &mdash; sophosfirewall-python 0.0.1 documentation</title>
+  <title>sophosfirewall_python &mdash; sophosfirewall-python 0.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="sophosfirewall module" href="sophosfirewall.html" />
+    <link rel="next" title="firewallapi module" href="firewallapi.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
 </head>
 
@@ -46,8 +46,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">sophosfirewall-python</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html">sophosfirewall module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">sophosfirewall_python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
 </ul>
 </li>
 </ul>
@@ -66,7 +66,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">sophosfirewall-python</li>
+      <li class="breadcrumb-item active">sophosfirewall_python</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,51 +77,48 @@
            <div itemprop="articleBody">
              
   <section id="sophosfirewall-python">
-<h1>sophosfirewall-python<a class="headerlink" href="#sophosfirewall-python" title="Permalink to this heading"></a></h1>
+<h1>sophosfirewall_python<a class="headerlink" href="#sophosfirewall-python" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="sophosfirewall.html">sophosfirewall module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.APIError"><code class="docutils literal notranslate"><span class="pre">APIError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.AuthFailure"><code class="docutils literal notranslate"><span class="pre">AuthFailure</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.IPAddressingError"><code class="docutils literal notranslate"><span class="pre">IPAddressingError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.OperatorError"><code class="docutils literal notranslate"><span class="pre">OperatorError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall"><code class="docutils literal notranslate"><span class="pre">SophosFirewall</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.create_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_hostgroup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.create_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_host()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.create_ip_network"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_network()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.create_ip_range"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_range()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.create_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_rule()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.create_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_service()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.error_check"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.error_check()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_acl_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_acl_rule()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_admin_authen"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_authen()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_admin_profile"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_profile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_admin_settings"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_settings()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_backup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_backup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_dns_forwarders"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_dns_forwarders()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_fqdn_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fqdn_host()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_fw_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fw_rule()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_host()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_ip_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_hostgroup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_ips_policy"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ips_policy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_notification"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_notification_list"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_reports_retention"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_reports_retention()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_service()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_snmpv3_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_snmpv3_user()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_syslog_server"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_syslog_server()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_tag"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_tag_with_filter"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag_with_filter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_urlgroup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_user()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.get_zone"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_zone()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.submit_template"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.submit_template()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.update_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_urlgroup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.validate_ip_address"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.validate_ip_address()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.SophosFirewall.validate_ip_network"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.validate_ip_network()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="firewallapi.html">firewallapi module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall"><code class="docutils literal notranslate"><span class="pre">SophosFirewall</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.create_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_hostgroup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.create_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.create_ip_network"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.create_ip_range"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_range()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.create_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.create_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_acl_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_acl_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_admin_authen"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_authen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_admin_profile"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_admin_settings"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_backup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_backup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_dns_forwarders"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_dns_forwarders()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_fqdn_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fqdn_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_fw_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fw_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_ip_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_hostgroup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_ips_policy"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ips_policy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_notification"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_notification_list"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_reports_retention"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_reports_retention()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_snmpv3_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_snmpv3_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_syslog_server"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_syslog_server()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_tag"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_tag_with_filter"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag_with_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_urlgroup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.get_zone"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_zone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.submit_template"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.submit_template()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewall.update_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_urlgroup()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="sophosfirewall.html#sophosfirewall.ZeroRecords"><code class="docutils literal notranslate"><span class="pre">ZeroRecords</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewallAPIError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAPIError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewallAuthFailure"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAuthFailure</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewallIPAddressingError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallIPAddressingError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewallOperatorError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallOperatorError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html#firewallapi.SophosFirewallZeroRecords"><code class="docutils literal notranslate"><span class="pre">SophosFirewallZeroRecords</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -133,7 +130,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="sophosfirewall.html" class="btn btn-neutral float-right" title="sophosfirewall module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="firewallapi.html" class="btn btn-neutral float-right" title="firewallapi module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

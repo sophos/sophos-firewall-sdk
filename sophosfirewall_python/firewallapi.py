@@ -1,24 +1,26 @@
 import requests
 import xmltodict
 import urllib3
+import os
+import re
 from jinja2 import Environment, FileSystemLoader
 from ipaddress import IPv4Network, IPv4Address
 
 urllib3.disable_warnings()
 
-class IPAddressingError(Exception):
+class SophosFirewallIPAddressingError(Exception):
     pass
 
-class AuthFailure(Exception):
+class SophosFirewallAuthFailure(Exception):
     pass
 
-class APIError(Exception):
+class SophosFirewallAPIError(Exception):
     pass
 
-class ZeroRecords(Exception):
+class SophosFirewallZeroRecords(Exception):
     pass
 
-class OperatorError(Exception):
+class SophosFirewallOperatorError(Exception):
     pass
 
 class SophosFirewall:
@@ -31,7 +33,7 @@ class SophosFirewall:
 
     # INTERNAL UTILITY CLASS METHODS
 
-    def validate_ip_network(self, ip_subnet, mask):
+    def _validate_ip_network(self, ip_subnet, mask):
         """Validate IP network and mask
 
         Args:
@@ -39,14 +41,14 @@ class SophosFirewall:
             mask (str): Subnet mask
 
         Raises:
-            IPAddressingError: Custom error class
+            SophosFirewallIPAddressingError: Custom error class
         """
         try:
             IPv4Network(f"{ip_subnet}/{mask}")
         except Exception as e:
-            raise IPAddressingError(f"Invalid network or mask provided - {ip_subnet}/{mask}")
+            raise SophosFirewallIPAddressingError(f"Invalid network or mask provided - {ip_subnet}/{mask}")
         
-    def validate_ip_address(self, ip_address):
+    def _validate_ip_address(self, ip_address):
         """Validate IP network and mask
 
         Args:
@@ -54,12 +56,12 @@ class SophosFirewall:
             mask (str): Subnet mask
 
         Raises:
-            IPAddressingError: Custom error class
+            SophosFirewallIPAddressingError: Custom error class
         """
         try:
             IPv4Address(ip_address)
         except Exception as e:
-            raise IPAddressingError(f"Invalid IP address provided - {ip_address}")
+            raise SophosFirewallIPAddressingError(f"Invalid IP address provided - {ip_address}")
 
 
     def _post(self, xmldata: str, verify: bool = True) -> requests.Response:
@@ -77,10 +79,10 @@ class SophosFirewall:
         }
         resp = requests.post(self.url, headers=headers, data=dict(reqxml=xmldata), verify=verify)
         if xmltodict.parse(resp.content.decode())['Response']['Login']['status'] == "Authentication Failure":
-            raise AuthFailure("Login failed!")
+            raise SophosFirewallAuthFailure("Login failed!")
         return resp
     
-    def submit_template(self, filename: str, vars: dict = dict(), verify: bool = True, debug: bool = False) -> requests.Response:
+    def submit_template(self, filename: str, vars: dict = dict(), template_dir: str = None, verify: bool = True, debug: bool = False) -> requests.Response:
         """Submits XML payload stored as a Jinja2 file
 
         Args:
@@ -92,7 +94,9 @@ class SophosFirewall:
         Returns:
             requests.Response object
         """
-        environment = Environment(trim_blocks=True, lstrip_blocks=True, loader=FileSystemLoader("templates"))
+        if not template_dir:
+            template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+        environment = Environment(trim_blocks=True, lstrip_blocks=True, loader=FileSystemLoader(template_dir))
         template = environment.get_template(filename)
         vars["username"] = self.username
         vars["password"] = self.password
@@ -102,12 +106,13 @@ class SophosFirewall:
         resp = self._post(xmldata=payload, verify=verify)
 
         resp_dict = xmltodict.parse(resp.content.decode())['Response']
+        success_pattern = "2[0-9][0-9]"
         for key in resp_dict:
             if 'Status' in resp_dict[key]:
-                if not resp_dict[key]['Status']['@code'] == '200':
-                    raise APIError(resp_dict[key])
-        return resp
-    
+                if not re.search(success_pattern, resp_dict[key]['Status']['@code']):
+                    raise SophosFirewallAPIError(resp_dict[key])
+        return xmltodict.parse(resp.content.decode())
+        
     def get_tag(self, xml_tag: str, format: str = "dict", verify: bool = True):
         """Execute a get for a specified XML tag. 
 
@@ -129,7 +134,7 @@ class SophosFirewall:
         </Request>
         '''
         resp = self._post(xmldata=payload, verify=verify)
-        self.error_check(resp, xml_tag)
+        self._error_check(resp, xml_tag)
         if format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
@@ -151,7 +156,7 @@ class SophosFirewall:
         """
         valid_operators = ["=", "!=", "like"]
         if operator not in valid_operators:
-            raise OperatorError(f"Invalid operator '{operator}'!  Supported operators: [ {', '.join(valid_operators)} ]")
+            raise SophosFirewallOperatorError(f"Invalid operator '{operator}'!  Supported operators: [ {', '.join(valid_operators)} ]")
         payload = f'''
         <Request>
             <Login>
@@ -168,12 +173,12 @@ class SophosFirewall:
         </Request>
         '''
         resp = self._post(xmldata=payload, verify=verify)
-        self.error_check(resp, xml_tag)
+        self._error_check(resp, xml_tag)
         if format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
     
-    def error_check(self, api_response, xml_tag):
+    def _error_check(self, api_response, xml_tag):
         """Check for errors in the API response and raise exception if present
 
         Args:
@@ -181,16 +186,16 @@ class SophosFirewall:
             xml_tag (str): The XML tag being operated on
 
         Raises:
-            ZeroRecords: Error raised when there are no records matching the request parameters
-            APIError: Error raised when there is a problem with the request parameters
+            SophosFirewallZeroRecords: Error raised when there are no records matching the request parameters
+            SophosFirewallAPIError: Error raised when there is a problem with the request parameters
         """
         if xml_tag in xmltodict.parse(api_response.content.decode())['Response']:
             resp_dict = xmltodict.parse(api_response.content.decode())['Response'][xml_tag]
             if 'Status' in resp_dict:
                 if resp_dict["Status"] == "No. of records Zero.":
-                    raise ZeroRecords(resp_dict["Status"])
+                    raise SophosFirewallZeroRecords(resp_dict["Status"])
         else:
-            raise APIError(str(xmltodict.parse(api_response.content.decode())))
+            raise SophosFirewallAPIError(str(xmltodict.parse(api_response.content.decode())))
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
     
@@ -518,6 +523,8 @@ class SophosFirewall:
             src_networks(list): Name(s) of the source network(s)
             dst_networks(list): Name(s) of the destination network(s)
             service_list(list): Name(s) of service(s)
+        Returns:
+            dict: XML response converted to Python dictionary
         """
         resp = self.submit_template("createfwrule.j2", vars=rule_params, verify=verify, debug=debug)
         return resp
@@ -531,9 +538,10 @@ class SophosFirewall:
             mask (str): Subnet mask
             verify (bool, optional): SSL certificate checking. Defaults to True.
             debug (bool, optional): Turn on debugging. Defaults to False.
-
+        Returns:
+            dict: XML response converted to Python dictionary
         """
-        self.validate_ip_network(ip_network, mask)
+        self._validate_ip_network(ip_network, mask)
 
         params = dict(
             name=name,
@@ -551,9 +559,10 @@ class SophosFirewall:
             ip_address (str): Host IP address
             verify (bool, optional): SSL certificate checking. Defaults to True.
             debug (bool, optional): Turn on debugging. Defaults to False.
-
+        Returns:
+            dict: XML response converted to Python dictionary
         """
-        self.validate_ip_address(ip_address)
+        self._validate_ip_address(ip_address)
 
         params = dict(
             name=name,
@@ -571,9 +580,11 @@ class SophosFirewall:
             end_ip (str): Ending IP address
             verify (bool, optional): SSL certificate checking. Defaults to True.
             debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary
         """
-        self.validate_ip_address(start_ip)
-        self.validate_ip_address(end_ip)
+        self._validate_ip_address(start_ip)
+        self._validate_ip_address(end_ip)
 
         params = dict(
             name=name,
@@ -592,7 +603,8 @@ class SophosFirewall:
             protocol (str): TCP or UDP
             verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
-
+        Returns:
+            dict: XML response converted to Python dictionary
         """
         params = dict(
             name=name,
@@ -611,7 +623,8 @@ class SophosFirewall:
             host_list (list): List of existing IP hosts to add to the group
             verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
-
+        Returns:
+            dict: XML response converted to Python dictionary
         """
         params = dict(
             name=name,
@@ -631,7 +644,7 @@ class SophosFirewall:
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
-            _type_: _description_
+            dict: XML response converted to Python dictionary
         """
         # Get the existing URL list first, if any
         resp = self.get_urlgroup(name=name, verify=verify)
