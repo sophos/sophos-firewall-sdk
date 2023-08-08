@@ -123,7 +123,10 @@ class SophosFirewall:
                 os.path.dirname(os.path.abspath(__file__)), "templates"
             )
         environment = Environment(
-            trim_blocks=True, lstrip_blocks=True, loader=FileSystemLoader(template_dir)
+            trim_blocks=True, 
+            lstrip_blocks=True, 
+            loader=FileSystemLoader(template_dir),
+            autoescape=True
         )
         template = environment.get_template(filename)
         template_vars["username"] = self.username
