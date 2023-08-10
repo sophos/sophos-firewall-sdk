@@ -35,14 +35,14 @@ jobs:
         poetry install
     - name: Black formatting
       run: |
-        black sophosfirewall_python/
+        poetry run black sophosfirewall_python/
 
     - name: Pylint
       run: |
-        pylint sophosfirewall_python/firewallapi.py
+        poetry run pylint sophosfirewall_python/firewallapi.py
         
     - name: Test with pytest
       run: |
-        pytest sophosfirewall_python/unittests.py
+        poetry run pytest sophosfirewall_python/unittests.py
 
   
