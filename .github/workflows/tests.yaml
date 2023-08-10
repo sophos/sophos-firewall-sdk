@@ -39,10 +39,14 @@ jobs:
 
     - name: Pylint
       run: |
-        poetry run pylint sophosfirewall_python/firewallapi.py
+        poetry run pylint sophosfirewall_python/firewallapi.py -vvv
         
-    - name: Test with pytest
+    - name: Pytest
       run: |
         poetry run pytest sophosfirewall_python/unittests.py
+
+    - name: Bandit
+      run: |
+        poetry run bandit sophosfirewall_python/firewallapi.py
 
   
