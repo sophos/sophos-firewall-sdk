@@ -1,0 +1,35 @@
+name: Build and Release Python Wheel
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on tags that start with 'v'
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          pip install poetry
+
+      - name: Build Wheel
+        run: |
+          poetry build
+
+      - name: Create Release and Upload Wheel
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.whl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
