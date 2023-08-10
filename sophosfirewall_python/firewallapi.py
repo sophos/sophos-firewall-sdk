@@ -13,28 +13,28 @@ urllib3.disable_warnings()
 
 
 class SophosFirewallIPAddressingError(Exception):
-    """Error raised when invalid IP address detected
-    """
+    """Error raised when invalid IP address detected"""
+
 
 class SophosFirewallAuthFailure(Exception):
-    """Error raised when authentication to firewall fails
-    """
+    """Error raised when authentication to firewall fails"""
+
 
 class SophosFirewallAPIError(Exception):
-    """Error raised when an API operation fails
-    """
+    """Error raised when an API operation fails"""
+
 
 class SophosFirewallZeroRecords(Exception):
-    """Error raised when a get request returns zero records
-    """
+    """Error raised when a get request returns zero records"""
+
 
 class SophosFirewallOperatorError(Exception):
-    """Error raised when an invalid operator is specified
-    """
+    """Error raised when an invalid operator is specified"""
+
 
 class SophosFirewall:
-    """Class used for interacting with the Sophos Firewall XML API
-    """
+    """Class used for interacting with the Sophos Firewall XML API"""
+
     def __init__(self, username, password, hostname, port):
         self.username = username
         self.password = password
@@ -90,7 +90,11 @@ class SophosFirewall:
         """
         headers = {"Accept": "application/xml"}
         resp = requests.post(
-            self.url, headers=headers, data={"reqxml": xmldata}, verify=verify, timeout=30
+            self.url,
+            headers=headers,
+            data={"reqxml": xmldata},
+            verify=verify,
+            timeout=30,
         )
         if (
             xmltodict.parse(resp.content.decode())["Response"]["Login"]["status"]
@@ -123,10 +127,10 @@ class SophosFirewall:
                 os.path.dirname(os.path.abspath(__file__)), "templates"
             )
         environment = Environment(
-            trim_blocks=True, 
-            lstrip_blocks=True, 
+            trim_blocks=True,
+            lstrip_blocks=True,
             loader=FileSystemLoader(template_dir),
-            autoescape=True
+            autoescape=True,
         )
         template = environment.get_template(filename)
         template_vars["username"] = self.username
@@ -637,11 +641,7 @@ class SophosFirewall:
         """
         self._validate_ip_network(ip_network, mask)
 
-        params = {
-                  "name": name, 
-                  "ip_network": ip_network,
-                  "mask": mask
-                  }
+        params = {"name": name, "ip_network": ip_network, "mask": mask}
         resp = self.submit_template(
             "createipnetwork.j2", template_vars=params, verify=verify, debug=debug
         )
@@ -662,10 +662,7 @@ class SophosFirewall:
         """
         self._validate_ip_address(ip_address)
 
-        params = {
-            "name": name,
-            "ip_address": ip_address
-        }
+        params = {"name": name, "ip_address": ip_address}
         resp = self.submit_template(
             "createiphost.j2", template_vars=params, verify=verify, debug=debug
         )
@@ -693,11 +690,7 @@ class SophosFirewall:
         self._validate_ip_address(start_ip)
         self._validate_ip_address(end_ip)
 
-        params = {
-            "name": name,
-            "start_ip": start_ip,
-            "end_ip": end_ip
-        }
+        params = {"name": name, "start_ip": start_ip, "end_ip": end_ip}
         resp = self.submit_template(
             "createiprange.j2", template_vars=params, verify=verify, debug=debug
         )
@@ -722,11 +715,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {
-            "name": name,
-            "port": port,
-            "protocol": protocol
-        }
+        params = {"name": name, "port": port, "protocol": protocol}
         resp = self.submit_template(
             "createservice.j2", template_vars=params, verify=verify, debug=debug
         )
@@ -751,11 +740,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {
-            "name": name,
-            "description": description,
-            "host_list": host_list
-        }
+        params = {"name": name, "description": description, "host_list": host_list}
         resp = self.submit_template(
             "createhostgroup.j2", template_vars=params, verify=verify, debug=debug
         )
@@ -782,16 +767,13 @@ class SophosFirewall:
         )
         domain_list = []
         if exist_list:
-            if isinstance(exist_list,str):
+            if isinstance(exist_list, str):
                 domain_list.append(exist_list)
             elif isinstance(exist_list, list):
                 domain_list = exist_list
         domain_list.append(domain)
 
-        params = {
-            "name": name,
-            "domain_list": domain_list
-        }
+        params = {"name": name, "domain_list": domain_list}
         resp = self.submit_template(
             "updateurlgroup.j2", template_vars=params, verify=verify, debug=debug
         )
