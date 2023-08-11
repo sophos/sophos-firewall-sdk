@@ -292,7 +292,7 @@ class SophosFirewall:
         """Get Interface object(s)
 
         Args:
-            name (str, optional): IP object name. Returns all objects if not specified.
+            name (str, optional): Interface name. Returns all objects if not specified.
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
@@ -307,7 +307,7 @@ class SophosFirewall:
         """Get VLAN object(s)
 
         Args:
-            name (str, optional): IP object name. Returns all objects if not specified.
+            name (str, optional): VLAN name. Returns all objects if not specified.
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
