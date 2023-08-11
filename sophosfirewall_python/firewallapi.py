@@ -269,6 +269,7 @@ class SophosFirewall:
 
         Args:
             name (str, optional): IP object name. Returns all objects if not specified.
+            ip_address (str, optional): Query by IP Address. 
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
@@ -284,6 +285,37 @@ class SophosFirewall:
                 verify=verify,
             )
         return self.get_tag(xml_tag="IPHost", verify=verify)
+    
+    def get_interface(
+        self, name: str = None, verify: bool = True
+    ):
+        """Get Interface object(s)
+
+        Args:
+            name (str, optional): IP object name. Returns all objects if not specified.
+            verify (bool, optional): SSL certificate checking. Defaults to True.
+        """
+        if name:
+            return self.get_tag_with_filter(
+                xml_tag="Interface", key="Name", value=name, operator="=", verify=verify
+            )
+        return self.get_tag(xml_tag="Interface", verify=verify)
+    
+    def get_vlan(
+        self, name: str = None, verify: bool = True
+    ):
+        """Get VLAN object(s)
+
+        Args:
+            name (str, optional): IP object name. Returns all objects if not specified.
+            verify (bool, optional): SSL certificate checking. Defaults to True.
+        """
+        if name:
+            return self.get_tag_with_filter(
+                xml_tag="VLAN", key="Name", value=name, operator="=", verify=verify
+            )
+        return self.get_tag(xml_tag="VLAN", verify=verify)
+
 
     def get_ip_hostgroup(self, name: str = None, verify: bool = True):
         """Get IP hostgroup(s)
