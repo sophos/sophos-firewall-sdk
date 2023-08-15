@@ -244,11 +244,12 @@ class SophosFirewall:
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
-    def get_fw_rule(self, name: str = None, verify: bool = True):
+    def get_fw_rule(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get firewall rule(s)
 
         Args:
             name (str, optional): Firewall Rule name.  Returns all rules if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional): SSL certificate checking. Defaults to True.
             debug(bool, optional): Enable debug mode
         """
@@ -257,71 +258,75 @@ class SophosFirewall:
                 xml_tag="FirewallRule",
                 key="Name",
                 value=name,
-                operator="=",
+                operator=operator,
                 verify=verify,
             )
         return self.get_tag(xml_tag="FirewallRule", verify=verify)
 
     def get_ip_host(
-        self, name: str = None, ip_address: str = None, verify: bool = True
+        self, name: str = None, ip_address: str = None, operator: str = "=", verify: bool = True
     ):
         """Get IP Host object(s)
 
         Args:
             name (str, optional): IP object name. Returns all objects if not specified.
-            ip_address (str, optional): Query by IP Address. 
+            ip_address (str, optional): Query by IP Address.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like. 
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="IPHost", key="Name", value=name, operator="=", verify=verify
+                xml_tag="IPHost", key="Name", value=name, operator=operator, verify=verify
             )
         if ip_address:
             return self.get_tag_with_filter(
                 xml_tag="IPHost",
                 key="IPAddress",
                 value=ip_address,
-                operator="=",
+                operator=operator,
                 verify=verify,
             )
         return self.get_tag(xml_tag="IPHost", verify=verify)
     
     def get_interface(
-        self, name: str = None, verify: bool = True
+        self, name: str = None, operator: str = "=", verify: bool = True
     ):
         """Get Interface object(s)
 
         Args:
             name (str, optional): Interface name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Interface", key="Name", value=name, operator="=", verify=verify
+                xml_tag="Interface", key="Name", value=name, operator=operator, verify=verify
             )
         return self.get_tag(xml_tag="Interface", verify=verify)
     
     def get_vlan(
-        self, name: str = None, verify: bool = True
+        self, name: str = None, operator: str="=", verify: bool = True
     ):
         """Get VLAN object(s)
 
         Args:
             name (str, optional): VLAN name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="VLAN", key="Name", value=name, operator="=", verify=verify
+                xml_tag="VLAN", key="Name", value=name, operator=operator, verify=verify
             )
         return self.get_tag(xml_tag="VLAN", verify=verify)
 
 
-    def get_ip_hostgroup(self, name: str = None, verify: bool = True):
+    def get_ip_hostgroup(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get IP hostgroup(s)
 
         Args:
             name (str, optional): Name of IP host group. Returns all if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
@@ -329,29 +334,31 @@ class SophosFirewall:
                 xml_tag="IPHostGroup",
                 key="Name",
                 value=name,
-                operator="=",
+                operator=operator,
                 verify=verify,
             )
         return self.get_tag(xml_tag="IPHostGroup", verify=verify)
 
-    def get_fqdn_host(self, name: str = None, verify: bool = True):
+    def get_fqdn_host(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get FQDN object(s)
 
         Args:
             name (str, optional): FQDN object name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="FQDNHost", key="Name", value=name, operator="=", verify=verify
+                xml_tag="FQDNHost", key="Name", value=name, operator=operator, verify=verify
             )
         return self.get_tag(xml_tag="FQDNHost", verify=verify)
 
-    def get_acl_rule(self, name: str = None, verify: bool = True):
+    def get_acl_rule(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get ACL rules
 
         Args:
             name (str, optional): Name of rule to retrieve. Returns all if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
@@ -362,16 +369,17 @@ class SophosFirewall:
                 xml_tag="LocalServiceACL",
                 key="Name",
                 value=name,
-                operator="=",
+                operator=operator,
                 verify=verify,
             )
         return self.get_tag(xml_tag="LocalServiceACL", verify=verify)
 
-    def get_user(self, name: str = None, verify: bool = True):
+    def get_user(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get local users
 
         Args:
             name (str, optional): Name of user. Retrieves all users if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
@@ -379,15 +387,16 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="User", key="Name", value=name, operator="=", verify=verify
+                xml_tag="User", key="Name", value=name, operator=operator, verify=verify
             )
         return self.get_tag(xml_tag="User", verify=verify)
 
-    def get_admin_profile(self, name: str = None, verify: bool = True):
+    def get_admin_profile(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get admin profiles
 
         Args:
             name (str, optional): Name of profile. Returns all if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
@@ -398,16 +407,17 @@ class SophosFirewall:
                 xml_tag="AdministrationProfile",
                 key="Name",
                 value=name,
-                operator="=",
+                operator=operator,
                 verify=verify,
             )
         return self.get_tag(xml_tag="AdministrationProfile", verify=verify)
 
-    def get_zone(self, name: str = None, verify: bool = True):
+    def get_zone(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get zone(s)
 
         Args:
             name (str, optional): Name of zone to query. Returns all if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
@@ -415,7 +425,7 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Zone", key="Name", value=name, operator="=", verify=verify
+                xml_tag="Zone", key="Name", value=name, operator=operator, verify=verify
             )
         return self.get_tag(xml_tag="Zone", verify=False)
 
@@ -559,11 +569,12 @@ class SophosFirewall:
         """
         return self.get_tag(xml_tag="SNMPv3User", verify=verify)
 
-    def get_urlgroup(self, name: str = None, verify: bool = True):
+    def get_urlgroup(self, name: str = None, operator: str = "=", verify: bool = True):
         """Get URLGroup(s)
 
         Args:
             name (str, optional): Get URLGroup by name. Defaults to None.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             verify (bool, optional): Toggle on/off SSL certificate check. Defaults to True.
 
         Returns:
@@ -571,13 +582,14 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="WebFilterURLGroup", key="Name", value=name, verify=verify
+                xml_tag="WebFilterURLGroup", key="Name", operator=operator, value=name, verify=verify
             )
         return self.get_tag(xml_tag="WebFilterURLGroup", verify=verify)
 
     def get_service(
         self,
         name: str = None,
+        operator: str = "=",
         dst_proto: str = None,
         dst_port: str = None,
         verify: bool = True,
@@ -586,6 +598,7 @@ class SophosFirewall:
 
         Args:
             name (str, optional): Get Service by name. Defaults to None.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             dst_proto(str, optional): Specify TCP or UDP
             dst_port(str, optional): Specify dest TCP or UDP port. Use : to specify ranges (ex. 67:68)
             verify (bool, optional): Toggle on/off SSL certificate check. Defaults to True.
@@ -595,7 +608,7 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Services", key="Name", value=name, operator="=", verify=verify
+                xml_tag="Services", key="Name", value=name, operator=operator, verify=verify
             )
         if dst_proto and dst_port:
             resp = self.get_tag(xml_tag="Services", verify=verify)
