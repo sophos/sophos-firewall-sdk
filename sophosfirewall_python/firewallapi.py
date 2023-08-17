@@ -96,11 +96,15 @@ class SophosFirewall:
             verify=verify,
             timeout=30,
         )
-        if (
-            xmltodict.parse(resp.content.decode())["Response"]["Login"]["status"]
-            == "Authentication Failure"
-        ):
-            raise SophosFirewallAuthFailure("Login failed!")
+
+        resp_dict = xmltodict.parse(resp.content.decode())['Response']
+        if "Status" in resp_dict:
+            if resp_dict["Status"]["@code"] == "534":
+                raise SophosFirewallAPIError("API operations are not allowed from the requester IP address")
+
+        if "Login" in resp_dict:
+            if resp_dict["Login"]["status"] == "Authentication Failure":
+                raise SophosFirewallAuthFailure("Login failed!")
         return resp
 
     def submit_template(
@@ -807,9 +811,12 @@ class SophosFirewall:
         """
         # Get the existing URL list first, if any
         resp = self.get_urlgroup(name=name, verify=verify)
-        exist_list = (
-            resp.get("Response").get("WebFilterURLGroup").get("URLlist").get("URL")
-        )
+        if "URLlist" in resp["Response"]["WebFilterURLGroup"]:
+            exist_list = (
+                resp.get("Response").get("WebFilterURLGroup").get("URLlist").get("URL")
+            )
+        else:
+            exist_list = None
         domain_list = []
         if exist_list:
             if isinstance(exist_list, str):
