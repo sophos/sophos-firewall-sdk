@@ -830,3 +830,37 @@ class SophosFirewall:
             "updateurlgroup.j2", template_vars=params, verify=verify, debug=debug
         )
         return resp
+    
+    def update_backup(
+        self, backup_params: dict, verify: bool = True, debug: bool = False
+    ):
+        """Updates scheduled backup settings
+
+        Args:
+            backup_params (dict): Dict containing backup settings
+            verify (bool, optional): SSL certificate verification. Defaults to True.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Keyword Args:
+            BackupMode (str): Backup mode (FTP/Mail/Local)
+            BackupPrefix (str): Backup Prefix
+            FTPServer (str, optional): FTP Server IP Address
+            Username (str, optional): FTP Server username
+            Password (str, optional): FTP Server password
+            FtpPath (str, optional): FTP Server path
+            EmailAddress (str): Email address
+            BackupFrequency (str): Never/Daily/Weekly/Monthly
+            Day (str): Day 
+            Hour (str): Hour 
+            Minute (str): Minute
+            Date (str): Numeric representation of month
+            EncryptionPassword (str, optional): Encryption password
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+
+        resp = self.submit_template(
+            "updatebackup.j2", template_vars=backup_params, verify=verify, debug=debug
+        )
+        return resp

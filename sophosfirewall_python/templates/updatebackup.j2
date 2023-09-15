@@ -1,0 +1,25 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="update"> 
+    <BackupRestore>
+		<ScheduleBackup>
+			<BackupMode>{{ BackupMode | default("") }}</BackupMode>
+			<BackupPrefix>{{ BackupPrefix | default("") }}</BackupPrefix>
+			<FTPServer>{{ FTPServer | default("") }}</FTPServer><!-- For FTP -->
+			<Username>{{ Username | default("") }}</Username><!-- For FTP -->
+			<Password>{{ Password | default("") }}</Password><!-- For FTP -->
+			<FtpPath>{{ FtpPath | default("") }}</FtpPath><!-- For FTP -->
+			<EmailAddress>{{ EmailAddress | default("") }}</EmailAddress><!--For Mail -->
+			<BackupFrequency>{{ BackupFrequency | default("") }}</BackupFrequency>
+			<Day>{{ Day | default("") }}</Day>
+			<Hour>{{ Hour | default("") }}</Hour>
+			<Minute>{{ Minute | default("") }}</Minute>
+			<Date>{{ Date | default("") }}</Date>
+			<EncryptionPassword>{{ EncryptionPassword | default("") }}</EncryptionPassword>
+		</ScheduleBackup>
+	</BackupRestore>
+   </Set>
+</Request>
