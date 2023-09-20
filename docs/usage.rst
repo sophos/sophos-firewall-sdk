@@ -12,7 +12,7 @@ Then install it using pip:
 .. code-block:: console
 
    $ cd sophos-firewall
-   $ pip install dist/sophosfirewall_python-X.X.X-py3-none-any.whl
+   $ pip install sophosfirewall_python-X.X.X-py3-none-any.whl
 
 Prerequisites
 -------------
