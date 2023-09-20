@@ -4,12 +4,9 @@ Usage
 Installation
 ------------
 
-To use sophosfirewall-python, first clone the repository:
-
-.. code-block:: console
-
-   $ git clone https://github.com/sophos-internal/it.netauto.sophos-firewall-api/ sophos-firewall
-
+To use sophosfirewall-python, first download the latest `.whl` file from the Releases page:
+https://github.com/sophos-internal/it.netauto.sophos-firewall-api/releases
+  
 Then install it using pip:
 
 .. code-block:: console
