@@ -1,0 +1,27 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="update"> 
+		<LocalServiceACL>
+			<RuleName>Appliance Access</RuleName>
+			<Description/>
+			<IPFamily>IPv4</IPFamily>
+			<SourceZone>Any</SourceZone>
+			{% if host_list %}
+			<Hosts>
+				{% for host in host_list %}
+				<Host>{{ host }}</Host>
+				{% endfor %}
+			</Hosts>
+			{% endif %}
+			<Services>
+				{% for service in service_list %}
+				<Service>{{ service }}</Service>
+				{% endfor %}
+			</Services>
+			<Action>accept</Action>
+		</LocalServiceACL>
+   </Set>
+</Request>
