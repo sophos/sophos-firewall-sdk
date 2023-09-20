@@ -1,4 +1,7 @@
 """firewallapi.py - Module for working with the Sophos Firewall API
+
+https://docs.sophos.com/nsg/sophos-firewall/19.5/API/index.html
+
 """
 import os
 import re
