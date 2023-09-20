@@ -794,6 +794,51 @@ class SophosFirewall:
             "createhostgroup.j2", template_vars=params, verify=verify, debug=debug
         )
         return resp
+    
+    def create_user(
+        self,
+        verify: bool = True,
+        debug: bool = False,
+        **kwargs
+    ):
+        """Create a User
+
+        Args:
+            verify: (bool, optional): SSL certificate verification. Defaults to True.
+            debug: (bool, optional): Enable debug mode. Defaults to False.
+
+        Keyword Args:
+            user (str): Username
+            name (str): User Display Name
+            description (str): User description
+            user_password (str): User password
+            user_type (str): User Type (Administrator/User)
+            profile (str): Profile name
+            group (str): Group name
+            email (str): User email address
+            access_time_policy (str, optional): Access time policy
+            sslvpn_policy (str, optional): SSL VPN policy
+            clientless_policy (str, optional): Clientless policy
+            l2tp (str, optional): L2TP Enable/Disable
+            pptp (str, optional): PPTP Enable/Disable
+            cisco (str, optional): CISCO Enable/Disable
+            quarantine_digest (str, optional): Quarantine Digest Enable/Disable
+            mac_binding (str, optional): MAC binding Enable/Disable
+            login_restriction (str, optional): Login restriction. Default = UserGroupNode.
+            isencryptcert (str, optional): Enable/Disable. Default = Disable.
+            simultaneous_logins (str, optional): Enable/Disable simultaneous login. 
+            surfingquota_policy (str, optional): Surfing quota policy. Default = Unlimited.
+            applianceaccess_schedule (str, optional): Schedule for appliance access.  Default = All The Time.
+            login_restriction (str, optional): Login restriction for appliance. Default = AnyNode.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        
+        resp = self.submit_template(
+            "createuser.j2", template_vars=kwargs, verify=verify, debug=debug
+        )
+        return resp
 
     def update_urlgroup(
         self, name: str, domain: str, verify: bool = True, debug: bool = False
@@ -863,4 +908,39 @@ class SophosFirewall:
         resp = self.submit_template(
             "updatebackup.j2", template_vars=backup_params, verify=verify, debug=debug
         )
+        return resp
+
+    def update_service_acl(self, host_list: list = [], service_list: list = [], action: str = "add", verify: bool = True, debug: bool = False):
+        """Update Local Service ACL (System > Administration > Device Access > Local service ACL exception)
+
+        Args:
+            host_list (list, optional): List of network or host groups. Defaults to [].
+            service_list (list, optional): List of services. Defaults to [].
+            action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'. 
+            verify (bool, optional): SSL Certificate checking. Defaults to True.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+        """
+        resp = self.get_acl_rule(verify=False)
+
+        exist_hosts = resp["Response"]["LocalServiceACL"]["Hosts"]["Host"]
+        exist_services = resp["Response"]["LocalServiceACL"]["Services"]["Service"]
+
+        if action == "add":
+            vars = {
+                "host_list": exist_hosts + host_list,
+                "service_list":  exist_services + service_list
+            }
+        elif action == "remove":
+            for host in host_list:
+                exist_hosts.remove(host)
+            for service in service_list:
+                exist_services.remove(service)
+            vars = {
+                "host_list": exist_hosts,
+                "service_list": exist_services
+            }
+        resp = self.submit_template(
+            "updateserviceacl.j2", template_vars=vars, verify=verify, debug=debug
+        )
+
         return resp

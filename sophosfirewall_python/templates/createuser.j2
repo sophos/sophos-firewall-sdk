@@ -1,0 +1,42 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation = "add"> 
+		<User transactionid = "">
+            <Username>{{ user }}</Username>
+            <Name>{{ name }}</Name>
+            <Description>{{ description }}</Description>
+            <Password>{{ user_password }}</Password>
+            <UserType>{{ user_type }}</UserType>
+            {% if user_type == 'Administrator' %}
+            <Profile>{{ profile }}</Profile>
+            {% endif %}
+            <Group>{{ group }}</Group>
+            <EmailList>
+                <EmailID>{{ email }}</EmailID>
+            </EmailList>
+            <AccessTimePolicy>{{ access_time_policy | default('Allowed all the time') }}</AccessTimePolicy>
+            <DataTransferPolicy/>
+            <QoSPolicy/>
+            <SSLVPNPolicy>{{ sslvpn_policy | default('No Policy Applied') }}</SSLVPNPolicy>
+            <SSLVPNIPv4Address/>
+            <SSLVPNIPv6Address/>
+            <ClientlessPolicy>{{ clientless_policy | default('No Policy Applied') }}</ClientlessPolicy>
+            <L2TP>{{ l2tp | default('Disable') }}</L2TP>
+            <PPTP>{{ pptp | default('Disable') }}</PPTP>
+            <CISCO>{{ cisco | default('Disable') }}</CISCO>
+            <QuarantineDigest>{{ quarantine_digest | default('Disable') }}</QuarantineDigest>
+            <MACBinding>{{ mac_binding | default('Disable') }}</MACBinding>
+            <LoginRestriction>{{ login_restriction | default('UserGroupNode') }}</LoginRestriction>
+            <IsEncryptCert>{{ isencryptcert | default('Disable') }}</IsEncryptCert>
+            <SimultaneousLoginsGlobal>{{ simulataneous_login | default('Disable') }}</SimultaneousLoginsGlobal>
+            <SurfingQuotaPolicy>{{ surfingquota_policy | default('Unlimited Internet Access') }}</SurfingQuotaPolicy>
+            {% if user_type == "Administrator" %}
+            <ScheduleForApplianceAccess>{{ applianceaccess_schedule | default('All The Time') }}</ScheduleForApplianceAccess>
+            <LoginRestrictionForAppliance>{{ login_restriction | default('AnyNode') }}</LoginRestrictionForAppliance>
+            {% endif %}
+        </User>
+   </Set>
+</Request>
