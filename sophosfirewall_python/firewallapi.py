@@ -910,7 +910,7 @@ class SophosFirewall:
         )
         return resp
 
-    def update_service_acl(self, host_list: list = [], service_list: list = [], action: str = "add", verify: bool = True, debug: bool = False):
+    def update_service_acl(self, host_list: list = None, service_list: list = None, action: str = "add", verify: bool = True, debug: bool = False):
         """Update Local Service ACL (System > Administration > Device Access > Local service ACL exception)
 
         Args:
@@ -924,6 +924,11 @@ class SophosFirewall:
 
         exist_hosts = resp["Response"]["LocalServiceACL"]["Hosts"]["Host"]
         exist_services = resp["Response"]["LocalServiceACL"]["Services"]["Service"]
+
+        if not host_list:
+            host_list = []
+        if not service_list:
+            service_list = []
 
         if action == "add":
             vars = {
