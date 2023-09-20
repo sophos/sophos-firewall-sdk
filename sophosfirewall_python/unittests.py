@@ -1,7 +1,7 @@
 """Tests for SophosFirewall module
 """
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
 from firewallapi import (
     SophosFirewall,
     SophosFirewallZeroRecords,
@@ -365,7 +365,7 @@ class TestSophosFirewall(unittest.TestCase):
         assert self.fw.create_rule(rule_params=rule_params) == expected_result
 
     @patch.object(SophosFirewall, "_post")
-    def test_failed_create(self, mocked_post):
+    def test_failed_create_rule(self, mocked_post):
         """Test failed creation response"""
         mock_response = Mock()
         mock_response.content = (
@@ -402,6 +402,220 @@ class TestSophosFirewall(unittest.TestCase):
         self.assertRaises(
             SophosFirewallAPIError, self.fw.create_rule, {"rule_params": rule_params}
         )
+
+    @patch.object(SophosFirewall, "_post")
+    def test_create_user(self, mocked_post):
+        """Test create_user() method"""
+        mock_response = Mock()
+        mock_response.content = (
+            """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Response APIVersion="1905.1" IPS_CAT_VER="1">
+            <Login>
+              <status>Authentication Successful</status>
+            </Login><User transactionid="">
+              <Status code="200">Configuration applied successfully.</Status>
+            </User>
+            </Response>""".replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+        mocked_post.return_value = mock_response
+
+        user_params = {'user': 'testuser',
+                    'name': 'Test User',
+                    'description': 'Test User',
+                    'user_password': 'C1sc0.123456',
+                    'user_type': 'Administrator',
+                    'profile': 'Administrator',
+                    'group': 'Open Group',
+                    'email': 'test@sophos.com'}
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "1905.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "User": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert self.fw.create_user(**user_params) == expected_result
+
+    @patch.object(SophosFirewall, "_post")
+    def test_update_backup(self, mocked_post):
+        """Test update_backup() method"""
+        mock_response = Mock()
+        mock_response.content = (
+            """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Response APIVersion="1905.1" IPS_CAT_VER="1">
+            <Login>
+              <status>Authentication Successful</status>
+            </Login><BackupRestore transactionid="">
+              <Status code="200">Configuration applied successfully.</Status>
+            </BackupRestore>
+            </Response>""".replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+        mocked_post.return_value = mock_response
+
+        backup_params = {'BackupFrequency': 'Weekly',
+                        'BackupMode': 'Local',
+                        'BackupPrefix': 'us-bos-utm-stag-1',
+                        'Day': 'Sunday',
+                        'EmailAddress': 'networkalerts@sophos.com',
+                        'FTPServer': None,
+                        'FtpPath': None,
+                        'Hour': '22',
+                        'Minute': '00',
+                        'Username': None,
+                        'ftp': False,
+                        'username': 'apiuser',
+                        'password': 'password'}
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "1905.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "BackupRestore": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert self.fw.update_backup(backup_params=backup_params) == expected_result
+    
+    
+    @patch.object(SophosFirewall, "_post")
+    @patch.object(SophosFirewall, "get_acl_rule")
+    def test_update_service_acl(self, mocked_get_acl_rule, mocked_post):
+        """Test update_service_acl() method"""
+        mock_get = MagicMock()
+        mock_get.__getitem__.return_value = {'@APIVersion': '2000.1',
+                '@IPS_CAT_VER': '1',
+                'Login': {'status': 'Authentication Successful'},
+                'LocalServiceACL': {'@transactionid': '',
+                'RuleName': 'Appliance Access',
+                'Description': None,
+                'Position': 'Top',
+                'IPFamily': 'IPv4',
+                'SourceZone': 'Any',
+                'Hosts': {'Host': ['Sophos Internal ACL',
+                    'Sophos External ACL',
+                    'All EAA Hosts']},
+                'Services': {'Service': ['Ping',
+                    'HTTPS',
+                    'SSH',
+                    'Ping',
+                    'UserPortal',
+                    'VPNPortal']},
+                'Action': 'accept'}}
+
+        mock_response = Mock()
+        mock_response.content = (
+            """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Response APIVersion="1905.1" IPS_CAT_VER="1">
+            <Login>
+              <status>Authentication Successful</status>
+            </Login><LocalServiceACL transactionid="">
+              <Status code="200">Configuration applied successfully.</Status>
+            </LocalServiceACL>
+            </Response>""".replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+
+        mocked_get_acl_rule.return_value = mock_get
+        mocked_post.return_value = mock_response
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "1905.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "LocalServiceACL": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert self.fw.update_service_acl(host_list=["Any"], action="add") == expected_result
+
+    @patch.object(SophosFirewall, "_post")
+    @patch.object(SophosFirewall, "get_urlgroup")
+    def test_update_urlgroup(self, mocked_get_urlgroup, mocked_post):
+        """Test update_urlgroup() method"""
+        mock_get = MagicMock()
+        mock_get.__getitem__.return_value = {'@APIVersion': '2000.1',
+                                            '@IPS_CAT_VER': '1',
+                                            'Login': {'status': 'Authentication Successful'},
+                                            'WebFilterURLGroup': {'@transactionid': '',
+                                            'Name': 'TEST1',
+                                            'Description': 'Test URL list',
+                                            'IsDefault': 'No',
+                                            'URLlist': {'URL': ['testdomain1.com', 'testdomain2.com']}}}
+
+        mock_response = Mock()
+        mock_response.content = (
+            """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Response APIVersion="1905.1" IPS_CAT_VER="1">
+            <Login>
+              <status>Authentication Successful</status>
+            </Login><WebFilterURLGroup transactionid="">
+              <Status code="200">Configuration applied successfully.</Status>
+            </WebFilterURLGroup>
+            </Response>""".replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+
+        mocked_get_urlgroup.return_value = mock_get
+        mocked_post.return_value = mock_response
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "1905.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "WebFilterURLGroup": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert self.fw.update_urlgroup(name='TEST1', domain="test.com") == expected_result
+
 
     @patch.object(SophosFirewall, "_post")
     def test_get_ip_host_all(self, mocked_post):
