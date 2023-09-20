@@ -931,7 +931,7 @@ class SophosFirewall:
             service_list = []
 
         if action == "add":
-            vars = {
+            template_vars = {
                 "host_list": exist_hosts + host_list,
                 "service_list":  exist_services + service_list
             }
@@ -940,12 +940,12 @@ class SophosFirewall:
                 exist_hosts.remove(host)
             for service in service_list:
                 exist_services.remove(service)
-            vars = {
+            template_vars = {
                 "host_list": exist_hosts,
                 "service_list": exist_services
             }
         resp = self.submit_template(
-            "updateserviceacl.j2", template_vars=vars, verify=verify, debug=debug
+            "updateserviceacl.j2", template_vars=template_vars, verify=verify, debug=debug
         )
 
         return resp
