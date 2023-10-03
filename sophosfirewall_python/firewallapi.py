@@ -237,9 +237,9 @@ class SophosFirewall:
             SophosFirewallZeroRecords: Error raised when there are no records matching the request parameters
             SophosFirewallAPIError: Error raised when there is a problem with the request parameters
         """
-        if xml_tag in xmltodict.parse(api_response.content.decode())["Response"]:
+        if xml_tag.title() in xmltodict.parse(api_response.content.decode())["Response"]:
             resp_dict = xmltodict.parse(api_response.content.decode())["Response"][
-                xml_tag
+                xml_tag.title()
             ]
             if "Status" in resp_dict:
                 if resp_dict["Status"] == "No. of records Zero.":
