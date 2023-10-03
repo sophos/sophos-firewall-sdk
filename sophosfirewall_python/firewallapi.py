@@ -154,7 +154,24 @@ class SophosFirewall:
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
     
+    def login(self, output_format: str = "dict"):
+        """Test login credentials.
 
+        Args:
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        payload = f"""
+        <Request>
+            <Login>
+                <Username>{self.username}</Username>
+                <Password>{self.password}</Password>
+            </Login>
+        </Request>
+        """
+        resp = self._post(xmldata=payload)
+        if output_format == "xml":
+            return resp.content.decode()
+        return xmltodict.parse(resp.content.decode())
 
     def get_tag(self, xml_tag: str, output_format: str = "dict"):
         """Execute a get for a specified XML tag.
