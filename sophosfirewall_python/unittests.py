@@ -244,7 +244,7 @@ class TestSophosFirewall(unittest.TestCase):
             <status>Authentication Successful</status>
         </Login>
         <IPHost transactionid="">
-            <Status>No. of records Zero.</Status>
+            <Status>Number of records Zero.</Status>
         </IPHost>
         </Response>
         """.replace(
@@ -312,6 +312,42 @@ class TestSophosFirewall(unittest.TestCase):
             )
             == expected_result
         )
+
+    @patch.object(SophosFirewall, "_post")
+    def test_login(self, mocked_post):
+        """Test login() method"""
+        mock_response = Mock()
+        mock_response.content = (
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <Response APIVersion="2000.1" IPS_CAT_VER="1">
+            <Login>
+                <status>Authentication Successful</status>
+            </Login>
+            </Response>""".replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+        mocked_post.return_value = mock_response
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "2000.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {
+                    "status": "Authentication Successful"
+                }
+            }
+        }
+
+        assert (
+            self.fw.login(
+            )
+            == expected_result
+        )
+
 
     @patch.object(SophosFirewall, "_post")
     def test_create_rule(self, mocked_post):
