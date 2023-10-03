@@ -15,9 +15,6 @@ Get all IP Hosts
 
     fw.get_ip_host()
 
-.. warning::
-    Use `verify=False` if operating against a device that does not have a valid SSL certificate. For example, `fw.get_ip_host(verify=False)`.
-    An SSLError will be thrown if certificate checking is enabled and the device does not have a valid certificate.
 
 Get IP Host by Name
 ^^^^^^^^^^^^^^^^^^^
@@ -119,7 +116,7 @@ Create IP Host
 
 .. code-block:: python
 
-    response = fw.create_ip_host(name="test-host", ip_address="10.0.0.1", verify=False)
+    response = fw.create_ip_host(name="test-host", ip_address="10.0.0.1")
 
     {
         "Response": {

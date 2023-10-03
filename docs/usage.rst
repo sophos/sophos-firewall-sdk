@@ -31,8 +31,14 @@ Import the module and create a `SophosFirewall` object:
         username=FIREWALL_USERNAME,
         password=FIREWALL_PASSWORD,
         hostname=FIREWALL_HOST_OR_IP,
-        port=FIREWALL_PORT
+        port=FIREWALL_PORT,
+        verify=True
         )
+
+.. warning::
+    Use `verify=False` if operating against a device that does not have a valid SSL certificate. For example, `fw.get_ip_host(verify=False)`.
+    An SSLError will be thrown if certificate checking is enabled and the device does not have a valid certificate.
+    You may also specify the filename of the certificate chain in PEM format, for example `verify=firewall.pem`. 
 
 Execute one of the available :doc:`firewallapi` methods. 
 
