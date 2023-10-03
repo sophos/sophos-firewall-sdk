@@ -38,12 +38,13 @@ class SophosFirewallOperatorError(Exception):
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
-    def __init__(self, username, password, hostname, port):
+    def __init__(self, username, password, hostname, port, verify=True):
         self.username = username
         self.password = password
         self.hostname = hostname
         self.port = port
         self.url = f"https://{hostname}:{port}/webconsole/APIController"
+        self.verify = verify
 
     # INTERNAL UTILITY CLASS METHODS
 
@@ -81,7 +82,7 @@ class SophosFirewall:
                 f"Invalid IP address provided - {ip_address}"
             ) from exc
 
-    def _post(self, xmldata: str, verify: bool = True) -> requests.Response:
+    def _post(self, xmldata: str) -> requests.Response:
         """Post XML request to the firewall returning response as a dict object
 
         Args:
@@ -96,7 +97,7 @@ class SophosFirewall:
             self.url,
             headers=headers,
             data={"reqxml": xmldata},
-            verify=verify,
+            verify=self.verify,
             timeout=30,
         )
 
@@ -115,7 +116,6 @@ class SophosFirewall:
         filename: str,
         template_vars: dict,
         template_dir: str = None,
-        verify: bool = True,
         debug: bool = False,
     ) -> dict:
         """Submits XML payload stored as a Jinja2 file
@@ -123,7 +123,6 @@ class SophosFirewall:
         Args:
             filename (str): Jinja2 template filename (must be in a directory called "templates")
             template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.
-            verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.
 
         Returns:
@@ -145,7 +144,7 @@ class SophosFirewall:
         payload = template.render(**template_vars)
         if debug:
             print(f"REQUEST: {payload}")
-        resp = self._post(xmldata=payload, verify=verify)
+        resp = self._post(xmldata=payload)
 
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
@@ -154,14 +153,15 @@ class SophosFirewall:
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
+    
 
-    def get_tag(self, xml_tag: str, output_format: str = "dict", verify: bool = True):
+
+    def get_tag(self, xml_tag: str, output_format: str = "dict"):
         """Execute a get for a specified XML tag.
 
         Args:
             xml_tag (str): XML tag for the request
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         payload = f"""
         <Request>
@@ -175,7 +175,7 @@ class SophosFirewall:
             </Get>
         </Request>
         """
-        resp = self._post(xmldata=payload, verify=verify)
+        resp = self._post(xmldata=payload)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
             return resp.content.decode()
@@ -187,8 +187,7 @@ class SophosFirewall:
         key: str,
         value: str,
         operator: str = "like",
-        output_format: str = dict,
-        verify: bool = True,
+        output_format: str = dict
     ):
         """Execute a get for a specified XML tag with filter criteria.
 
@@ -198,7 +197,6 @@ class SophosFirewall:
             value (str): Search value
             operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to "like".
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
-            verify (bool): SSL certificate checking. Defaults to True.
         """
         valid_operators = ["=", "!=", "like"]
         if operator not in valid_operators:
@@ -220,11 +218,22 @@ class SophosFirewall:
             </Get>
         </Request>
         """
-        resp = self._post(xmldata=payload, verify=verify)
+        resp = self._post(xmldata=payload)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
+
+    def _dict_to_lower(self, target_dict):
+        """Convert the keys of a dictionary to lower-case
+
+        Args:
+            target_dict (dict): Dictionary to be converted
+
+        Returns:
+            dict: Dictionary with all keys converted to lower case
+        """
+        return {key.lower(): val for key,val in target_dict.items()}
 
     def _error_check(self, api_response, xml_tag):
         """Check for errors in the API response and raise exception if present
@@ -237,12 +246,12 @@ class SophosFirewall:
             SophosFirewallZeroRecords: Error raised when there are no records matching the request parameters
             SophosFirewallAPIError: Error raised when there is a problem with the request parameters
         """
-        if xml_tag.title() in xmltodict.parse(api_response.content.decode())["Response"]:
-            resp_dict = xmltodict.parse(api_response.content.decode())["Response"][
-                xml_tag.title()
-            ]
+        response = xmltodict.parse(api_response.content.decode())["Response"]
+        lower_response = self._dict_to_lower(response)
+        if xml_tag.lower() in lower_response:
+            resp_dict = lower_response[xml_tag.lower()]
             if "Status" in resp_dict:
-                if resp_dict["Status"] == "No. of records Zero.":
+                if resp_dict["Status"] == "Number of records Zero.":
                     raise SophosFirewallZeroRecords(resp_dict["Status"])
         else:
             raise SophosFirewallAPIError(
@@ -251,13 +260,12 @@ class SophosFirewall:
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
-    def get_fw_rule(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_fw_rule(self, name: str = None, operator: str = "="):
         """Get firewall rule(s)
 
         Args:
             name (str, optional): Firewall Rule name.  Returns all rules if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
             debug(bool, optional): Enable debug mode
         """
         if name:
@@ -265,25 +273,22 @@ class SophosFirewall:
                 xml_tag="FirewallRule",
                 key="Name",
                 value=name,
-                operator=operator,
-                verify=verify,
+                operator=operator
             )
-        return self.get_tag(xml_tag="FirewallRule", verify=verify)
+        return self.get_tag(xml_tag="FirewallRule")
 
     def get_ip_host(
-        self, name: str = None, ip_address: str = None, operator: str = "=", verify: bool = True
-    ):
+        self, name: str = None, ip_address: str = None, operator: str = "="):
         """Get IP Host object(s)
 
         Args:
             name (str, optional): IP object name. Returns all objects if not specified.
             ip_address (str, optional): Query by IP Address.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like. 
-            verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="IPHost", key="Name", value=name, operator=operator, verify=verify
+                xml_tag="IPHost", key="Name", value=name, operator=operator
             )
         if ip_address:
             return self.get_tag_with_filter(
@@ -291,50 +296,42 @@ class SophosFirewall:
                 key="IPAddress",
                 value=ip_address,
                 operator=operator,
-                verify=verify,
             )
-        return self.get_tag(xml_tag="IPHost", verify=verify)
+        return self.get_tag(xml_tag="IPHost")
     
     def get_interface(
-        self, name: str = None, operator: str = "=", verify: bool = True
-    ):
+        self, name: str = None, operator: str = "="):
         """Get Interface object(s)
 
         Args:
             name (str, optional): Interface name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Interface", key="Name", value=name, operator=operator, verify=verify
-            )
-        return self.get_tag(xml_tag="Interface", verify=verify)
+                xml_tag="Interface", key="Name", value=name, operator=operator)
+        return self.get_tag(xml_tag="Interface")
     
     def get_vlan(
-        self, name: str = None, operator: str="=", verify: bool = True
-    ):
+        self, name: str = None, operator: str="="):
         """Get VLAN object(s)
 
         Args:
             name (str, optional): VLAN name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="VLAN", key="Name", value=name, operator=operator, verify=verify
-            )
-        return self.get_tag(xml_tag="VLAN", verify=verify)
+                xml_tag="VLAN", key="Name", value=name, operator=operator)
+        return self.get_tag(xml_tag="VLAN")
 
 
-    def get_ip_hostgroup(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_ip_hostgroup(self, name: str = None, operator: str = "="):
         """Get IP hostgroup(s)
 
         Args:
             name (str, optional): Name of IP host group. Returns all if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
@@ -342,31 +339,28 @@ class SophosFirewall:
                 key="Name",
                 value=name,
                 operator=operator,
-                verify=verify,
             )
-        return self.get_tag(xml_tag="IPHostGroup", verify=verify)
+        return self.get_tag(xml_tag="IPHostGroup")
 
-    def get_fqdn_host(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_fqdn_host(self, name: str = None, operator: str = "="):
         """Get FQDN object(s)
 
         Args:
             name (str, optional): FQDN object name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="FQDNHost", key="Name", value=name, operator=operator, verify=verify
+                xml_tag="FQDNHost", key="Name", value=name, operator=operator
             )
-        return self.get_tag(xml_tag="FQDNHost", verify=verify)
+        return self.get_tag(xml_tag="FQDNHost")
 
-    def get_acl_rule(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_acl_rule(self, name: str = None, operator: str = "="):
         """Get ACL rules
 
         Args:
             name (str, optional): Name of rule to retrieve. Returns all if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
@@ -376,35 +370,32 @@ class SophosFirewall:
                 xml_tag="LocalServiceACL",
                 key="Name",
                 value=name,
-                operator=operator,
-                verify=verify,
+                operator=operator
             )
-        return self.get_tag(xml_tag="LocalServiceACL", verify=verify)
+        return self.get_tag(xml_tag="LocalServiceACL")
 
-    def get_user(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_user(self, name: str = None, operator: str = "="):
         """Get local users
 
         Args:
             name (str, optional): Name of user. Retrieves all users if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="User", key="Name", value=name, operator=operator, verify=verify
+                xml_tag="User", key="Name", value=name, operator=operator
             )
-        return self.get_tag(xml_tag="User", verify=verify)
+        return self.get_tag(xml_tag="User")
 
-    def get_admin_profile(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_admin_profile(self, name: str = None, operator: str = "="):
         """Get admin profiles
 
         Args:
             name (str, optional): Name of profile. Returns all if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
@@ -415,183 +406,162 @@ class SophosFirewall:
                 key="Name",
                 value=name,
                 operator=operator,
-                verify=verify,
             )
-        return self.get_tag(xml_tag="AdministrationProfile", verify=verify)
+        return self.get_tag(xml_tag="AdministrationProfile")
 
-    def get_zone(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_zone(self, name: str = None, operator: str = "="):
         """Get zone(s)
 
         Args:
             name (str, optional): Name of zone to query. Returns all if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Zone", key="Name", value=name, operator=operator, verify=verify
+                xml_tag="Zone", key="Name", value=name, operator=operator
             )
-        return self.get_tag(xml_tag="Zone", verify=False)
+        return self.get_tag(xml_tag="Zone")
 
-    def get_admin_authen(self, verify: bool = True):
+    def get_admin_authen(self):
         """Get admin authentication settings
-
-        Args:
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="AdminAuthentication", verify=verify)
+        return self.get_tag(xml_tag="AdminAuthentication")
 
-    def get_ips_policy(self, name: str = None, verify: bool = True):
+    def get_ips_policy(self, name: str = None):
         """Get IPS policy
 
         Args:
             name (str, optional): Name of a policy to filter on. Returns all if not specified.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="IPSPolicy", key="Name", value=name, verify=verify
+                xml_tag="IPSPolicy", key="Name", value=name
             )
-        return self.get_tag(xml_tag="IPSPolicy", verify=verify)
+        return self.get_tag(xml_tag="IPSPolicy")
 
-    def get_syslog_server(self, name: str = None, verify: bool = True):
+    def get_syslog_server(self, name: str = None):
         """Get syslog server.
 
         Args:
             name (str, optional): Name of syslog server. Returns all if not specified.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="SyslogServers", key="Name", value=name, verify=verify
+                xml_tag="SyslogServers", key="Name", value=name
             )
-        return self.get_tag(xml_tag="SyslogServers", verify=verify)
+        return self.get_tag(xml_tag="SyslogServers")
 
-    def get_notification(self, name: str = None, verify: bool = True):
+    def get_notification(self, name: str = None):
         """Get notification.
 
         Args:
             name (str, optional): Name of notification. Returns all if not specified.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Notification", key="Name", value=name, verify=verify
+                xml_tag="Notification", key="Name", value=name
             )
-        return self.get_tag(xml_tag="Notification", verify=verify)
+        return self.get_tag(xml_tag="Notification")
 
-    def get_notification_list(self, name: str = None, verify: bool = True):
+    def get_notification_list(self, name: str = None):
         """Get notification list.
 
         Args:
             name (str, optional): Name of notification list. Returns all if not specified.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="NotificationList", key="Name", value=name, verify=verify
+                xml_tag="NotificationList", key="Name", value=name
             )
-        return self.get_tag(xml_tag="NotificationList", verify=verify)
+        return self.get_tag(xml_tag="NotificationList")
 
-    def get_backup(self, name: str = None, verify: bool = True):
+    def get_backup(self, name: str = None):
         """Get backup details.
 
         Args:
             name (str, optional): Name of backup schedule. Returns all if not specified.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="BackupRestore", key="Name", value=name, verify=verify
+                xml_tag="BackupRestore", key="Name", value=name
             )
-        return self.get_tag(xml_tag="BackupRestore", verify=verify)
+        return self.get_tag(xml_tag="BackupRestore")
 
-    def get_reports_retention(self, name: str = None, verify: bool = True):
+    def get_reports_retention(self, name: str = None):
         """Get Reports retention period.
 
         Args:
             name (str, optional): Name of backup schedule. Returns all if not specified.
-            verify (bool, optional):  Toggle on/off SSL certificate check.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="DataManagement", key="Name", value=name, verify=verify
+                xml_tag="DataManagement", key="Name", value=name
             )
-        return self.get_tag(xml_tag="DataManagement", verify=verify)
+        return self.get_tag(xml_tag="DataManagement")
 
-    def get_admin_settings(self, verify: bool = True):
+    def get_admin_settings(self):
         """Get Web Admin Settings (Administration > Settings)
 
-        Args:
-            verify (bool, optional):  Toggle on/off SSL certificate check.
-
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="AdminSettings", verify=verify)
+        return self.get_tag(xml_tag="AdminSettings")
 
-    def get_dns_forwarders(self, verify: bool = True):
+    def get_dns_forwarders(self):
         """Get DNS forwarders.
 
-        Args:
-            verify (bool, optional):  Toggle on/off SSL certificate check.
-
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="DNS", verify=verify)
+        return self.get_tag(xml_tag="DNS")
 
-    def get_snmpv3_user(self, verify: bool = True):
+    def get_snmpv3_user(self):
         """Get SNMP v3 Users
 
-        Args:
-            verify (bool, optional):  Toggle on/off SSL certificate check.
-
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="SNMPv3User", verify=verify)
+        return self.get_tag(xml_tag="SNMPv3User")
 
-    def get_urlgroup(self, name: str = None, operator: str = "=", verify: bool = True):
+    def get_urlgroup(self, name: str = None, operator: str = "="):
         """Get URLGroup(s)
 
         Args:
             name (str, optional): Get URLGroup by name. Defaults to None.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            verify (bool, optional): Toggle on/off SSL certificate check. Defaults to True.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="WebFilterURLGroup", key="Name", operator=operator, value=name, verify=verify
+                xml_tag="WebFilterURLGroup", key="Name", operator=operator, value=name
             )
-        return self.get_tag(xml_tag="WebFilterURLGroup", verify=verify)
+        return self.get_tag(xml_tag="WebFilterURLGroup")
 
     def get_service(
         self,
@@ -599,7 +569,6 @@ class SophosFirewall:
         operator: str = "=",
         dst_proto: str = None,
         dst_port: str = None,
-        verify: bool = True,
     ):
         """Get Service(s)
 
@@ -608,17 +577,16 @@ class SophosFirewall:
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
             dst_proto(str, optional): Specify TCP or UDP
             dst_port(str, optional): Specify dest TCP or UDP port. Use : to specify ranges (ex. 67:68)
-            verify (bool, optional): Toggle on/off SSL certificate check. Defaults to True.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Services", key="Name", value=name, operator=operator, verify=verify
+                xml_tag="Services", key="Name", value=name, operator=operator
             )
         if dst_proto and dst_port:
-            resp = self.get_tag(xml_tag="Services", verify=verify)
+            resp = self.get_tag(xml_tag="Services")
             svc_list = resp["Response"]["Services"].copy()
             for svc in svc_list:
                 matched = False
@@ -642,16 +610,15 @@ class SophosFirewall:
                 if not matched:
                     resp["Response"]["Services"].remove(svc)
             return resp
-        return self.get_tag(xml_tag="Services", verify=verify)
+        return self.get_tag(xml_tag="Services")
 
     # METHODS FOR OBJECT CREATION
 
-    def create_rule(self, rule_params: dict, verify: bool = True, debug: bool = False):
+    def create_rule(self, rule_params: dict, debug: bool = False):
         """Create a firewall rule
 
         Args:
             rule_params (dict): Configuration parmeters for the rule, see Keyword Args for supported parameters.
-            verify (bool, optional): SSL certificate checking. Defaults to True.
 
         Keyword Args:
             rulename(str): Name of the firewall rule
@@ -668,7 +635,7 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         resp = self.submit_template(
-            "createfwrule.j2", template_vars=rule_params, verify=verify, debug=debug
+            "createfwrule.j2", template_vars=rule_params, debug=debug
         )
         return resp
 
@@ -677,7 +644,6 @@ class SophosFirewall:
         name: str,
         ip_network: str,
         mask: str,
-        verify: bool = True,
         debug: bool = False,
     ):
         """Create IP address object
@@ -686,7 +652,6 @@ class SophosFirewall:
             name (str): Name of the object
             ip_network (str): IP network address
             mask (str): Subnet mask
-            verify (bool, optional): SSL certificate checking. Defaults to True.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -695,19 +660,18 @@ class SophosFirewall:
 
         params = {"name": name, "ip_network": ip_network, "mask": mask}
         resp = self.submit_template(
-            "createipnetwork.j2", template_vars=params, verify=verify, debug=debug
+            "createipnetwork.j2", template_vars=params, debug=debug
         )
         return resp
 
     def create_ip_host(
-        self, name: str, ip_address: str, verify: bool = True, debug: bool = False
+        self, name: str, ip_address: str, debug: bool = False
     ):
         """Create IP address object
 
         Args:
             name (str): Name of the object
             ip_address (str): Host IP address
-            verify (bool, optional): SSL certificate checking. Defaults to True.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -716,7 +680,7 @@ class SophosFirewall:
 
         params = {"name": name, "ip_address": ip_address}
         resp = self.submit_template(
-            "createiphost.j2", template_vars=params, verify=verify, debug=debug
+            "createiphost.j2", template_vars=params, debug=debug
         )
         return resp
 
@@ -725,7 +689,6 @@ class SophosFirewall:
         name: str,
         start_ip: str,
         end_ip: str,
-        verify: bool = True,
         debug: bool = False,
     ):
         """Create IP range object
@@ -734,7 +697,6 @@ class SophosFirewall:
             name (str): Name of the object
             start_ip (str): Starting IP address
             end_ip (str): Ending IP address
-            verify (bool, optional): SSL certificate checking. Defaults to True.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -744,7 +706,7 @@ class SophosFirewall:
 
         params = {"name": name, "start_ip": start_ip, "end_ip": end_ip}
         resp = self.submit_template(
-            "createiprange.j2", template_vars=params, verify=verify, debug=debug
+            "createiprange.j2", template_vars=params, debug=debug
         )
         return resp
 
@@ -753,7 +715,6 @@ class SophosFirewall:
         name: str,
         port: str,
         protocol: str,
-        verify: bool = True,
         debug: bool = False,
     ):
         """Create a TCP or UDP service
@@ -762,14 +723,13 @@ class SophosFirewall:
             name (str): Service name
             port (str): TCP/UDP port
             protocol (str): TCP or UDP
-            verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
         params = {"name": name, "port": port, "protocol": protocol}
         resp = self.submit_template(
-            "createservice.j2", template_vars=params, verify=verify, debug=debug
+            "createservice.j2", template_vars=params, debug=debug
         )
         return resp
 
@@ -778,7 +738,6 @@ class SophosFirewall:
         name: str,
         description: str,
         host_list: list,
-        verify: bool = True,
         debug: bool = False,
     ):
         """Create a Host Group
@@ -787,27 +746,24 @@ class SophosFirewall:
             name (str): Host Group name
             description (str): Host Group description
             host_list (list): List of existing IP hosts to add to the group
-            verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
         params = {"name": name, "description": description, "host_list": host_list}
         resp = self.submit_template(
-            "createhostgroup.j2", template_vars=params, verify=verify, debug=debug
+            "createhostgroup.j2", template_vars=params, debug=debug
         )
         return resp
     
     def create_user(
         self,
-        verify: bool = True,
         debug: bool = False,
         **kwargs
     ):
         """Create a User
 
         Args:
-            verify: (bool, optional): SSL certificate verification. Defaults to True.
             debug: (bool, optional): Enable debug mode. Defaults to False.
 
         Keyword Args:
@@ -839,26 +795,25 @@ class SophosFirewall:
         """
         
         resp = self.submit_template(
-            "createuser.j2", template_vars=kwargs, verify=verify, debug=debug
+            "createuser.j2", template_vars=kwargs, debug=debug
         )
         return resp
 
     def update_urlgroup(
-        self, name: str, domain: str, verify: bool = True, debug: bool = False
+        self, name: str, domain: str, debug: bool = False
     ):
         """Adds a specified domain to a web URL Group
 
         Args:
             name (str): URL Group name
             domain (str): Domain to be added to URL Group
-            verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         # Get the existing URL list first, if any
-        resp = self.get_urlgroup(name=name, verify=verify)
+        resp = self.get_urlgroup(name=name)
         if "URLlist" in resp["Response"]["WebFilterURLGroup"]:
             exist_list = (
                 resp.get("Response").get("WebFilterURLGroup").get("URLlist").get("URL")
@@ -875,18 +830,17 @@ class SophosFirewall:
 
         params = {"name": name, "domain_list": domain_list}
         resp = self.submit_template(
-            "updateurlgroup.j2", template_vars=params, verify=verify, debug=debug
+            "updateurlgroup.j2", template_vars=params, debug=debug
         )
         return resp
     
     def update_backup(
-        self, backup_params: dict, verify: bool = True, debug: bool = False
+        self, backup_params: dict, debug: bool = False
     ):
         """Updates scheduled backup settings
 
         Args:
             backup_params (dict): Dict containing backup settings
-            verify (bool, optional): SSL certificate verification. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Keyword Args:
@@ -909,11 +863,11 @@ class SophosFirewall:
         """
 
         resp = self.submit_template(
-            "updatebackup.j2", template_vars=backup_params, verify=verify, debug=debug
+            "updatebackup.j2", template_vars=backup_params, debug=debug
         )
         return resp
 
-    def update_service_acl(self, host_list: list = None, service_list: list = None, action: str = "add", verify: bool = True, debug: bool = False):
+    def update_service_acl(self, host_list: list = None, service_list: list = None, action: str = "add", debug: bool = False):
         """Update Local Service ACL (System > Administration > Device Access > Local service ACL exception)
 
         Args:
@@ -923,7 +877,7 @@ class SophosFirewall:
             verify (bool, optional): SSL Certificate checking. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
-        resp = self.get_acl_rule(verify=False)
+        resp = self.get_acl_rule()
 
         exist_hosts = resp["Response"]["LocalServiceACL"]["Hosts"]["Host"]
         exist_services = resp["Response"]["LocalServiceACL"]["Services"]["Service"]
@@ -948,7 +902,7 @@ class SophosFirewall:
                 "service_list": exist_services
             }
         resp = self.submit_template(
-            "updateserviceacl.j2", template_vars=template_vars, verify=verify, debug=debug
+            "updateserviceacl.j2", template_vars=template_vars, debug=debug
         )
 
         return resp
