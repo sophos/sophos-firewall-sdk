@@ -5,7 +5,7 @@ changelog:
     labels:
       - ignore-for-release
     authors:
-      - octocat
+      - mamullen13316
   categories:
     - title: Breaking Changes 🛠
       labels:
