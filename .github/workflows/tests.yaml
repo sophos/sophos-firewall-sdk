@@ -32,7 +32,7 @@ jobs:
         cache: 'poetry'
     - name: Install dependencies
       run: |
-        poetry install
+        poetry install --with test,docs
     - name: Black formatting
       run: |
         poetry run black sophosfirewall_python/
