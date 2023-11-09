@@ -110,7 +110,12 @@ class SophosFirewall:
         resp_dict = xmltodict.parse(resp.content.decode())['Response']
         if "Status" in resp_dict:
             if resp_dict["Status"]["@code"] == "534":
-                raise SophosFirewallAPIError("API operations are not allowed from the requester IP address")
+                # IP not allowed in API Access List
+                raise SophosFirewallAPIError(resp_dict["Status"]["#text"])
+
+            if resp_dict["Status"]["@code"] == "532":
+                # API access not enabled
+                raise SophosFirewallAPIError(resp_dict["Status"]["#text"])
 
         if "Login" in resp_dict:
             if resp_dict["Login"]["status"] == "Authentication Failure":
