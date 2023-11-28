@@ -48,7 +48,7 @@ GET methods provide retrieval of existing firewall configuration settings. They 
 ```
 
 #### CREATE Methods
-Create methods are used to create new configuration objects on the firewall. To define a new Create method, the XML payload for the request must first be created in a template and stored in the `templates` directory. The XML payload in the template can contain [Jinja variables](https://jinja.palletsprojects.com/en/3.1.x/templates/#variables) that will be populated when the template is rendered. Below is an example template and create method to create an IP Host. In the template, the values within the double brackets `{{ var }}` are variables that are passed in by the create method arguments. 
+Create methods are used to create new configuration objects on the firewall. To define a new Create method, the XML payload for the request must first be created in a template and stored in the `templates` directory. The XML payload in the template can contain [Jinja variables](https://jinja.palletsprojects.com/en/3.1.x/templates/#variables) that will be populated when the template is rendered. Below is an example template containing the XML payload to create an IP Host. In the template, the values within the double brackets `{{ var }}` are variables that are passed in by the create method arguments. 
 
 ```xml
 <Request>
@@ -94,7 +94,7 @@ def create_ip_host(
 #### UPDATE Methods
 Update methods provide the ability to change existing configuration on the firewall. When defining update methods, it is often necessary to first do a GET request to retrieve the existing configuration. This is because often the existing configuration must be in the payload in addition to any modifications. For example, when updating a URL Group with a new entry, the list must contain the existing entries along with the new one. Otherwise, the list will only contain the new entry when updated. Update methods can therefore first use an existing get method if defined, or can use the `get_tag` and/or `get_tag_with_filter` methods. Then, the information from the get request can be parsed and modified as necessary. Finally, the template can be submitted with the `submit_template` method, using the modified variables from the get request when rendering the template. 
   
-Below is the code to update a URL Group on the firewall. It first does a get request using the existing `get_urlgroup` method. It parses the existing list of URLs from the response, and then adds the new domain to the list. Finally, it uses the `submit_template` method to submit the `updateurlgroup.j2` template, passing in as variables the name of the list to be updated and the new domain list containing the existing and added domain.  
+Below is the code to update a URL Group on the firewall. It first does a get request using the existing `get_urlgroup` method. It parses the existing list of URLs from the response, and then adds the new domain to the list. Finally, it uses the `submit_template` method to submit the `updateurlgroup.j2` template, passing in as variables the name of the list to be updated and the updated domain list.
 
 ```python
     def update_urlgroup(
