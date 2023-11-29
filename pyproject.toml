@@ -1,6 +1,9 @@
 [tool.poetry]
 name = "sophosfirewall-python"
-version = "0.1.14"
+packages = [
+    { include = "sophosfirewall_python" },
+]
+version = "0.1.15"
 description = "Python SDK for Sophos Firewall"
 authors = ["Matt Mullen <matt.mullen@sophos.com>"]
 readme = "README.md"
