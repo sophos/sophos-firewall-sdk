@@ -8,6 +8,9 @@ on:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout Repository
