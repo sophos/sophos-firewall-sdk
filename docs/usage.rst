@@ -10,7 +10,8 @@ The module can be installed using pip:
 
    $ pip install sophosfirewall-python
 
-> It is recommended to install the module into a Python virtual environment to avoid any dependency conflicts with the system Python.
+.. warning::
+     It is recommended to install the module into a Python virtual environment to avoid any conflicts with packages that may already exist on the local system.
 
 Prerequisites
 -------------
