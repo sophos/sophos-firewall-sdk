@@ -1,7 +1,7 @@
 # Sophos Firewall Python SDK
 The Sophos Firewall Python Software Development Kit (SDK) provides a Python module for working with the [XML API](https://doc.sophos.com/nsg/sophos-firewall/20.0/API/index.html) of Sophos Firewall. 
   
-For installation and usage details please see the [documentation](https://sophosfirewall_python.readthedocs.io/)
+For installation and usage details please see the [documentation](https://sophosfirewall-python.readthedocs.io/)
   
 ## Support
 The Sophos Firewall Python SDK was developed by a small community of engineers within Sophos who will be maintaining the project. Questions can be posted to the [Q&A](https://github.com/sophos/sophos-firewall-sdk/discussions/categories/q-a) section of the Github project. If you are hitting a bug, please open a new [Issue](https://github.com/sophos/sophos-firewall-sdk/issues) and fill out the Bug Report template.  If you would like to see a new feature implemented, please fill out the Feature Request template.  
