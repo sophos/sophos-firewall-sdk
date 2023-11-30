@@ -4,15 +4,13 @@ Usage
 Installation
 ------------
 
-To use sophosfirewall-python, first download the latest `.whl` file from the Releases page:
-https://github.com/sophos-internal/it.netauto.sophos-firewall-api/releases
-  
-Then install it using pip:
+The module can be installed using pip:
 
 .. code-block:: console
 
-   $ cd sophos-firewall
-   $ pip install sophosfirewall_python-X.X.X-py3-none-any.whl
+   $ pip install sophosfirewall-python
+
+> It is recommended to install the module into a Python virtual environment to avoid any dependency conflicts with the system Python.
 
 Prerequisites
 -------------
