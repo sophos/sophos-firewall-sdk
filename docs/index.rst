@@ -5,7 +5,7 @@
 
 Welcome to sophosfirewall-python's documentation!
 =================================================
-The sophosfirewall-python module provides the ability to manage `Sophos Firewall <https://sophosfirewall-python.readthedocs.io/en/latest/index.html>`_ using programmability. 
+The sophosfirewall-python module provides the ability to manage `Sophos Firewall <https://www.sophos.com/en-us/products/next-gen-firewall>`_ using programmability. 
 The module :doc:`methods <firewallapi>` simplify using the firewall `XML API <https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html>`_ to configure the firewall or retrieve existing configuration.
 
 .. toctree::
