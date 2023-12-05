@@ -826,6 +826,32 @@ class SophosFirewall:
             "createuser.j2", template_vars=kwargs, debug=debug
         )
         return resp
+    
+    def update_user_password(
+        self, username: str, new_password: str, debug: bool = False
+    ):
+        """Update user password.
+
+        Args:
+            username (str): Username
+            new_password (str): New password. Must meet complexity requirements.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        # Get the existing user
+        resp = self.get_user(name=username)
+        user_params = resp["Response"]["User"]
+        user_params["Password"] = new_password
+        user_params.pop["PasswordHash"] # pylint: disable=pointless-statement
+
+        # Update the user
+        resp = self.submit_template(
+            "updateuserpassword.j2", template_vars=user_params, debug=debug
+        )
+        return resp
+
 
     def update_urlgroup(
         self, name: str, domain: str, debug: bool = False
