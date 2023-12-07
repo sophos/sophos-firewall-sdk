@@ -844,14 +844,33 @@ class SophosFirewall:
         resp = self.get_user(name=username)
         user_params = resp["Response"]["User"]
         user_params["Password"] = new_password
-        user_params.pop["PasswordHash"] # pylint: disable=pointless-statement
+        user_params.pop("PasswordHash")
 
         # Update the user
         resp = self.submit_template(
             "updateuserpassword.j2", template_vars=user_params, debug=debug
         )
         return resp
+    
+    def update_admin_password(
+            self, current_password: str, new_password: str, debug: bool = False
+    ):
+        """Update the admin password.
 
+        Args:
+            current_password (str): Current admin password.
+            new_password (str): New admin password. Must meet complexity requirements.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        params = {"current_password": current_password, "new_password": new_password}
+
+        resp = self.submit_template(
+            "updateadminpassword.j2", template_vars=params, debug=debug
+        )
+        return resp
 
     def update_urlgroup(
         self, name: str, domain: str, debug: bool = False
