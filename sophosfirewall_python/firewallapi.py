@@ -279,7 +279,7 @@ class SophosFirewall:
         if xml_tag.lower() in lower_response:
             resp_dict = lower_response[xml_tag.lower()]
             if "Status" in resp_dict:
-                if resp_dict["Status"] == "Number of records Zero.":
+                if resp_dict["Status"] == "Number of records Zero." or resp_dict["Status"] == "No. of records Zero.":
                     raise SophosFirewallZeroRecords(resp_dict["Status"])
         else:
             raise SophosFirewallAPIError(
