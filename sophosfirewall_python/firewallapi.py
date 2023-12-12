@@ -288,7 +288,6 @@ class SophosFirewall:
             xml_tag (str): The XML tag indicating the type of object to be updated.
             name (str): The name of the object to be updated.
             update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
-            Use API docs and/or `get_tag_with_filter` with `output_format="xml"` to see valid XML keys.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         resp = self.get_tag_with_filter(
