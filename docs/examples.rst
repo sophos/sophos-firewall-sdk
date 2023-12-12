@@ -15,7 +15,7 @@ Get all IP Hosts
 
     fw.get_ip_host()
 
-
+.. _get-ip-host-label
 Get IP Host by Name
 ^^^^^^^^^^^^^^^^^^^
 
@@ -143,7 +143,7 @@ Create IP Host
 
 Create Firewall Rule
 ^^^^^^^^^^^^^^^^^^^^
-When creating a firewall rule, first create a Python dict object storing the rule parameters. Then pass the parameters to the **create_rule** method.
+When creating a firewall rule, first create a Python dict object storing the rule parameters. Then pass the parameters to the **create_rule()** method.
 
 .. code-block:: python
 
@@ -271,4 +271,83 @@ send the payload to the firewall.
 .. note::
     Create methods have an optional **debug** argument that can be used to print out the XML payload for troubleshooting purposes.
     Ex. fw.create_ip_host(name="test-host", ip_address="10.0.0.1", debug=True)   
+
+Update Functions
+----------------
+Update an existing firewall configuration.
+
+Update User Password
+^^^^^^^^^^^^^^^^^^^^
+.. code-block:: python
+
+    response = fw.update_user_password(username="testuser", new_password="P@ssw0rd123")
+
+    { 'Response': { '@APIVersion': '2000.1',
+        '@IPS_CAT_VER': '1',
+        'Login': {'status': 'Authentication Successful'},
+        'User': { '@transactionid': '',
+            'Status': { 
+              '#text': 'Configuration applied successfully.',
+              '@code': '200'}
+              }
+            }
+        }
+
+Update
+^^^^^^
+While there are several feature-specific update methods, the generic **update()** method can be used to update any object.
+The **update()** method requires arguments specifying the name of the object and a dictionary of key/value pairs indicating which
+object parameters should be updated. The keys must match the XML tags in the existing object. The available keys can be 
+determined by reviewing the `API documentation <https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html>`_ and/or
+using the **get_tag_with_filter()** method to retrieve the object by name.
+  
+In the below example, we have an existing IP Host named `TESTHOST` that we are changing the IP address from 1.1.1.1 to 2.2.2.2. 
+From the output of :ref:`_get-ip-host-label` we can see that the XML format of the key used to set the IP address is `IPAddress`. 
+Therefore, we pass in a dict setting `IPAddress` to the new IP address 2.2.2.2.
+
+.. code-block:: python
+
+    response = fw.update(xml_tag="IPHost", name="TESTHOST", update_params={"IPAddress": "2.2.2.2"})
+
+    {'Response': 
+        { '@APIVersion': '2000.1',
+          '@IPS_CAT_VER': '1',
+          'IPHost': {   
+            '@transactionid': '',
+            'Status': {
+               '#text': 'Configuration applied successfully.',
+                '@code': '200'}
+                },
+            'Login': {'status': 'Authentication Successful'}
+            }
+        }
+
+Delete Functions
+----------------
+Delete objects from the firewall.
+
+Remove
+^^^^^^
+The **remove()** method can be used to delete objects from the firewall. The method requires the XML tag for the type of object
+being removed, and the name of the object. The below example removes an IP Host from the firewall named `TESTHOST`.
+
+.. code-block:: python
+    response = fw.remove(xml_tag="IPHost", name="TESTHOST")
+
+        {
+        "Response": {
+            "@APIVersion": "2000.1",
+            "@IPS_CAT_VER": "1",
+            "Login": {
+                "status": "Authentication Successful"
+            },
+            "IPHost": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully."
+                }
+            }
+        }
+    }
 
