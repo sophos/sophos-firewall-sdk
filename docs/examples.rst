@@ -302,7 +302,7 @@ determined by reviewing the `API documentation <https://docs.sophos.com/nsg/soph
 using the **get_tag_with_filter()** method to retrieve the object by name.
   
 In the below example, we have an existing IP Host named `TESTHOST` that we are changing the IP address from 1.1.1.1 to 2.2.2.2. 
-From the output of :ref:`_get-ip-host-label` we can see that the XML format of the key used to set the IP address is `IPAddress`. 
+From the output of :ref:`get-ip-host-label` we can see that the XML format of the key used to set the IP address is `IPAddress`. 
 Therefore, we pass in a dict setting `IPAddress` to the new IP address 2.2.2.2.
 
 .. code-block:: python
@@ -332,6 +332,7 @@ The **remove()** method can be used to delete objects from the firewall. The met
 being removed, and the name of the object. The below example removes an IP Host from the firewall named `TESTHOST`.
 
 .. code-block:: python
+    
     response = fw.remove(xml_tag="IPHost", name="TESTHOST")
 
         {
