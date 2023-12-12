@@ -42,6 +42,7 @@ class SophosFirewallOperatorError(Exception):
 
 
 
+
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
@@ -279,7 +280,45 @@ class SophosFirewall:
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
+    
+    def update(self, xml_tag: str, name: str, update_params: dict, output_format: str = "dict"):
+        """Update an existing object on the firewall.
 
+        Args:
+            xml_tag (str): The XML tag indicating the type of object to be updated.
+            name (str): The name of the object to be updated.
+            update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
+            Use API docs and/or `get_tag_with_filter` with `output_format="xml"` to see valid XML keys.
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        resp = self.get_tag_with_filter(
+            xml_tag=xml_tag,
+            key="Name",
+            value=name,
+            operator="=")
+        
+        for key in update_params:
+            resp["Response"][xml_tag][key] = update_params[key]
+
+        update_body = {}
+        update_body[xml_tag]=resp["Response"][xml_tag]
+        xml_update_body = xmltodict.unparse(update_body, pretty=True).lstrip('<?xml version="1.0" encoding="utf-8"?>')
+        payload = f"""
+        <Request>
+            <Login>
+                <Username>{self.username}</Username>
+                <Password>{self.password}</Password>
+            </Login>
+            <Set operation="update"> 
+                {xml_update_body}
+            </Set>
+        </Request>
+        """
+        resp = self._post(xmldata=payload)
+        self._error_check(resp, xml_tag)
+        if output_format == "xml":
+            return resp.content.decode()
+        return xmltodict.parse(resp.content.decode())
 
     def _dict_to_lower(self, target_dict):
         """Convert the keys of a dictionary to lower-case
@@ -310,12 +349,13 @@ class SophosFirewall:
             if "Status" in resp_dict:
                 if resp_dict["Status"] == "Number of records Zero." or resp_dict["Status"] == "No. of records Zero.":
                     raise SophosFirewallZeroRecords(resp_dict["Status"])
+                if "@code" in resp_dict["Status"]:
+                    if not resp_dict["Status"]["@code"].startswith("2"):
+                        raise SophosFirewallAPIError(f"{resp_dict['Status']['@code']}: {resp_dict['Status']['#text']}")
         else:
             raise SophosFirewallAPIError(
                 str(xmltodict.parse(api_response.content.decode()))
             )
-        
-    
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
