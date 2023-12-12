@@ -758,3 +758,101 @@ class TestSophosFirewall(unittest.TestCase):
             }
         }
         assert self.fw.get_ip_host(name="TEST1") == expected_result
+
+    @patch.object(SophosFirewall, "_post")
+    def test_remove(self, mocked_post):
+        """Test remove() method"""
+        mock_response = Mock()
+        mock_response.content = (
+            """
+                <?xml version="1.0" encoding="utf-8"?>
+                <Response APIVersion="2000.1" IPS_CAT_VER="1">
+                    <Login>
+                        <status>Authentication Successful</status>
+                    </Login>
+                    <IPHost transactionid="">
+                        <Status code="200">Configuration applied successfully.</Status>
+                    </IPHost>
+                </Response>
+            """.replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+
+        mocked_post.return_value = mock_response
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "2000.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "IPHost": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert self.fw.remove(xml_tag="IPHost", name='TESTHOST') == expected_result
+
+    
+    @patch.object(SophosFirewall, "_post")
+    @patch.object(SophosFirewall, "get_tag_with_filter")
+    def test_update(self, mocked_get_tag_with_filter, mocked_post):
+        """Test update() method"""
+        mock_get = MagicMock()
+        mock_get.__getitem__.content = {'Response': 
+                                {'@APIVersion': '2000.1',
+                                '@IPS_CAT_VER': '1', 
+                                'Login': {'status': 'Authentication Successful'}, 
+                                'IPHost': {'@transactionid': '', 
+                                            'Name': 'TESTHOST', 
+                                            'IPFamily': 'IPv4', 
+                                            'HostType': 'IP', 
+                                            'IPAddress': '1.1.1.1'}
+                                            }
+                            }
+
+        mock_response = Mock()
+        mock_response.content = (
+            """
+                <?xml version="1.0" encoding="utf-8"?>
+                <Response APIVersion="2000.1" IPS_CAT_VER="1">
+                    <Login>
+                        <status>Authentication Successful</status>
+                    </Login>
+                    <IPHost transactionid="">
+                        <Status code="200">Configuration applied successfully.</Status>
+                    </IPHost>
+                </Response>
+            """.replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+
+        mocked_get_tag_with_filter.return_value = mock_get
+        mocked_post.return_value = mock_response
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "2000.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "IPHost": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert self.fw.update(xml_tag="IPHost", name='TESTHOST', update_params={"IPAddress": "2.2.2.2"}) == expected_result
