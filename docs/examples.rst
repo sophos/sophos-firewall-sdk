@@ -15,7 +15,7 @@ Get all IP Hosts
 
     fw.get_ip_host()
 
-.. _get-ip-host-label
+.. _get-ip-host-label:
 Get IP Host by Name
 ^^^^^^^^^^^^^^^^^^^
 
