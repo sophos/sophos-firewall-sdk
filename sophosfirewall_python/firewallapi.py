@@ -41,6 +41,7 @@ class SophosFirewallOperatorError(Exception):
     """Error raised when an invalid operator is specified"""
 
 
+
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
@@ -252,6 +253,34 @@ class SophosFirewall:
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
 
+    def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
+        """Remove an object from the firewall.
+
+        Args:
+            xml_tag (str): The XML tag indicating the type of object to be removed.
+            name (str): The name of the object to be removed.
+            output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        payload = f"""
+        <Request>
+            <Login>
+                <Username>{self.username}</Username>
+                <Password>{self.password}</Password>
+            </Login>
+            <Remove>
+              <{xml_tag}>
+                <Name>{name}</Name>
+              </{xml_tag}>
+            </Remove>
+        </Request>
+        """
+        resp = self._post(xmldata=payload)
+        self._error_check(resp, xml_tag)
+        if output_format == "xml":
+            return resp.content.decode()
+        return xmltodict.parse(resp.content.decode())
+
+
     def _dict_to_lower(self, target_dict):
         """Convert the keys of a dictionary to lower-case
 
@@ -285,6 +314,8 @@ class SophosFirewall:
             raise SophosFirewallAPIError(
                 str(xmltodict.parse(api_response.content.decode()))
             )
+        
+    
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
