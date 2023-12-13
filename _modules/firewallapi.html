@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>firewallapi &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">firewallapi</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for firewallapi</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">firewallapi.py - Module for working with the Sophos Firewall API</span>
+
+<span class="sd">Copyright 2023 Sophos Ltd.  All rights reserved.</span>
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing</span>
+<span class="sd">permissions and limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">ipaddress</span> <span class="kn">import</span> <span class="n">IPv4Network</span><span class="p">,</span> <span class="n">IPv4Address</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">xmltodict</span>
+<span class="kn">import</span> <span class="nn">urllib3</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span>
+
+
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="SophosFirewallIPAddressingError">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewallIPAddressingError">[docs]</a>
+<span class="k">class</span> <span class="nc">SophosFirewallIPAddressingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when invalid IP address detected&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallAuthFailure">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewallAuthFailure">[docs]</a>
+<span class="k">class</span> <span class="nc">SophosFirewallAuthFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when authentication to firewall fails&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallAPIError">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewallAPIError">[docs]</a>
+<span class="k">class</span> <span class="nc">SophosFirewallAPIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when an API operation fails&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallZeroRecords">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewallZeroRecords">[docs]</a>
+<span class="k">class</span> <span class="nc">SophosFirewallZeroRecords</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when a get request returns zero records&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallOperatorError">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewallOperatorError">[docs]</a>
+<span class="k">class</span> <span class="nc">SophosFirewallOperatorError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when an invalid operator is specified&quot;&quot;&quot;</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="SophosFirewall">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall">[docs]</a>
+<span class="k">class</span> <span class="nc">SophosFirewall</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class used for interacting with the Sophos Firewall XML API&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">/webconsole/APIController&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="n">verify</span>
+
+    <span class="c1"># INTERNAL UTILITY CLASS METHODS</span>
+
+    <span class="k">def</span> <span class="nf">_validate_ip_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_subnet</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate IP network and mask</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ip_subnet (str): IP network address</span>
+<span class="sd">            mask (str): Subnet mask</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SophosFirewallIPAddressingError: Custom error class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">IPv4Network</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ip_subnet</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">mask</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallIPAddressingError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid network or mask provided - </span><span class="si">{</span><span class="n">ip_subnet</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">mask</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+    <span class="k">def</span> <span class="nf">_validate_ip_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate IP network and mask</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ip_subnet (str): IP network address</span>
+<span class="sd">            mask (str): Subnet mask</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SophosFirewallIPAddressingError: Custom error class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">IPv4Address</span><span class="p">(</span><span class="n">ip_address</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallIPAddressingError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid IP address provided - </span><span class="si">{</span><span class="n">ip_address</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+    <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmldata</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post XML request to the firewall returning response as a dict object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xmldata (str): XML payload</span>
+<span class="sd">            verify (bool):  SSL certificate verification. Default=True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/xml&quot;</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;reqxml&quot;</span><span class="p">:</span> <span class="n">xmldata</span><span class="p">},</span>
+            <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s1">&#39;Response&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;534&quot;</span><span class="p">:</span>
+                <span class="c1"># IP not allowed in API Access List</span>
+                <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;#text&quot;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;532&quot;</span><span class="p">:</span>
+                <span class="c1"># API access not enabled</span>
+                <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;#text&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Login&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Login&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Authentication Failure&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SophosFirewallAuthFailure</span><span class="p">(</span><span class="s2">&quot;Login failed!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span>
+
+<div class="viewcode-block" id="SophosFirewall.submit_template">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.submit_template">[docs]</a>
+    <span class="k">def</span> <span class="nf">submit_template</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">template_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Submits XML payload stored as a Jinja2 file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Jinja2 template filename (must be in a directory called &quot;templates&quot;)</span>
+<span class="sd">            template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_dir</span><span class="p">:</span>
+            <span class="n">template_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;templates&quot;</span>
+            <span class="p">)</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span>
+            <span class="n">trim_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">lstrip_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">template_dir</span><span class="p">),</span>
+            <span class="n">autoescape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;REQUEST: </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+
+        <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s2">&quot;Response&quot;</span><span class="p">]</span>
+        <span class="n">success_pattern</span> <span class="o">=</span> <span class="s2">&quot;2[0-9][0-9]&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">success_pattern</span><span class="p">,</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.login">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.login">[docs]</a>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test login credentials.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_tag">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_tag">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a get for a specified XML tag.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): XML tag for the request</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Get&gt;</span>
+<span class="s2">                &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">                &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">            &lt;/Get&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_tag_with_filter">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_tag_with_filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_tag_with_filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;like&quot;</span><span class="p">,</span>
+        <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">dict</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a get for a specified XML tag with filter criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): XML tag for the request.</span>
+<span class="sd">            key (str): Search key</span>
+<span class="sd">            value (str): Search value</span>
+<span class="sd">            operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to &quot;like&quot;.</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">valid_operators</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="s2">&quot;like&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">operator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_operators</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallOperatorError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&#39;!  Supported operators: [ </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_operators</span><span class="p">)</span><span class="si">}</span><span class="s2"> ]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Get&gt;</span>
+<span class="s2">                &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">                    &lt;Filter&gt;</span>
+<span class="s2">                        &lt;key name=&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot; criteria=&quot;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&quot;&gt;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&lt;/key&gt;</span>
+<span class="s2">                    &lt;/Filter&gt;</span>
+<span class="s2">                &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">            &lt;/Get&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.remove">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.remove">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an object from the firewall.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): The XML tag indicating the type of object to be removed.</span>
+<span class="sd">            name (str): The name of the object to be removed.</span>
+<span class="sd">            output_format (str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Remove&gt;</span>
+<span class="s2">              &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">                &lt;Name&gt;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&lt;/Name&gt;</span>
+<span class="s2">              &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">            &lt;/Remove&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.update">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">update_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an existing object on the firewall.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): The XML tag indicating the type of object to be updated.</span>
+<span class="sd">            update_params (dict): Keys/values to be updated. Keys must match an existing XML key.</span>
+<span class="sd">            name (str, optional): The name of the object to be updated, if applicable.</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="n">xml_tag</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="n">xml_tag</span>
+            <span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">update_params</span><span class="p">:</span>
+            <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="n">xml_tag</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="n">update_body</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">update_body</span><span class="p">[</span><span class="n">xml_tag</span><span class="p">]</span><span class="o">=</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="n">xml_tag</span><span class="p">]</span>
+        <span class="n">xml_update_body</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">unparse</span><span class="p">(</span><span class="n">update_body</span><span class="p">,</span> <span class="n">pretty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#39;</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Set operation=&quot;update&quot;&gt; </span>
+<span class="s2">                </span><span class="si">{</span><span class="n">xml_update_body</span><span class="si">}</span>
+<span class="s2">            &lt;/Set&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_dict_to_lower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the keys of a dictionary to lower-case</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_dict (dict): Dictionary to be converted</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Dictionary with all keys converted to lower case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">target_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="k">def</span> <span class="nf">_error_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_response</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for errors in the API response and raise exception if present</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_response (Requests.response): The response object returned from the requests module</span>
+<span class="sd">            xml_tag (str): The XML tag being operated on</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SophosFirewallZeroRecords: Error raised when there are no records matching the request parameters</span>
+<span class="sd">            SophosFirewallAPIError: Error raised when there is a problem with the request parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s2">&quot;Response&quot;</span><span class="p">]</span>
+        <span class="n">lower_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict_to_lower</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xml_tag</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">lower_response</span><span class="p">:</span>
+            <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">lower_response</span><span class="p">[</span><span class="n">xml_tag</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Number of records Zero.&quot;</span> <span class="ow">or</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;No. of records Zero.&quot;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SophosFirewallZeroRecords</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="s2">&quot;@code&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">resp_dict</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;@code&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resp_dict</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;#text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+            <span class="p">)</span>
+
+    <span class="c1"># METHODS FOR OBJECT RETRIEVAL (GET)</span>
+
+<div class="viewcode-block" id="SophosFirewall.get_fw_rule">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_fw_rule">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fw_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get firewall rule(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Firewall Rule name.  Returns all rules if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">            debug(bool, optional): Enable debug mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_ip_host">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_ip_host">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ip_host</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get IP Host object(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): IP object name. Returns all objects if not specified.</span>
+<span class="sd">            ip_address (str, optional): Query by IP Address.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHost&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">ip_address</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHost&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;IPAddress&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">ip_address</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHost&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.get_interface">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_interface">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_interface</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Interface object(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Interface name. Returns all objects if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Interface&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Interface&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.get_vlan">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_vlan">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_vlan</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get VLAN object(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): VLAN name. Returns all objects if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;VLAN&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;VLAN&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewall.get_ip_hostgroup">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_ip_hostgroup">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ip_hostgroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get IP hostgroup(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of IP host group. Returns all if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHostGroup&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPHostGroup&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_fqdn_host">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_fqdn_host">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fqdn_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get FQDN object(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): FQDN object name. Returns all objects if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FQDNHost&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FQDNHost&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_acl_rule">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_acl_rule">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_acl_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ACL rules</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of rule to retrieve. Returns all if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_user">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get local users</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of user. Retrieves all users if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_admin_profile">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_admin_profile">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_admin_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get admin profiles</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of profile. Returns all if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_zone">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_zone">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get zone(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of zone to query. Returns all if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Zone&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Zone&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_admin_authen">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_admin_authen">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_admin_authen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get admin authentication settings</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdminAuthentication&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_ips_policy">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_ips_policy">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ips_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get IPS policy</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of a policy to filter on. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPSPolicy&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;IPSPolicy&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_syslog_server">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_syslog_server">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_syslog_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get syslog server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of syslog server. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;SyslogServers&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;SyslogServers&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_notification">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_notification">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get notification.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of notification. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Notification&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Notification&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_notification_list">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_notification_list">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_notification_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get notification list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of notification list. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;NotificationList&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;NotificationList&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_backup">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_backup">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get backup details.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of backup schedule. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;BackupRestore&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;BackupRestore&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_reports_retention">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_reports_retention">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_reports_retention</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Reports retention period.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of backup schedule. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;DataManagement&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;DataManagement&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_admin_settings">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_admin_settings">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_admin_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Web Admin Settings (Administration &gt; Settings)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_dns_forwarders">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_dns_forwarders">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_dns_forwarders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get DNS forwarders.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;DNS&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_snmpv3_user">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_snmpv3_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_snmpv3_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get SNMP v3 Users</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;SNMPv3User&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_urlgroup">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_urlgroup">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_urlgroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get URLGroup(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Get URLGroup by name. Defaults to None.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.get_service">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.get_service">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_service</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span>
+        <span class="n">dst_proto</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dst_port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Service(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Get Service by name. Defaults to None.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">            dst_proto(str, optional): Specify TCP or UDP</span>
+<span class="sd">            dst_port(str, optional): Specify dest TCP or UDP port. Use : to specify ranges (ex. 67:68)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Services&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dst_proto</span> <span class="ow">and</span> <span class="n">dst_port</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Services&quot;</span><span class="p">)</span>
+            <span class="n">svc_list</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">svc</span> <span class="ow">in</span> <span class="n">svc_list</span><span class="p">:</span>
+                <span class="n">matched</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">port</span> <span class="o">=</span> <span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DestinationPort&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s2">&quot;Protocol&quot;</span> <span class="ow">in</span> <span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">]:</span>
+                        <span class="n">proto</span> <span class="o">=</span> <span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">][</span><span class="s2">&quot;Protocol&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s2">&quot;ProtocolName&quot;</span> <span class="ow">in</span> <span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">]:</span>
+                        <span class="n">proto</span> <span class="o">=</span> <span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">][</span><span class="s2">&quot;ProtocolName&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">proto</span> <span class="o">==</span> <span class="n">dst_proto</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">port</span> <span class="o">==</span> <span class="n">dst_port</span><span class="p">:</span>
+                        <span class="n">matched</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">subsvc</span> <span class="ow">in</span> <span class="n">svc</span><span class="p">[</span><span class="s2">&quot;ServiceDetails&quot;</span><span class="p">][</span><span class="s2">&quot;ServiceDetail&quot;</span><span class="p">]:</span>
+                        <span class="n">port</span> <span class="o">=</span> <span class="n">subsvc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DestinationPort&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;Protocol&quot;</span> <span class="ow">in</span> <span class="n">subsvc</span><span class="p">:</span>
+                            <span class="n">proto</span> <span class="o">=</span> <span class="n">subsvc</span><span class="p">[</span><span class="s2">&quot;Protocol&quot;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="s2">&quot;ProtocolName&quot;</span> <span class="ow">in</span> <span class="n">subsvc</span><span class="p">:</span>
+                            <span class="n">proto</span> <span class="o">=</span> <span class="n">subsvc</span><span class="p">[</span><span class="s2">&quot;ProtocolName&quot;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">proto</span> <span class="o">==</span> <span class="n">dst_proto</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">port</span> <span class="o">==</span> <span class="n">dst_port</span><span class="p">:</span>
+                            <span class="n">matched</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">matched</span><span class="p">:</span>
+                    <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">svc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">resp</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Services&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># METHODS FOR OBJECT CREATION</span>
+
+<div class="viewcode-block" id="SophosFirewall.create_rule">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_rule">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a firewall rule</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rule_params (dict): Configuration parmeters for the rule, see Keyword Args for supported parameters.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            rulename(str): Name of the firewall rule</span>
+<span class="sd">            after_rulename(str): Name of the rule to insert this rule after</span>
+<span class="sd">            action(str): Accept, Drop, Reject</span>
+<span class="sd">            description(str): Rule description</span>
+<span class="sd">            log(str): Enable, Disable</span>
+<span class="sd">            src_zones(list): Name(s) of the source zone(s)</span>
+<span class="sd">            dst_zones(list): Name(s) of the destination zone(s)</span>
+<span class="sd">            src_networks(list): Name(s) of the source network(s)</span>
+<span class="sd">            dst_networks(list): Name(s) of the destination network(s)</span>
+<span class="sd">            service_list(list): Name(s) of service(s)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createfwrule.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">rule_params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.create_ip_network">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_ip_network">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_ip_network</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">ip_network</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">mask</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create IP address object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the object</span>
+<span class="sd">            ip_network (str): IP network address</span>
+<span class="sd">            mask (str): Subnet mask</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_ip_network</span><span class="p">(</span><span class="n">ip_network</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;ip_network&quot;</span><span class="p">:</span> <span class="n">ip_network</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="n">mask</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createipnetwork.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.create_ip_host">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_ip_host">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_ip_host</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create IP address object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the object</span>
+<span class="sd">            ip_address (str): Host IP address</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_ip_address</span><span class="p">(</span><span class="n">ip_address</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;ip_address&quot;</span><span class="p">:</span> <span class="n">ip_address</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createiphost.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.create_ip_range">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_ip_range">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_ip_range</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">end_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create IP range object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the object</span>
+<span class="sd">            start_ip (str): Starting IP address</span>
+<span class="sd">            end_ip (str): Ending IP address</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_ip_address</span><span class="p">(</span><span class="n">start_ip</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_ip_address</span><span class="p">(</span><span class="n">end_ip</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;start_ip&quot;</span><span class="p">:</span> <span class="n">start_ip</span><span class="p">,</span> <span class="s2">&quot;end_ip&quot;</span><span class="p">:</span> <span class="n">end_ip</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createiprange.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.create_service">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_service">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_service</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a TCP or UDP service</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Service name</span>
+<span class="sd">            port (str): TCP/UDP port</span>
+<span class="sd">            protocol (str): TCP or UDP</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;protocol&quot;</span><span class="p">:</span> <span class="n">protocol</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createservice.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.create_hostgroup">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_hostgroup">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_hostgroup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">host_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a Host Group</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Host Group name</span>
+<span class="sd">            description (str): Host Group description</span>
+<span class="sd">            host_list (list): List of existing IP hosts to add to the group</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span> <span class="s2">&quot;host_list&quot;</span><span class="p">:</span> <span class="n">host_list</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createhostgroup.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.create_user">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.create_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a User</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            debug: (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            user (str): Username</span>
+<span class="sd">            name (str): User Display Name</span>
+<span class="sd">            description (str): User description</span>
+<span class="sd">            user_password (str): User password</span>
+<span class="sd">            user_type (str): User Type (Administrator/User)</span>
+<span class="sd">            profile (str): Profile name</span>
+<span class="sd">            group (str): Group name</span>
+<span class="sd">            email (str): User email address</span>
+<span class="sd">            access_time_policy (str, optional): Access time policy</span>
+<span class="sd">            sslvpn_policy (str, optional): SSL VPN policy</span>
+<span class="sd">            clientless_policy (str, optional): Clientless policy</span>
+<span class="sd">            l2tp (str, optional): L2TP Enable/Disable</span>
+<span class="sd">            pptp (str, optional): PPTP Enable/Disable</span>
+<span class="sd">            cisco (str, optional): CISCO Enable/Disable</span>
+<span class="sd">            quarantine_digest (str, optional): Quarantine Digest Enable/Disable</span>
+<span class="sd">            mac_binding (str, optional): MAC binding Enable/Disable</span>
+<span class="sd">            login_restriction (str, optional): Login restriction. Default = UserGroupNode.</span>
+<span class="sd">            isencryptcert (str, optional): Enable/Disable. Default = Disable.</span>
+<span class="sd">            simultaneous_logins (str, optional): Enable/Disable simultaneous login. </span>
+<span class="sd">            surfingquota_policy (str, optional): Surfing quota policy. Default = Unlimited.</span>
+<span class="sd">            applianceaccess_schedule (str, optional): Schedule for appliance access.  Default = All The Time.</span>
+<span class="sd">            login_restriction (str, optional): Login restriction for appliance. Default = AnyNode.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createuser.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.update_user_password">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.update_user_password">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_user_password</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update user password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            username (str): Username</span>
+<span class="sd">            new_password (str): New password. Must meet complexity requirements.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the existing user</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">user_params</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;User&quot;</span><span class="p">]</span>
+        <span class="n">user_params</span><span class="p">[</span><span class="s2">&quot;Password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_password</span>
+        <span class="n">user_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;PasswordHash&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Update the user</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateuserpassword.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">user_params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.update_admin_password">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.update_admin_password">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_admin_password</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">current_password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the admin password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            current_password (str): Current admin password.</span>
+<span class="sd">            new_password (str): New admin password. Must meet complexity requirements.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;current_password&quot;</span><span class="p">:</span> <span class="n">current_password</span><span class="p">,</span> <span class="s2">&quot;new_password&quot;</span><span class="p">:</span> <span class="n">new_password</span><span class="p">}</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateadminpassword.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.update_urlgroup">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.update_urlgroup">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_urlgroup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a specified domain to a web URL Group</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): URL Group name</span>
+<span class="sd">            domain (str): Domain to be added to URL Group</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the existing URL list first, if any</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_urlgroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;URLlist&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">]:</span>
+            <span class="n">exist_list</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">resp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Response&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;URLlist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;URL&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exist_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">domain_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">exist_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exist_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">domain_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exist_list</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exist_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">domain_list</span> <span class="o">=</span> <span class="n">exist_list</span>
+        <span class="n">domain_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;domain_list&quot;</span><span class="p">:</span> <span class="n">domain_list</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateurlgroup.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+    
+<div class="viewcode-block" id="SophosFirewall.update_backup">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.update_backup">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_backup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">backup_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates scheduled backup settings</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            backup_params (dict): Dict containing backup settings</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            BackupMode (str): Backup mode (FTP/Mail/Local)</span>
+<span class="sd">            BackupPrefix (str): Backup Prefix</span>
+<span class="sd">            FTPServer (str, optional): FTP Server IP Address</span>
+<span class="sd">            Username (str, optional): FTP Server username</span>
+<span class="sd">            Password (str, optional): FTP Server password</span>
+<span class="sd">            FtpPath (str, optional): FTP Server path</span>
+<span class="sd">            EmailAddress (str): Email address</span>
+<span class="sd">            BackupFrequency (str): Never/Daily/Weekly/Monthly</span>
+<span class="sd">            Day (str): Day </span>
+<span class="sd">            Hour (str): Hour </span>
+<span class="sd">            Minute (str): Minute</span>
+<span class="sd">            Date (str): Numeric representation of month</span>
+<span class="sd">            EncryptionPassword (str, optional): Encryption password</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updatebackup.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">backup_params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="SophosFirewall.update_service_acl">
+<a class="viewcode-back" href="../firewallapi.html#firewallapi.SophosFirewall.update_service_acl">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_service_acl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host_list</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">service_list</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update Local Service ACL (System &gt; Administration &gt; Device Access &gt; Local service ACL exception)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host_list (list, optional): List of network or host groups. Defaults to [].</span>
+<span class="sd">            service_list (list, optional): List of services. Defaults to [].</span>
+<span class="sd">            action (str, optional): Indicate &#39;add&#39; or &#39;remove&#39; from list. Default is &#39;add&#39;. </span>
+<span class="sd">            verify (bool, optional): SSL Certificate checking. Defaults to True.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_acl_rule</span><span class="p">()</span>
+
+        <span class="n">exist_hosts</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Hosts&quot;</span><span class="p">][</span><span class="s2">&quot;Host&quot;</span><span class="p">]</span>
+        <span class="n">exist_services</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">][</span><span class="s2">&quot;Service&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">host_list</span><span class="p">:</span>
+            <span class="n">host_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">service_list</span><span class="p">:</span>
+            <span class="n">service_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;host_list&quot;</span><span class="p">:</span> <span class="n">exist_hosts</span> <span class="o">+</span> <span class="n">host_list</span><span class="p">,</span>
+                <span class="s2">&quot;service_list&quot;</span><span class="p">:</span>  <span class="n">exist_services</span> <span class="o">+</span> <span class="n">service_list</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;remove&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">host_list</span><span class="p">:</span>
+                <span class="n">exist_hosts</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">service_list</span><span class="p">:</span>
+                <span class="n">exist_services</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;host_list&quot;</span><span class="p">:</span> <span class="n">exist_hosts</span><span class="p">,</span>
+                <span class="s2">&quot;service_list&quot;</span><span class="p">:</span> <span class="n">exist_services</span>
+            <span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateserviceacl.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">resp</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
