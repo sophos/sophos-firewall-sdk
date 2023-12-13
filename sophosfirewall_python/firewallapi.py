@@ -281,20 +281,25 @@ class SophosFirewall:
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
     
-    def update(self, xml_tag: str, name: str, update_params: dict, output_format: str = "dict"):
+    def update(self, xml_tag: str, update_params: dict, name: str = None, output_format: str = "dict"):
         """Update an existing object on the firewall.
 
         Args:
             xml_tag (str): The XML tag indicating the type of object to be updated.
-            name (str): The name of the object to be updated.
             update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
+            name (str, optional): The name of the object to be updated, if applicable.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
-        resp = self.get_tag_with_filter(
-            xml_tag=xml_tag,
-            key="Name",
-            value=name,
-            operator="=")
+        if name:
+            resp = self.get_tag_with_filter(
+                xml_tag=xml_tag,
+                key="Name",
+                value=name,
+                operator="=")
+        else:
+            resp = self.get_tag(
+                xml_tag=xml_tag
+            )
         
         for key in update_params:
             resp["Response"][xml_tag][key] = update_params[key]
