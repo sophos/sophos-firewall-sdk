@@ -296,10 +296,11 @@ Update User Password
 Update
 ^^^^^^
 While there are several feature-specific update methods, the generic **update()** method can be used to update any object.
-The **update()** method requires arguments specifying the name of the object and a dictionary of key/value pairs indicating which
-object parameters should be updated. The keys must match the XML tags in the existing object. The available keys can be 
+The **update()** method requires an argument `update_params` which should be specified as a Python dict containing the key/value pairs
+indicating which object parameters should be updated. The keys must match the XML tags in the existing object. The available keys can be 
 determined by reviewing the `API documentation <https://docs.sophos.com/nsg/sophos-firewall/18.5/API/index.html>`_ and/or
-using the **get_tag_with_filter()** method to retrieve the object by name.
+using the **get_tag_with_filter()** method to retrieve the object by name. The **update()** method also takes an optional `name` argument 
+that can be used to select an object by its name.
   
 In the below example, we have an existing IP Host named `TESTHOST` that we are changing the IP address from 1.1.1.1 to 2.2.2.2. 
 From the output of :ref:`get-ip-host-label` we can see that the XML format of the key used to set the IP address is `IPAddress`. 
@@ -307,7 +308,7 @@ Therefore, we pass in a dict setting `IPAddress` to the new IP address 2.2.2.2.
 
 .. code-block:: python
 
-    response = fw.update(xml_tag="IPHost", name="TESTHOST", update_params={"IPAddress": "2.2.2.2"})
+    response = fw.update(xml_tag="IPHost", update_params={"IPAddress": "2.2.2.2"}, name="TESTHOST")
 
     {'Response': 
         { '@APIVersion': '2000.1',
