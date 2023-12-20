@@ -836,17 +836,17 @@ class SophosFirewall:
         )
         return resp
 
-    def create_hostgroup(
+    def create_ip_hostgroup(
         self,
         name: str,
         description: str,
         host_list: list,
         debug: bool = False,
     ):
-        """Create a Host Group
+        """Create an IP Host Group
 
         Args:
-            name (str): Host Group name
+            name (str): IP Host Group name
             description (str): Host Group description
             host_list (list): List of existing IP hosts to add to the group
             debug (bool, optional): Enable debug mode. Defaults to False.
@@ -855,7 +855,7 @@ class SophosFirewall:
         """
         params = {"name": name, "description": description, "host_list": host_list}
         resp = self.submit_template(
-            "createhostgroup.j2", template_vars=params, debug=debug
+            "createiphostgroup.j2", template_vars=params, debug=debug
         )
         return resp
     
