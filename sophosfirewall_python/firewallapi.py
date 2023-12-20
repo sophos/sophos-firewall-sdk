@@ -948,13 +948,14 @@ class SophosFirewall:
         return resp
 
     def update_urlgroup(
-        self, name: str, domain: str, debug: bool = False
+        self, name: str, domain: str, action: str = "add", debug: bool = False
     ):
-        """Adds a specified domain to a web URL Group
+        """Add or remove a specified domain to/from a web URL Group
 
         Args:
-            name (str): URL Group name
-            domain (str): Domain to be added to URL Group
+            name (str): URL Group name.
+            domain (str): Domain to be added to URL Group.
+            action (str): Specify 'add' or 'remove'. Defaults to 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
@@ -974,7 +975,10 @@ class SophosFirewall:
                 domain_list.append(exist_list)
             elif isinstance(exist_list, list):
                 domain_list = exist_list
-        domain_list.append(domain)
+        if action == "add":
+            domain_list.append(domain)
+        elif action == "remove" and domain in domain_list:
+            domain_list.remove(domain)
 
         params = {"name": name, "domain_list": domain_list}
         resp = self.submit_template(
