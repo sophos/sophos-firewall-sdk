@@ -987,7 +987,7 @@ class SophosFirewall:
         return resp
 
     def update_ip_hostgroup(
-        self, name: str, description: str, ip_host: str, action: str = "add", debug: bool = False
+        self, name: str, ip_host: str, description: str = None, action: str = "add", debug: bool = False
     ):
         """Add or remove a specified domain to/from a web URL Group
 
@@ -1020,6 +1020,8 @@ class SophosFirewall:
                 host_list.append(ip_host)
             elif action == "remove".lower() and ip_host in host_list:
                 host_list.remove(ip_host)
+        if not description:
+            description = resp.get("Response").get("IPHostGroup").get("Description")
 
         params = {"name": name, "description": description, "host_list": host_list}
         resp = self.submit_template(
