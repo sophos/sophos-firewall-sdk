@@ -948,13 +948,14 @@ class SophosFirewall:
         return resp
 
     def update_urlgroup(
-        self, name: str, domain: str, debug: bool = False
+        self, name: str, domain: str, action: str = "add", debug: bool = False
     ):
-        """Adds a specified domain to a web URL Group
+        """Add or remove a specified domain to/from a web URL Group
 
         Args:
-            name (str): URL Group name
-            domain (str): Domain to be added to URL Group
+            name (str): URL Group name.
+            domain (str): Domain to be added to URL Group.
+            action (str): Add or Remove from URL Group. Defaults to Add.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
@@ -974,14 +975,60 @@ class SophosFirewall:
                 domain_list.append(exist_list)
             elif isinstance(exist_list, list):
                 domain_list = exist_list
-        domain_list.append(domain)
+        if action.lower() == "add" and domain not in domain_list:
+            domain_list.append(domain)
+        elif action.lower() == "remove" and domain in domain_list:
+            domain_list.remove(domain)
 
         params = {"name": name, "domain_list": domain_list}
         resp = self.submit_template(
             "updateurlgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
+    def update_ip_hostgroup(
+        self, name: str, ip_host: str, description: str = None, action: str = "add", debug: bool = False
+    ):
+        """Add or remove a specified domain to/from a web URL Group
+
+        Args:
+            name (str): IP Host Group name.
+            description (str): IP Host Group description.
+            host (str): IP Host to be added to or removed from the Host List.
+            action (str): Add or Remove from Host list. Specify None to disable updating Host List. Defaults to Add.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        # Get the existing Host list first, if any
+        resp = self.get_ip_hostgroup(name=name)
+        if "HostList" in resp["Response"]["IPHostGroup"]:
+            exist_list = (
+                resp.get("Response").get("IPHostGroup").get("HostList").get("Host")
+            )
+        else:
+            exist_list = None
+        host_list = []
+        if exist_list:
+            if isinstance(exist_list, str):
+                host_list.append(exist_list)
+            elif isinstance(exist_list, list):
+                host_list = exist_list
+        if action:
+            if action.lower() == "add" and not ip_host in host_list:
+                host_list.append(ip_host)
+            elif action == "remove".lower() and ip_host in host_list:
+                host_list.remove(ip_host)
+        if not description:
+            description = resp.get("Response").get("IPHostGroup").get("Description")
+
+        params = {"name": name, "description": description, "host_list": host_list}
+        resp = self.submit_template(
+            "updateiphostgroup.j2", template_vars=params, debug=debug
+        )
+        return resp
+
     def update_backup(
         self, backup_params: dict, debug: bool = False
     ):
