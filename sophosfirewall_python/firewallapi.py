@@ -987,14 +987,14 @@ class SophosFirewall:
         return resp
 
     def update_ip_hostgroup(
-        self, name: str, ip_host: str, description: str = None, action: str = "add", debug: bool = False
+        self, name: str, host_list: list, description: str = None, action: str = "add", debug: bool = False
     ):
         """Add or remove a specified domain to/from a web URL Group
 
         Args:
             name (str): IP Host Group name.
             description (str): IP Host Group description.
-            host (str): IP Host to be added to or removed from the Host List.
+            host_list (str): List of IP Hosts to be added to or removed from the Host List.
             action (str): Add or Remove from Host list. Specify None to disable updating Host List. Defaults to Add.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
@@ -1009,21 +1009,22 @@ class SophosFirewall:
             )
         else:
             exist_list = None
-        host_list = []
+        new_host_list = []
         if exist_list:
             if isinstance(exist_list, str):
-                host_list.append(exist_list)
+                new_host_list.append(exist_list)
             elif isinstance(exist_list, list):
-                host_list = exist_list
-        if action:
-            if action.lower() == "add" and not ip_host in host_list:
-                host_list.append(ip_host)
-            elif action == "remove".lower() and ip_host in host_list:
-                host_list.remove(ip_host)
+                new_host_list = exist_list
+        for ip_host in host_list:
+            if action:
+                if action.lower() == "add" and not ip_host in new_host_list:
+                    new_host_list.append(ip_host)
+                elif action == "remove".lower() and ip_host in new_host_list:
+                    new_host_list.remove(ip_host)
         if not description:
             description = resp.get("Response").get("IPHostGroup").get("Description")
 
-        params = {"name": name, "description": description, "host_list": host_list}
+        params = {"name": name, "description": description, "host_list": new_host_list}
         resp = self.submit_template(
             "updateiphostgroup.j2", template_vars=params, debug=debug
         )
