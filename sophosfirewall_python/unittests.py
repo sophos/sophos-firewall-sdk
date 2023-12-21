@@ -657,7 +657,7 @@ class TestSophosFirewall(unittest.TestCase):
             }
         }
 
-        assert self.fw.update_urlgroup(name='TEST1', domain="test.com") == expected_result
+        assert self.fw.update_urlgroup(name='TEST1', domain_list=["test.com"]) == expected_result
 
 
     @patch.object(SophosFirewall, "_post")
