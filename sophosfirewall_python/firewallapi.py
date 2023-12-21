@@ -40,6 +40,9 @@ class SophosFirewallZeroRecords(Exception):
 class SophosFirewallOperatorError(Exception):
     """Error raised when an invalid operator is specified"""
 
+class SophosFirewallInvalidArgument(Exception):
+    """Error raised when an invalid argument is specified"""
+
 
 
 
@@ -124,6 +127,11 @@ class SophosFirewall:
                 raise SophosFirewallAuthFailure("Login failed!")
         return resp
 
+    def _validate_arg(self, arg_name, arg_value, valid_choices):
+        if not arg_value in valid_choices:
+            raise SophosFirewallInvalidArgument(
+                f"Invalid choice for {arg_name} argument, valid choices are {valid_choices}")
+
     def submit_template(
         self,
         filename: str,
@@ -166,7 +174,7 @@ class SophosFirewall:
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
-    
+
     def login(self, output_format: str = "dict"):
         """Test login credentials.
 
@@ -280,7 +288,7 @@ class SophosFirewall:
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
-    
+
     def update(self, xml_tag: str, update_params: dict, name: str = None, output_format: str = "dict"):
         """Update an existing object on the firewall.
 
@@ -300,7 +308,7 @@ class SophosFirewall:
             resp = self.get_tag(
                 xml_tag=xml_tag
             )
-        
+
         for key in update_params:
             resp["Response"][xml_tag][key] = update_params[key]
 
@@ -401,7 +409,7 @@ class SophosFirewall:
                 operator=operator,
             )
         return self.get_tag(xml_tag="IPHost")
-    
+
     def get_interface(
         self, name: str = None, operator: str = "="):
         """Get Interface object(s)
@@ -414,7 +422,7 @@ class SophosFirewall:
             return self.get_tag_with_filter(
                 xml_tag="Interface", key="Name", value=name, operator=operator)
         return self.get_tag(xml_tag="Interface")
-    
+
     def get_vlan(
         self, name: str = None, operator: str="="):
         """Get VLAN object(s)
@@ -858,7 +866,7 @@ class SophosFirewall:
             "createiphostgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def create_user(
         self,
         debug: bool = False,
@@ -896,12 +904,12 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        
+
         resp = self.submit_template(
             "createuser.j2", template_vars=kwargs, debug=debug
         )
         return resp
-    
+
     def update_user_password(
         self, username: str, new_password: str, debug: bool = False
     ):
@@ -926,7 +934,7 @@ class SophosFirewall:
             "updateuserpassword.j2", template_vars=user_params, debug=debug
         )
         return resp
-    
+
     def update_admin_password(
             self, current_password: str, new_password: str, debug: bool = False
     ):
@@ -948,19 +956,25 @@ class SophosFirewall:
         return resp
 
     def update_urlgroup(
-        self, name: str, domain: str, action: str = "add", debug: bool = False
+        self, name: str, domain_list: list, action: str = "add", debug: bool = False
     ):
         """Add or remove a specified domain to/from a web URL Group
 
         Args:
             name (str): URL Group name.
-            domain (str): Domain to be added to URL Group.
-            action (str): Add or Remove from URL Group. Defaults to Add.
+            domain_list (list): List of domains to added/removed/replaced.
+            action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
+
+        if action:
+            self._validate_arg(arg_name="action",
+                    arg_value=action,
+                    valid_choices=["add", "remove", "replace"])
+
         # Get the existing URL list first, if any
         resp = self.get_urlgroup(name=name)
         if "URLlist" in resp["Response"]["WebFilterURLGroup"]:
@@ -969,18 +983,25 @@ class SophosFirewall:
             )
         else:
             exist_list = None
-        domain_list = []
+        if action == "replace":
+            exist_list = None
+        new_domain_list = []
         if exist_list:
             if isinstance(exist_list, str):
-                domain_list.append(exist_list)
+                new_domain_list.append(exist_list)
             elif isinstance(exist_list, list):
-                domain_list = exist_list
-        if action.lower() == "add" and domain not in domain_list:
-            domain_list.append(domain)
-        elif action.lower() == "remove" and domain in domain_list:
-            domain_list.remove(domain)
+                for domain in exist_list:
+                    new_domain_list.append(domain)
+        for domain in domain_list:
+            if action.lower() == "add" and domain not in new_domain_list:
+                new_domain_list.append(domain)
+            elif action.lower() == "remove" and domain in new_domain_list:
+                new_domain_list.remove(domain)
+            elif action.lower() == "replace":
+                new_domain_list.append(domain)
 
-        params = {"name": name, "domain_list": domain_list}
+        print(f"new_domain_list: {new_domain_list}")
+        params = {"name": name, "domain_list": new_domain_list}
         resp = self.submit_template(
             "updateurlgroup.j2", template_vars=params, debug=debug
         )
@@ -995,14 +1016,19 @@ class SophosFirewall:
             name (str): IP Host Group name.
             description (str): IP Host Group description.
             host_list (str): List of IP Hosts to be added to or removed from the Host List.
-            action (str): Add/Remove from Host List, or Replace existing Host List. Specify None to disable updating Host List. Defaults to Add.
+            action (str): Options are 'add', 'remove' or 'replace'. Specify None to disable updating Host List. Defaults to 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         # Get the existing Host list first, if any
-        
+
+        if action:
+            self._validate_arg(arg_name="action",
+                    arg_value=action,
+                    valid_choices=["add", "remove", "replace"])
+
         resp = self.get_ip_hostgroup(name=name)
         if "HostList" in resp["Response"]["IPHostGroup"]:
             exist_list = (
@@ -1010,7 +1036,7 @@ class SophosFirewall:
             )
         else:
             exist_list = None
-        
+
         if action.lower() == "replace":
             exist_list = None
 
@@ -1080,6 +1106,10 @@ class SophosFirewall:
             verify (bool, optional): SSL Certificate checking. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
+        if action:
+            self._validate_arg(arg_name="action",
+                               arg_value=action,
+                               valid_choices=["add", "remove"])
         resp = self.get_acl_rule()
 
         exist_hosts = resp["Response"]["LocalServiceACL"]["Hosts"]["Host"]
