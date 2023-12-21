@@ -995,13 +995,14 @@ class SophosFirewall:
             name (str): IP Host Group name.
             description (str): IP Host Group description.
             host_list (str): List of IP Hosts to be added to or removed from the Host List.
-            action (str): Add or Remove from Host list. Specify None to disable updating Host List. Defaults to Add.
+            action (str): Add/Remove from Host List, or Replace existing Host List. Specify None to disable updating Host List. Defaults to Add.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
         # Get the existing Host list first, if any
+        
         resp = self.get_ip_hostgroup(name=name)
         if "HostList" in resp["Response"]["IPHostGroup"]:
             exist_list = (
@@ -1009,6 +1010,10 @@ class SophosFirewall:
             )
         else:
             exist_list = None
+        
+        if action.lower() == "replace":
+            exist_list = None
+
         new_host_list = []
         if exist_list:
             if isinstance(exist_list, str):
@@ -1019,8 +1024,10 @@ class SophosFirewall:
             if action:
                 if action.lower() == "add" and not ip_host in new_host_list:
                     new_host_list.append(ip_host)
-                elif action == "remove".lower() and ip_host in new_host_list:
+                elif action.lower() == "remove" and ip_host in new_host_list:
                     new_host_list.remove(ip_host)
+                elif action.lower() == "replace":
+                    new_host_list.append(ip_host)
         if not description:
             description = resp.get("Response").get("IPHostGroup").get("Description")
 
