@@ -131,7 +131,7 @@ class SophosFirewall:
         if not arg_value in valid_choices:
             raise SophosFirewallInvalidArgument(
                 f"Invalid choice for {arg_name} argument, valid choices are {valid_choices}")
-        
+
     def submit_template(
         self,
         filename: str,
@@ -174,7 +174,7 @@ class SophosFirewall:
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
-    
+
     def login(self, output_format: str = "dict"):
         """Test login credentials.
 
@@ -288,7 +288,7 @@ class SophosFirewall:
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
-    
+
     def update(self, xml_tag: str, update_params: dict, name: str = None, output_format: str = "dict"):
         """Update an existing object on the firewall.
 
@@ -308,7 +308,7 @@ class SophosFirewall:
             resp = self.get_tag(
                 xml_tag=xml_tag
             )
-        
+
         for key in update_params:
             resp["Response"][xml_tag][key] = update_params[key]
 
@@ -409,7 +409,7 @@ class SophosFirewall:
                 operator=operator,
             )
         return self.get_tag(xml_tag="IPHost")
-    
+
     def get_interface(
         self, name: str = None, operator: str = "="):
         """Get Interface object(s)
@@ -422,7 +422,7 @@ class SophosFirewall:
             return self.get_tag_with_filter(
                 xml_tag="Interface", key="Name", value=name, operator=operator)
         return self.get_tag(xml_tag="Interface")
-    
+
     def get_vlan(
         self, name: str = None, operator: str="="):
         """Get VLAN object(s)
@@ -866,7 +866,7 @@ class SophosFirewall:
             "createiphostgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def create_user(
         self,
         debug: bool = False,
@@ -904,12 +904,12 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        
+
         resp = self.submit_template(
             "createuser.j2", template_vars=kwargs, debug=debug
         )
         return resp
-    
+
     def update_user_password(
         self, username: str, new_password: str, debug: bool = False
     ):
@@ -934,7 +934,7 @@ class SophosFirewall:
             "updateuserpassword.j2", template_vars=user_params, debug=debug
         )
         return resp
-    
+
     def update_admin_password(
             self, current_password: str, new_password: str, debug: bool = False
     ):
@@ -1023,7 +1023,7 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         # Get the existing Host list first, if any
-        
+
         if action:
             self._validate_arg(arg_name="action",
                     arg_value=action,
@@ -1036,7 +1036,7 @@ class SophosFirewall:
             )
         else:
             exist_list = None
-        
+
         if action.lower() == "replace":
             exist_list = None
 
