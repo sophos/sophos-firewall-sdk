@@ -142,8 +142,9 @@ class SophosFirewall:
         """Submits XML payload stored as a Jinja2 file
 
         Args:
-            filename (str): Jinja2 template filename (must be in a directory called "templates")
+            filename (str): Jinja2 template filename. Place in "templates" directory or configure template_dir.
             template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.
+            template_dir (str): Directory to look for templates. Default is "./templates".
             debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.
 
         Returns:
