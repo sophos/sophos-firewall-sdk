@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>firewallapi module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="sophosfirewall_python" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">firewallapi module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewall"><code class="docutils literal notranslate"><span class="pre">SophosFirewall</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_ip_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_hostgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_ip_network"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_ip_range"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_ip_range()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_rule()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.create_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.create_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_acl_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_acl_rule()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_admin_authen"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_authen()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_admin_profile"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_admin_settings"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_admin_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_backup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_backup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_dns_forwarders"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_dns_forwarders()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_fqdn_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fqdn_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_fw_rule"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_fw_rule()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_interface"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_interface()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_ip_host"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_ip_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ip_hostgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_ips_policy"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_ips_policy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_notification"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_notification_list"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_notification_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_reports_retention"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_reports_retention()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_service"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_snmpv3_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_snmpv3_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_syslog_server"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_syslog_server()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_tag"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_tag_with_filter"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_tag_with_filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_urlgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_user"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_user()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_vlan"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_vlan()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.get_zone"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.get_zone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.login"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.login()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.remove"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.submit_template"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.submit_template()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update_admin_password"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_admin_password()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update_backup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_backup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update_ip_hostgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_ip_hostgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update_service_acl"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_service_acl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update_urlgroup"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_urlgroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallapi.SophosFirewall.update_user_password"><code class="docutils literal notranslate"><span class="pre">SophosFirewall.update_user_password()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewallAPIError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAPIError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewallAuthFailure"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAuthFailure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewallIPAddressingError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallIPAddressingError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewallInvalidArgument"><code class="docutils literal notranslate"><span class="pre">SophosFirewallInvalidArgument</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewallOperatorError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallOperatorError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#firewallapi.SophosFirewallZeroRecords"><code class="docutils literal notranslate"><span class="pre">SophosFirewallZeroRecords</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">firewallapi module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/firewallapi.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-firewallapi">
+<span id="firewallapi-module"></span><h1>firewallapi module<a class="headerlink" href="#module-firewallapi" title="Link to this heading"></a></h1>
+<p>firewallapi.py - Module for working with the Sophos Firewall API</p>
+<p>Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used for interacting with the Sophos Firewall XML API</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_ip_host">
+<span class="sig-name descname"><span class="pre">create_ip_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_ip_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_ip_host" title="Link to this definition"></a></dt>
+<dd><p>Create IP address object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>ip_address</strong> (<em>str</em>) – Host IP address</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_ip_hostgroup">
+<span class="sig-name descname"><span class="pre">create_ip_hostgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_ip_hostgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_ip_hostgroup" title="Link to this definition"></a></dt>
+<dd><p>Create an IP Host Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – IP Host Group name</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Host Group description</p></li>
+<li><p><strong>host_list</strong> (<em>list</em>) – List of existing IP hosts to add to the group</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_ip_network">
+<span class="sig-name descname"><span class="pre">create_ip_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_ip_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_ip_network" title="Link to this definition"></a></dt>
+<dd><p>Create IP address object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>ip_network</strong> (<em>str</em>) – IP network address</p></li>
+<li><p><strong>mask</strong> (<em>str</em>) – Subnet mask</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_ip_range">
+<span class="sig-name descname"><span class="pre">create_ip_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_ip_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_ip_range" title="Link to this definition"></a></dt>
+<dd><p>Create IP range object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>start_ip</strong> (<em>str</em>) – Starting IP address</p></li>
+<li><p><strong>end_ip</strong> (<em>str</em>) – Ending IP address</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_rule">
+<span class="sig-name descname"><span class="pre">create_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_rule" title="Link to this definition"></a></dt>
+<dd><p>Create a firewall rule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rule_params</strong> (<em>dict</em>) – Configuration parmeters for the rule, see Keyword Args for supported parameters.</p>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>rulename</strong> (<em>str</em>) – Name of the firewall rule</p></li>
+<li><p><strong>after_rulename</strong> (<em>str</em>) – Name of the rule to insert this rule after</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Accept, Drop, Reject</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Rule description</p></li>
+<li><p><strong>log</strong> (<em>str</em>) – Enable, Disable</p></li>
+<li><p><strong>src_zones</strong> (<em>list</em>) – Name(s) of the source zone(s)</p></li>
+<li><p><strong>dst_zones</strong> (<em>list</em>) – Name(s) of the destination zone(s)</p></li>
+<li><p><strong>src_networks</strong> (<em>list</em>) – Name(s) of the source network(s)</p></li>
+<li><p><strong>dst_networks</strong> (<em>list</em>) – Name(s) of the destination network(s)</p></li>
+<li><p><strong>service_list</strong> (<em>list</em>) – Name(s) of service(s)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_service">
+<span class="sig-name descname"><span class="pre">create_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_service" title="Link to this definition"></a></dt>
+<dd><p>Create a TCP or UDP service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Service name</p></li>
+<li><p><strong>port</strong> (<em>str</em>) – TCP/UDP port</p></li>
+<li><p><strong>protocol</strong> (<em>str</em>) – TCP or UDP</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.create_user">
+<span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.create_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.create_user" title="Link to this definition"></a></dt>
+<dd><p>Create a User</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>debug</strong> – (bool, optional): Enable debug mode. Defaults to False.</p>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>user</strong> (<em>str</em>) – Username</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – User Display Name</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – User description</p></li>
+<li><p><strong>user_password</strong> (<em>str</em>) – User password</p></li>
+<li><p><strong>user_type</strong> (<em>str</em>) – User Type (Administrator/User)</p></li>
+<li><p><strong>profile</strong> (<em>str</em>) – Profile name</p></li>
+<li><p><strong>group</strong> (<em>str</em>) – Group name</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – User email address</p></li>
+<li><p><strong>access_time_policy</strong> (<em>str</em><em>, </em><em>optional</em>) – Access time policy</p></li>
+<li><p><strong>sslvpn_policy</strong> (<em>str</em><em>, </em><em>optional</em>) – SSL VPN policy</p></li>
+<li><p><strong>clientless_policy</strong> (<em>str</em><em>, </em><em>optional</em>) – Clientless policy</p></li>
+<li><p><strong>l2tp</strong> (<em>str</em><em>, </em><em>optional</em>) – L2TP Enable/Disable</p></li>
+<li><p><strong>pptp</strong> (<em>str</em><em>, </em><em>optional</em>) – PPTP Enable/Disable</p></li>
+<li><p><strong>cisco</strong> (<em>str</em><em>, </em><em>optional</em>) – CISCO Enable/Disable</p></li>
+<li><p><strong>quarantine_digest</strong> (<em>str</em><em>, </em><em>optional</em>) – Quarantine Digest Enable/Disable</p></li>
+<li><p><strong>mac_binding</strong> (<em>str</em><em>, </em><em>optional</em>) – MAC binding Enable/Disable</p></li>
+<li><p><strong>login_restriction</strong> (<em>str</em><em>, </em><em>optional</em>) – Login restriction. Default = UserGroupNode.</p></li>
+<li><p><strong>isencryptcert</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable. Default = Disable.</p></li>
+<li><p><strong>simultaneous_logins</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable simultaneous login.</p></li>
+<li><p><strong>surfingquota_policy</strong> (<em>str</em><em>, </em><em>optional</em>) – Surfing quota policy. Default = Unlimited.</p></li>
+<li><p><strong>applianceaccess_schedule</strong> (<em>str</em><em>, </em><em>optional</em>) – Schedule for appliance access.  Default = All The Time.</p></li>
+<li><p><strong>login_restriction</strong> – Login restriction for appliance. Default = AnyNode.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_acl_rule">
+<span class="sig-name descname"><span class="pre">get_acl_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_acl_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_acl_rule" title="Link to this definition"></a></dt>
+<dd><p>Get ACL rules</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of rule to retrieve. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_admin_authen">
+<span class="sig-name descname"><span class="pre">get_admin_authen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_admin_authen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_admin_authen" title="Link to this definition"></a></dt>
+<dd><p>Get admin authentication settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_admin_profile">
+<span class="sig-name descname"><span class="pre">get_admin_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_admin_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_admin_profile" title="Link to this definition"></a></dt>
+<dd><p>Get admin profiles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of profile. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_admin_settings">
+<span class="sig-name descname"><span class="pre">get_admin_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_admin_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_admin_settings" title="Link to this definition"></a></dt>
+<dd><p>Get Web Admin Settings (Administration &gt; Settings)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_backup">
+<span class="sig-name descname"><span class="pre">get_backup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_backup" title="Link to this definition"></a></dt>
+<dd><p>Get backup details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of backup schedule. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_dns_forwarders">
+<span class="sig-name descname"><span class="pre">get_dns_forwarders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_dns_forwarders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_dns_forwarders" title="Link to this definition"></a></dt>
+<dd><p>Get DNS forwarders.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_fqdn_host">
+<span class="sig-name descname"><span class="pre">get_fqdn_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_fqdn_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_fqdn_host" title="Link to this definition"></a></dt>
+<dd><p>Get FQDN object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – FQDN object name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_fw_rule">
+<span class="sig-name descname"><span class="pre">get_fw_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_fw_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_fw_rule" title="Link to this definition"></a></dt>
+<dd><p>Get firewall rule(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Firewall Rule name.  Returns all rules if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_interface">
+<span class="sig-name descname"><span class="pre">get_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_interface" title="Link to this definition"></a></dt>
+<dd><p>Get Interface object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Interface name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_ip_host">
+<span class="sig-name descname"><span class="pre">get_ip_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_ip_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_ip_host" title="Link to this definition"></a></dt>
+<dd><p>Get IP Host object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – IP object name. Returns all objects if not specified.</p></li>
+<li><p><strong>ip_address</strong> (<em>str</em><em>, </em><em>optional</em>) – Query by IP Address.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_ip_hostgroup">
+<span class="sig-name descname"><span class="pre">get_ip_hostgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_ip_hostgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_ip_hostgroup" title="Link to this definition"></a></dt>
+<dd><p>Get IP hostgroup(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of IP host group. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_ips_policy">
+<span class="sig-name descname"><span class="pre">get_ips_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_ips_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_ips_policy" title="Link to this definition"></a></dt>
+<dd><p>Get IPS policy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of a policy to filter on. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_notification">
+<span class="sig-name descname"><span class="pre">get_notification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_notification" title="Link to this definition"></a></dt>
+<dd><p>Get notification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of notification. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_notification_list">
+<span class="sig-name descname"><span class="pre">get_notification_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_notification_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_notification_list" title="Link to this definition"></a></dt>
+<dd><p>Get notification list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of notification list. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_reports_retention">
+<span class="sig-name descname"><span class="pre">get_reports_retention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_reports_retention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_reports_retention" title="Link to this definition"></a></dt>
+<dd><p>Get Reports retention period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of backup schedule. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_service">
+<span class="sig-name descname"><span class="pre">get_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_proto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_service" title="Link to this definition"></a></dt>
+<dd><p>Get Service(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Get Service by name. Defaults to None.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+<li><p><strong>dst_proto</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify TCP or UDP</p></li>
+<li><p><strong>dst_port</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify dest TCP or UDP port. Use : to specify ranges (ex. 67:68)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_snmpv3_user">
+<span class="sig-name descname"><span class="pre">get_snmpv3_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_snmpv3_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_snmpv3_user" title="Link to this definition"></a></dt>
+<dd><p>Get SNMP v3 Users</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_syslog_server">
+<span class="sig-name descname"><span class="pre">get_syslog_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_syslog_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_syslog_server" title="Link to this definition"></a></dt>
+<dd><p>Get syslog server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of syslog server. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_tag">
+<span class="sig-name descname"><span class="pre">get_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_tag" title="Link to this definition"></a></dt>
+<dd><p>Execute a get for a specified XML tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – XML tag for the request</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_tag_with_filter">
+<span class="sig-name descname"><span class="pre">get_tag_with_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'like'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_tag_with_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_tag_with_filter" title="Link to this definition"></a></dt>
+<dd><p>Execute a get for a specified XML tag with filter criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – XML tag for the request.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – Search key</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – Search value</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search (“=”,”!=”,”like”). Defaults to “like”.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_urlgroup">
+<span class="sig-name descname"><span class="pre">get_urlgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_urlgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_urlgroup" title="Link to this definition"></a></dt>
+<dd><p>Get URLGroup(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Get URLGroup by name. Defaults to None.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_user">
+<span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_user" title="Link to this definition"></a></dt>
+<dd><p>Get local users</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of user. Retrieves all users if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_vlan">
+<span class="sig-name descname"><span class="pre">get_vlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_vlan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_vlan" title="Link to this definition"></a></dt>
+<dd><p>Get VLAN object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – VLAN name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.get_zone">
+<span class="sig-name descname"><span class="pre">get_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.get_zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.get_zone" title="Link to this definition"></a></dt>
+<dd><p>Get zone(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of zone to query. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.login">
+<span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.login" title="Link to this definition"></a></dt>
+<dd><p>Test login credentials.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove an object from the firewall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – The XML tag indicating the type of object to be removed.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the object to be removed.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.submit_template">
+<span class="sig-name descname"><span class="pre">submit_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.submit_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.submit_template" title="Link to this definition"></a></dt>
+<dd><p>Submits XML payload stored as a Jinja2 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Jinja2 template filename. Place in “templates” directory or configure template_dir.</p></li>
+<li><p><strong>template_vars</strong> (<em>dict</em>) – Dictionary of variables to inject into the template. Username and password are passed in by default.</p></li>
+<li><p><strong>template_dir</strong> (<em>str</em>) – Directory to look for templates. Default is “./templates”.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode to display XML payload. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update" title="Link to this definition"></a></dt>
+<dd><p>Update an existing object on the firewall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – The XML tag indicating the type of object to be updated.</p></li>
+<li><p><strong>update_params</strong> (<em>dict</em>) – Keys/values to be updated. Keys must match an existing XML key.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the object to be updated, if applicable.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update_admin_password">
+<span class="sig-name descname"><span class="pre">update_admin_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update_admin_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update_admin_password" title="Link to this definition"></a></dt>
+<dd><p>Update the admin password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_password</strong> (<em>str</em>) – Current admin password.</p></li>
+<li><p><strong>new_password</strong> (<em>str</em>) – New admin password. Must meet complexity requirements.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update_backup">
+<span class="sig-name descname"><span class="pre">update_backup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backup_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update_backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update_backup" title="Link to this definition"></a></dt>
+<dd><p>Updates scheduled backup settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>backup_params</strong> (<em>dict</em>) – Dict containing backup settings</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>BackupMode</strong> (<em>str</em>) – Backup mode (FTP/Mail/Local)</p></li>
+<li><p><strong>BackupPrefix</strong> (<em>str</em>) – Backup Prefix</p></li>
+<li><p><strong>FTPServer</strong> (<em>str</em><em>, </em><em>optional</em>) – FTP Server IP Address</p></li>
+<li><p><strong>Username</strong> (<em>str</em><em>, </em><em>optional</em>) – FTP Server username</p></li>
+<li><p><strong>Password</strong> (<em>str</em><em>, </em><em>optional</em>) – FTP Server password</p></li>
+<li><p><strong>FtpPath</strong> (<em>str</em><em>, </em><em>optional</em>) – FTP Server path</p></li>
+<li><p><strong>EmailAddress</strong> (<em>str</em>) – Email address</p></li>
+<li><p><strong>BackupFrequency</strong> (<em>str</em>) – Never/Daily/Weekly/Monthly</p></li>
+<li><p><strong>Day</strong> (<em>str</em>) – Day</p></li>
+<li><p><strong>Hour</strong> (<em>str</em>) – Hour</p></li>
+<li><p><strong>Minute</strong> (<em>str</em>) – Minute</p></li>
+<li><p><strong>Date</strong> (<em>str</em>) – Numeric representation of month</p></li>
+<li><p><strong>EncryptionPassword</strong> (<em>str</em><em>, </em><em>optional</em>) – Encryption password</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update_ip_hostgroup">
+<span class="sig-name descname"><span class="pre">update_ip_hostgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'add'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update_ip_hostgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update_ip_hostgroup" title="Link to this definition"></a></dt>
+<dd><p>Add or remove a specified domain to/from a web URL Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – IP Host Group name.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – IP Host Group description.</p></li>
+<li><p><strong>host_list</strong> (<em>str</em>) – List of IP Hosts to be added to or removed from the Host List.</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Options are ‘add’, ‘remove’ or ‘replace’. Specify None to disable updating Host List. Defaults to ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update_service_acl">
+<span class="sig-name descname"><span class="pre">update_service_acl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'add'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update_service_acl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update_service_acl" title="Link to this definition"></a></dt>
+<dd><p>Update Local Service ACL (System &gt; Administration &gt; Device Access &gt; Local service ACL exception)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of network or host groups. Defaults to [].</p></li>
+<li><p><strong>service_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of services. Defaults to [].</p></li>
+<li><p><strong>action</strong> (<em>str</em><em>, </em><em>optional</em>) – Indicate ‘add’ or ‘remove’ from list. Default is ‘add’.</p></li>
+<li><p><strong>verify</strong> (<em>bool</em><em>, </em><em>optional</em>) – SSL Certificate checking. Defaults to True.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update_urlgroup">
+<span class="sig-name descname"><span class="pre">update_urlgroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'add'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update_urlgroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update_urlgroup" title="Link to this definition"></a></dt>
+<dd><p>Add or remove a specified domain to/from a web URL Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – URL Group name.</p></li>
+<li><p><strong>domain_list</strong> (<em>list</em>) – List of domains to added/removed/replaced.</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Options are ‘add’, ‘remove’ or ‘replace’. Defaults to ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewall.update_user_password">
+<span class="sig-name descname"><span class="pre">update_user_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewall.update_user_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewall.update_user_password" title="Link to this definition"></a></dt>
+<dd><p>Update user password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<em>str</em>) – Username</p></li>
+<li><p><strong>new_password</strong> (<em>str</em>) – New password. Must meet complexity requirements.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewallAPIError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallAPIError</span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewallAPIError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewallAPIError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when an API operation fails</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewallAuthFailure">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallAuthFailure</span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewallAuthFailure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewallAuthFailure" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when authentication to firewall fails</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewallIPAddressingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallIPAddressingError</span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewallIPAddressingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewallIPAddressingError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when invalid IP address detected</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewallInvalidArgument">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallInvalidArgument</span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewallInvalidArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewallInvalidArgument" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when an invalid argument is specified</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewallOperatorError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallOperatorError</span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewallOperatorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewallOperatorError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when an invalid operator is specified</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="firewallapi.SophosFirewallZeroRecords">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallapi.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallZeroRecords</span></span><a class="reference internal" href="_modules/firewallapi.html#SophosFirewallZeroRecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallapi.SophosFirewallZeroRecords" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when a get request returns zero records</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="sophosfirewall_python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
