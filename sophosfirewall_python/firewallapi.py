@@ -868,6 +868,25 @@ class SophosFirewall:
         )
         return resp
 
+    def create_urlgroup(
+        self, name: str, domain_list: list, debug: bool = False
+    ):
+        """Create a web URL Group
+
+        Args:
+            name (str): URL Group name.
+            domain_list (list): List of domains to added/removed/replaced.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        params = {"name": name, "domain_list": domain_list}
+        resp = self.submit_template(
+            "createurlgroup.j2", template_vars=params, debug=debug
+        )
+        return resp
+
     def create_user(
         self,
         debug: bool = False,
