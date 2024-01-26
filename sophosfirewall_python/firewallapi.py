@@ -989,6 +989,8 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
+        if not isinstance(domain_list, list):
+            raise SophosFirewallInvalidArgument("The update_urlgroup() argument `domain_list` must be of type list!")
 
         if action:
             self._validate_arg(arg_name="action",
@@ -1020,7 +1022,6 @@ class SophosFirewall:
             elif action.lower() == "replace":
                 new_domain_list.append(domain)
 
-        print(f"new_domain_list: {new_domain_list}")
         params = {"name": name, "domain_list": new_domain_list}
         resp = self.submit_template(
             "updateurlgroup.j2", template_vars=params, debug=debug
