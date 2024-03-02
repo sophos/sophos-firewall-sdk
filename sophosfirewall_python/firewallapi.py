@@ -49,13 +49,14 @@ class SophosFirewallInvalidArgument(Exception):
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
-    def __init__(self, username, password, hostname, port, verify=True):
+    def __init__(self, username, password, hostname, port, verify=True, encrypted_password = False):
         self.username = username
         self.password = password
         self.hostname = hostname
         self.port = port
         self.url = f"https://{hostname}:{port}/webconsole/APIController"
         self.verify = verify
+        self.encrypted_password = encrypted_password
 
     # INTERNAL UTILITY CLASS METHODS
 
@@ -186,7 +187,7 @@ class SophosFirewall:
         <Request>
             <Login>
                 <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
+                <Password passwordform='{"encrypt" if self.encrypted_password else "plaintext"}'>{self.password}</Password>
             </Login>
         </Request>
         """
