@@ -51,6 +51,9 @@ def setup(request):
             else:
                 print(f"{resp['Response'][tag]['Status']['@code']}: {resp['Response'][tag]['Status']['#text']}")
         print("\nTest cleanup...")
+        print("Removing FUNC_TESTHOST1 from LocalServiceACL")
+        resp = fw.update_service_acl(host_list=["FUNC_TESTHOST1"], action="remove")
+        print(f"{resp['Response']['LocalServiceACL']['Status']['@code']}: {resp['Response']['LocalServiceACL']['Status']['#text']}")
         remove(tag="FirewallRule", name="FUNC_TESTRULE1")
         remove(tag="IPHost", name="FUNC_TESTNETWORK2")
         remove(tag="IPHost", name="FUNC_TESTNETWORK1")
@@ -60,9 +63,7 @@ def setup(request):
         remove(tag="Services", name="FUNC_TESTSVC1")
         remove(tag="WebFilterURLGroup", name="FUNC_URLGROUP1")
         remove(tag="User", name="func_testuser1")
-        print("Removing FUNC_TESTHOST1 from LocalServiceACL")
-        resp = fw.update_service_acl(host_list=["FUNC_TESTHOST1"], action="remove")
-        print(f"{resp['Response']['LocalServiceACL']['Status']['@code']}: {resp['Response']['LocalServiceACL']['Status']['#text']}")
+        
 
     request.addfinalizer(cleanup)
 
