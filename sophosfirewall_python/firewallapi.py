@@ -40,10 +40,9 @@ class SophosFirewallZeroRecords(Exception):
 class SophosFirewallOperatorError(Exception):
     """Error raised when an invalid operator is specified"""
 
+
 class SophosFirewallInvalidArgument(Exception):
     """Error raised when an invalid argument is specified"""
-
-
 
 
 class SophosFirewall:
@@ -112,7 +111,7 @@ class SophosFirewall:
             timeout=30,
         )
 
-        resp_dict = xmltodict.parse(resp.content.decode())['Response']
+        resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         if "Status" in resp_dict:
             if resp_dict["Status"]["@code"] == "534":
                 # IP not allowed in API Access List
@@ -130,7 +129,8 @@ class SophosFirewall:
     def _validate_arg(self, arg_name, arg_value, valid_choices):
         if not arg_value in valid_choices:
             raise SophosFirewallInvalidArgument(
-                f"Invalid choice for {arg_name} argument, valid choices are {valid_choices}")
+                f"Invalid choice for {arg_name} argument, valid choices are {valid_choices}"
+            )
 
     def submit_template(
         self,
@@ -226,7 +226,7 @@ class SophosFirewall:
         key: str,
         value: str,
         operator: str = "like",
-        output_format: str = dict
+        output_format: str = dict,
     ):
         """Execute a get for a specified XML tag with filter criteria.
 
@@ -290,7 +290,13 @@ class SophosFirewall:
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
 
-    def update(self, xml_tag: str, update_params: dict, name: str = None, output_format: str = "dict"):
+    def update(
+        self,
+        xml_tag: str,
+        update_params: dict,
+        name: str = None,
+        output_format: str = "dict",
+    ):
         """Update an existing object on the firewall.
 
         Args:
@@ -301,21 +307,19 @@ class SophosFirewall:
         """
         if name:
             resp = self.get_tag_with_filter(
-                xml_tag=xml_tag,
-                key="Name",
-                value=name,
-                operator="=")
-        else:
-            resp = self.get_tag(
-                xml_tag=xml_tag
+                xml_tag=xml_tag, key="Name", value=name, operator="="
             )
+        else:
+            resp = self.get_tag(xml_tag=xml_tag)
 
         for key in update_params:
             resp["Response"][xml_tag][key] = update_params[key]
 
         update_body = {}
-        update_body[xml_tag]=resp["Response"][xml_tag]
-        xml_update_body = xmltodict.unparse(update_body, pretty=True).lstrip('<?xml version="1.0" encoding="utf-8"?>')
+        update_body[xml_tag] = resp["Response"][xml_tag]
+        xml_update_body = xmltodict.unparse(update_body, pretty=True).lstrip(
+            '<?xml version="1.0" encoding="utf-8"?>'
+        )
         payload = f"""
         <Request>
             <Login>
@@ -342,7 +346,7 @@ class SophosFirewall:
         Returns:
             dict: Dictionary with all keys converted to lower case
         """
-        return {key.lower(): val for key,val in target_dict.items()}
+        return {key.lower(): val for key, val in target_dict.items()}
 
     def _error_check(self, api_response, xml_tag):
         """Check for errors in the API response and raise exception if present
@@ -360,11 +364,16 @@ class SophosFirewall:
         if xml_tag.lower() in lower_response:
             resp_dict = lower_response[xml_tag.lower()]
             if "Status" in resp_dict:
-                if resp_dict["Status"] == "Number of records Zero." or resp_dict["Status"] == "No. of records Zero.":
+                if (
+                    resp_dict["Status"] == "Number of records Zero."
+                    or resp_dict["Status"] == "No. of records Zero."
+                ):
                     raise SophosFirewallZeroRecords(resp_dict["Status"])
                 if "@code" in resp_dict["Status"]:
                     if not resp_dict["Status"]["@code"].startswith("2"):
-                        raise SophosFirewallAPIError(f"{resp_dict['Status']['@code']}: {resp_dict['Status']['#text']}")
+                        raise SophosFirewallAPIError(
+                            f"{resp_dict['Status']['@code']}: {resp_dict['Status']['#text']}"
+                        )
         else:
             raise SophosFirewallAPIError(
                 str(xmltodict.parse(api_response.content.decode()))
@@ -382,21 +391,19 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="FirewallRule",
-                key="Name",
-                value=name,
-                operator=operator
+                xml_tag="FirewallRule", key="Name", value=name, operator=operator
             )
         return self.get_tag(xml_tag="FirewallRule")
 
     def get_ip_host(
-        self, name: str = None, ip_address: str = None, operator: str = "="):
+        self, name: str = None, ip_address: str = None, operator: str = "="
+    ):
         """Get IP Host object(s)
 
         Args:
             name (str, optional): IP object name. Returns all objects if not specified.
             ip_address (str, optional): Query by IP Address.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like. 
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
         if name:
             return self.get_tag_with_filter(
@@ -411,8 +418,7 @@ class SophosFirewall:
             )
         return self.get_tag(xml_tag="IPHost")
 
-    def get_interface(
-        self, name: str = None, operator: str = "="):
+    def get_interface(self, name: str = None, operator: str = "="):
         """Get Interface object(s)
 
         Args:
@@ -421,11 +427,11 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="Interface", key="Name", value=name, operator=operator)
+                xml_tag="Interface", key="Name", value=name, operator=operator
+            )
         return self.get_tag(xml_tag="Interface")
 
-    def get_vlan(
-        self, name: str = None, operator: str="="):
+    def get_vlan(self, name: str = None, operator: str = "="):
         """Get VLAN object(s)
 
         Args:
@@ -434,9 +440,9 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="VLAN", key="Name", value=name, operator=operator)
+                xml_tag="VLAN", key="Name", value=name, operator=operator
+            )
         return self.get_tag(xml_tag="VLAN")
-
 
     def get_ip_hostgroup(self, name: str = None, operator: str = "="):
         """Get IP hostgroup(s)
@@ -479,10 +485,7 @@ class SophosFirewall:
         """
         if name:
             return self.get_tag_with_filter(
-                xml_tag="LocalServiceACL",
-                key="Name",
-                value=name,
-                operator=operator
+                xml_tag="LocalServiceACL", key="Name", value=name, operator=operator
             )
         return self.get_tag(xml_tag="LocalServiceACL")
 
@@ -555,9 +558,7 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         if name:
-            return self.get_tag_with_filter(
-                xml_tag="IPSPolicy", key="Name", value=name
-            )
+            return self.get_tag_with_filter(xml_tag="IPSPolicy", key="Name", value=name)
         return self.get_tag(xml_tag="IPSPolicy")
 
     def get_syslog_server(self, name: str = None):
@@ -776,9 +777,7 @@ class SophosFirewall:
         )
         return resp
 
-    def create_ip_host(
-        self, name: str, ip_address: str, debug: bool = False
-    ):
+    def create_ip_host(self, name: str, ip_address: str, debug: bool = False):
         """Create IP address object
 
         Args:
@@ -868,9 +867,7 @@ class SophosFirewall:
         )
         return resp
 
-    def create_urlgroup(
-        self, name: str, domain_list: list, debug: bool = False
-    ):
+    def create_urlgroup(self, name: str, domain_list: list, debug: bool = False):
         """Create a web URL Group
 
         Args:
@@ -887,11 +884,7 @@ class SophosFirewall:
         )
         return resp
 
-    def create_user(
-        self,
-        debug: bool = False,
-        **kwargs
-    ):
+    def create_user(self, debug: bool = False, **kwargs):
         """Create a User
 
         Args:
@@ -916,7 +909,7 @@ class SophosFirewall:
             mac_binding (str, optional): MAC binding Enable/Disable
             login_restriction (str, optional): Login restriction. Default = UserGroupNode.
             isencryptcert (str, optional): Enable/Disable. Default = Disable.
-            simultaneous_logins (str, optional): Enable/Disable simultaneous login. 
+            simultaneous_logins (str, optional): Enable/Disable simultaneous login.
             surfingquota_policy (str, optional): Surfing quota policy. Default = Unlimited.
             applianceaccess_schedule (str, optional): Schedule for appliance access.  Default = All The Time.
             login_restriction (str, optional): Login restriction for appliance. Default = AnyNode.
@@ -925,9 +918,7 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
 
-        resp = self.submit_template(
-            "createuser.j2", template_vars=kwargs, debug=debug
-        )
+        resp = self.submit_template("createuser.j2", template_vars=kwargs, debug=debug)
         return resp
 
     def update_user_password(
@@ -956,7 +947,7 @@ class SophosFirewall:
         return resp
 
     def update_admin_password(
-            self, current_password: str, new_password: str, debug: bool = False
+        self, current_password: str, new_password: str, debug: bool = False
     ):
         """Update the admin password.
 
@@ -990,12 +981,16 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         if not isinstance(domain_list, list):
-            raise SophosFirewallInvalidArgument("The update_urlgroup() argument `domain_list` must be of type list!")
+            raise SophosFirewallInvalidArgument(
+                "The update_urlgroup() argument `domain_list` must be of type list!"
+            )
 
         if action:
-            self._validate_arg(arg_name="action",
-                    arg_value=action,
-                    valid_choices=["add", "remove", "replace"])
+            self._validate_arg(
+                arg_name="action",
+                arg_value=action,
+                valid_choices=["add", "remove", "replace"],
+            )
 
         # Get the existing URL list first, if any
         resp = self.get_urlgroup(name=name)
@@ -1029,7 +1024,12 @@ class SophosFirewall:
         return resp
 
     def update_ip_hostgroup(
-        self, name: str, host_list: list, description: str = None, action: str = "add", debug: bool = False
+        self,
+        name: str,
+        host_list: list,
+        description: str = None,
+        action: str = "add",
+        debug: bool = False,
     ):
         """Add or remove a specified domain to/from a web URL Group
 
@@ -1046,9 +1046,11 @@ class SophosFirewall:
         # Get the existing Host list first, if any
 
         if action:
-            self._validate_arg(arg_name="action",
-                    arg_value=action,
-                    valid_choices=["add", "remove", "replace"])
+            self._validate_arg(
+                arg_name="action",
+                arg_value=action,
+                valid_choices=["add", "remove", "replace"],
+            )
 
         resp = self.get_ip_hostgroup(name=name)
         if "HostList" in resp["Response"]["IPHostGroup"]:
@@ -1084,9 +1086,7 @@ class SophosFirewall:
         )
         return resp
 
-    def update_backup(
-        self, backup_params: dict, debug: bool = False
-    ):
+    def update_backup(self, backup_params: dict, debug: bool = False):
         """Updates scheduled backup settings
 
         Args:
@@ -1102,8 +1102,8 @@ class SophosFirewall:
             FtpPath (str, optional): FTP Server path
             EmailAddress (str): Email address
             BackupFrequency (str): Never/Daily/Weekly/Monthly
-            Day (str): Day 
-            Hour (str): Hour 
+            Day (str): Day
+            Hour (str): Hour
             Minute (str): Minute
             Date (str): Numeric representation of month
             EncryptionPassword (str, optional): Encryption password
@@ -1117,20 +1117,26 @@ class SophosFirewall:
         )
         return resp
 
-    def update_service_acl(self, host_list: list = None, service_list: list = None, action: str = "add", debug: bool = False):
+    def update_service_acl(
+        self,
+        host_list: list = None,
+        service_list: list = None,
+        action: str = "add",
+        debug: bool = False,
+    ):
         """Update Local Service ACL (System > Administration > Device Access > Local service ACL exception)
 
         Args:
             host_list (list, optional): List of network or host groups. Defaults to [].
             service_list (list, optional): List of services. Defaults to [].
-            action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'. 
+            action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'.
             verify (bool, optional): SSL Certificate checking. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
         if action:
-            self._validate_arg(arg_name="action",
-                               arg_value=action,
-                               valid_choices=["add", "remove"])
+            self._validate_arg(
+                arg_name="action", arg_value=action, valid_choices=["add", "remove"]
+            )
         resp = self.get_acl_rule()
 
         exist_hosts = resp["Response"]["LocalServiceACL"]["Hosts"]["Host"]
@@ -1144,17 +1150,14 @@ class SophosFirewall:
         if action == "add":
             template_vars = {
                 "host_list": exist_hosts + host_list,
-                "service_list":  exist_services + service_list
+                "service_list": exist_services + service_list,
             }
         elif action == "remove":
             for host in host_list:
                 exist_hosts.remove(host)
             for service in service_list:
                 exist_services.remove(service)
-            template_vars = {
-                "host_list": exist_hosts,
-                "service_list": exist_services
-            }
+            template_vars = {"host_list": exist_hosts, "service_list": exist_services}
         resp = self.submit_template(
             "updateserviceacl.j2", template_vars=template_vars, debug=debug
         )

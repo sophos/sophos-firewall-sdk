@@ -28,7 +28,8 @@ from sophosfirewall_python.firewallapi import (
 
 API_VERSION = os.environ["API_VERSION"]
 
-@pytest.fixture(scope='session', autouse=True)
+
+@pytest.fixture(scope="session", autouse=True)
 def setup(request):
     """Test setup."""
     fw = SophosFirewall(
@@ -36,12 +37,13 @@ def setup(request):
         password=os.environ["XG_PASSWORD"],
         hostname=os.environ["XG_HOSTNAME"],
         port=4444,
-        verify=False
+        verify=False,
     )
     yield fw
 
     def cleanup():
         """Test completion tasks."""
+
         def remove(tag, name):
             print(f"Removing {tag} {name}")
             try:
@@ -49,11 +51,16 @@ def setup(request):
             except SophosFirewallAPIError as e:
                 print(f"Error {e}")
             else:
-                print(f"{resp['Response'][tag]['Status']['@code']}: {resp['Response'][tag]['Status']['#text']}")
+                print(
+                    f"{resp['Response'][tag]['Status']['@code']}: {resp['Response'][tag]['Status']['#text']}"
+                )
+
         print("\nTest cleanup...")
         print("Removing FUNC_TESTHOST1 from LocalServiceACL")
         resp = fw.update_service_acl(host_list=["FUNC_TESTHOST1"], action="remove")
-        print(f"{resp['Response']['LocalServiceACL']['Status']['@code']}: {resp['Response']['LocalServiceACL']['Status']['#text']}")
+        print(
+            f"{resp['Response']['LocalServiceACL']['Status']['@code']}: {resp['Response']['LocalServiceACL']['Status']['#text']}"
+        )
         remove(tag="FirewallRule", name="FUNC_TESTRULE1")
         remove(tag="IPHost", name="FUNC_TESTNETWORK2")
         remove(tag="IPHost", name="FUNC_TESTNETWORK1")
@@ -63,7 +70,6 @@ def setup(request):
         remove(tag="Services", name="FUNC_TESTSVC1")
         remove(tag="WebFilterURLGroup", name="FUNC_URLGROUP1")
         remove(tag="User", name="func_testuser1")
-        
 
     request.addfinalizer(cleanup)
 
@@ -75,17 +81,12 @@ def test_login(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            }
+            "Login": {"status": "Authentication Successful"},
         }
     }
 
-    assert (
-        setup.login(
-        )
-        == expected_result
-    )
+    assert setup.login() == expected_result
+
 
 def test_create_ip_host(setup):
     """Test create_ip_host method."""
@@ -94,37 +95,27 @@ def test_create_ip_host(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "IPHost": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
     hosts = [
-        {
-            "name": "FUNC_TESTHOST1",
-            "ip": "1.1.1.1"
-        },
-        {
-            "name": "FUNC_TESTHOST2",
-            "ip": "2.2.2.2"
-        }
+        {"name": "FUNC_TESTHOST1", "ip": "1.1.1.1"},
+        {"name": "FUNC_TESTHOST2", "ip": "2.2.2.2"},
     ]
     for host in hosts:
         assert (
-            setup.create_ip_host(
-                name=host["name"],
-                ip_address=host["ip"]
-            )
+            setup.create_ip_host(name=host["name"], ip_address=host["ip"])
             == expected_result
         )
+
 
 def test_create_ip_hostgroup(setup):
     """Test create_ip_hostgroup method."""
@@ -133,16 +124,14 @@ def test_create_ip_hostgroup(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "IPHostGroup": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
@@ -150,10 +139,11 @@ def test_create_ip_hostgroup(setup):
         setup.create_ip_hostgroup(
             name="FUNC_TESTGROUP1",
             description="Test group created during functional test",
-            host_list=["FUNC_TESTHOST1"]
+            host_list=["FUNC_TESTHOST1"],
         )
         == expected_result
     )
+
 
 def test_create_ip_network(setup):
     """Test create_ip_network method."""
@@ -162,16 +152,14 @@ def test_create_ip_network(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "IPHost": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
@@ -180,10 +168,10 @@ def test_create_ip_network(setup):
             name="FUNC_TESTNETWORK1",
             ip_network="1.1.1.0",
             mask="255.255.255.0",
-
         )
         == expected_result
     )
+
 
 def test_create_ip_range(setup):
     """Test create_ip_range method."""
@@ -192,27 +180,24 @@ def test_create_ip_range(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "IPHost": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
     assert (
         setup.create_ip_range(
-            name="FUNC_TESTNETWORK2",
-            start_ip="2.2.2.1",
-            end_ip="2.2.2.10"
+            name="FUNC_TESTNETWORK2", start_ip="2.2.2.1", end_ip="2.2.2.10"
         )
         == expected_result
     )
+
 
 def test_create_service(setup):
     """Test create_service method."""
@@ -221,27 +206,22 @@ def test_create_service(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "Services": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
     assert (
-        setup.create_service(
-            name="FUNC_TESTSVC1",
-            port=1234,
-            protocol="tcp"
-        )
+        setup.create_service(name="FUNC_TESTSVC1", port=1234, protocol="tcp")
         == expected_result
     )
+
 
 def test_create_rule(setup):
     """Test create_rule method."""
@@ -250,16 +230,14 @@ def test_create_rule(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "FirewallRule": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
@@ -273,15 +251,11 @@ def test_create_rule(setup):
         dst_zones=["LAN"],
         src_networks=["FUNC_TESTNETWORK1"],
         dst_networks=["FUNC_TESTNETWORK2"],
-        service_list=["FUNC_TESTSVC1"]
+        service_list=["FUNC_TESTSVC1"],
     )
 
-    assert (
-        setup.create_rule(
-            rule_params=rule_params           
-        )
-        == expected_result
-    )
+    assert setup.create_rule(rule_params=rule_params) == expected_result
+
 
 def test_create_urlgroup(setup):
     """Test create_urlgroup method."""
@@ -290,26 +264,24 @@ def test_create_urlgroup(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "WebFilterURLGroup": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
     assert (
         setup.create_urlgroup(
-            name="FUNC_URLGROUP1",
-            domain_list=["test1.com", "test2.com"]
+            name="FUNC_URLGROUP1", domain_list=["test1.com", "test2.com"]
         )
         == expected_result
     )
+
 
 def test_create_user(setup):
     """Test create_user method."""
@@ -318,16 +290,14 @@ def test_create_user(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "User": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
@@ -345,6 +315,7 @@ def test_create_user(setup):
         == expected_result
     )
 
+
 def test_update_ip_hostgroup(setup):
     """Test update_ip_hostgroup method."""
 
@@ -352,43 +323,39 @@ def test_update_ip_hostgroup(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "IPHostGroup": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
-    get_result = {'Response': {'@APIVersion': '2000.1',
-                    '@IPS_CAT_VER': '1',
-                    'Login': {'status': 'Authentication Successful'},
-                    'IPHostGroup': {'@transactionid': '',
-                    'Name': 'FUNC_TESTGROUP1',
-                    'Description': "Test group created during functional test",
-                    'HostList': {'Host': ['FUNC_TESTHOST1', 'FUNC_TESTHOST2']},
-                    'IPFamily': 'IPv4'
-                    }}}
+    get_result = {
+        "Response": {
+            "@APIVersion": "2000.1",
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "IPHostGroup": {
+                "@transactionid": "",
+                "Name": "FUNC_TESTGROUP1",
+                "Description": "Test group created during functional test",
+                "HostList": {"Host": ["FUNC_TESTHOST1", "FUNC_TESTHOST2"]},
+                "IPFamily": "IPv4",
+            },
+        }
+    }
 
     assert (
-        setup.update_ip_hostgroup(
-            name="FUNC_TESTGROUP1",
-            host_list=["FUNC_TESTHOST2"]
-        )
+        setup.update_ip_hostgroup(name="FUNC_TESTGROUP1", host_list=["FUNC_TESTHOST2"])
         == update_result
     )
 
-    assert (
-        setup.get_ip_hostgroup(
-            name="FUNC_TESTGROUP1"
-        )
-        == get_result
-    )
+    assert setup.get_ip_hostgroup(name="FUNC_TESTGROUP1") == get_result
+
 
 def test_update_urlgroup(setup):
     """Test update_urlgroup method."""
@@ -397,42 +364,39 @@ def test_update_urlgroup(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "WebFilterURLGroup": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
-    get_result = {'Response': {'@APIVersion': '2000.1',
-                    '@IPS_CAT_VER': '1',
-                    'Login': {'status': 'Authentication Successful'},
-                    'WebFilterURLGroup': {'@transactionid': '',
-                    'Name': 'FUNC_URLGROUP1',
-                    'Description': None,
-                    'IsDefault': 'No',
-                    'URLlist': {'URL': ['test1.com', 'test2.com', 'test3.com']}}}}
+    get_result = {
+        "Response": {
+            "@APIVersion": "2000.1",
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "WebFilterURLGroup": {
+                "@transactionid": "",
+                "Name": "FUNC_URLGROUP1",
+                "Description": None,
+                "IsDefault": "No",
+                "URLlist": {"URL": ["test1.com", "test2.com", "test3.com"]},
+            },
+        }
+    }
 
     assert (
-        setup.update_urlgroup(
-            name="FUNC_URLGROUP1",
-            domain_list=["test3.com"]
-        )
+        setup.update_urlgroup(name="FUNC_URLGROUP1", domain_list=["test3.com"])
         == update_result
     )
 
-    assert (
-        setup.get_urlgroup(
-            name="FUNC_URLGROUP1"
-        )
-        == get_result
-    )
+    assert setup.get_urlgroup(name="FUNC_URLGROUP1") == get_result
+
 
 def test_update_service_acl(setup):
     """Test update_service_acl method."""
@@ -441,49 +405,52 @@ def test_update_service_acl(setup):
         "Response": {
             "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
-            "Login": {
-                "status": "Authentication Successful"
-            },
+            "Login": {"status": "Authentication Successful"},
             "LocalServiceACL": {
                 "@transactionid": "",
                 "Status": {
                     "@code": "200",
-                    "#text": "Configuration applied successfully."
-                }
-            }
+                    "#text": "Configuration applied successfully.",
+                },
+            },
         }
     }
 
-    get_result = {'Response': {'@APIVersion': '2000.1',
-                    '@IPS_CAT_VER': '1',
-                    'Login': {'status': 'Authentication Successful'},
-                    'LocalServiceACL': {'@transactionid': '',
-                    'RuleName': 'Appliance Access',
-                    'Description': None,
-                    'Position': 'Top',
-                    'IPFamily': 'IPv4',
-                    'SourceZone': 'Any',
-                    'Hosts': {'Host': ['Sophos Internal ACL',
-                        'Sophos External ACL',
-                        'All EAA Hosts',
-                        'FUNC_TESTHOST1']},
-                    'Services': {'Service': ['Ping',
-                        'HTTPS',
-                        'SSH',
-                        'Ping',
-                        'UserPortal',
-                        'VPNPortal']},
-                    'Action': 'accept'}}}
+    get_result = {
+        "Response": {
+            "@APIVersion": "2000.1",
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "LocalServiceACL": {
+                "@transactionid": "",
+                "RuleName": "Appliance Access",
+                "Description": None,
+                "Position": "Top",
+                "IPFamily": "IPv4",
+                "SourceZone": "Any",
+                "Hosts": {
+                    "Host": [
+                        "Sophos Internal ACL",
+                        "Sophos External ACL",
+                        "All EAA Hosts",
+                        "FUNC_TESTHOST1",
+                    ]
+                },
+                "Services": {
+                    "Service": [
+                        "Ping",
+                        "HTTPS",
+                        "SSH",
+                        "Ping",
+                        "UserPortal",
+                        "VPNPortal",
+                    ]
+                },
+                "Action": "accept",
+            },
+        }
+    }
 
-    assert (
-        setup.update_service_acl(
-            host_list=["FUNC_TESTHOST1"]
-        )
-        == update_result
-    )
+    assert setup.update_service_acl(host_list=["FUNC_TESTHOST1"]) == update_result
 
-    assert (
-        setup.get_acl_rule(
-        )
-        == get_result
-    )
+    assert setup.get_acl_rule() == get_result
