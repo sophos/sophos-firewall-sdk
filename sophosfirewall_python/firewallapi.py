@@ -296,6 +296,7 @@ class SophosFirewall:
         update_params: dict,
         name: str = None,
         output_format: str = "dict",
+        debug: bool = False
     ):
         """Update an existing object on the firewall.
 
@@ -304,6 +305,7 @@ class SophosFirewall:
             update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
             name (str, optional): The name of the object to be updated, if applicable.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+            debug (bool): Displays the XML payload that was submitted 
         """
         if name:
             resp = self.get_tag_with_filter(
@@ -331,6 +333,8 @@ class SophosFirewall:
             </Set>
         </Request>
         """
+        if debug:
+            print(payload)
         resp = self._post(xmldata=payload)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
@@ -1111,9 +1115,16 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-
+        updated_params = {}
+        current_params = self.get_backup()['Response']['BackupRestore']['ScheduleBackup']
+        for param in current_params:
+            if param in backup_params:
+                updated_params[param] = backup_params[param]
+            else:
+                updated_params[param] = current_params[param]
+            
         resp = self.submit_template(
-            "updatebackup.j2", template_vars=backup_params, debug=debug
+            "updatebackup.j2", template_vars=updated_params, debug=debug
         )
         return resp
 
