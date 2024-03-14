@@ -489,13 +489,37 @@ class TestSophosFirewall(unittest.TestCase):
         assert self.fw.create_user(**user_params) == expected_result
 
     @patch.object(SophosFirewall, "_post")
-    def test_update_backup(self, mocked_post):
+    @patch.object(SophosFirewall, "get_backup")
+    def test_update_backup(self, mocked_get_backup, mocked_post):
         """Test update_backup() method"""
+        mock_get = MagicMock()
+        mock_get.__getitem__.return_value = {'Response': {'@APIVersion': '2000.1',
+                '@IPS_CAT_VER': '1',
+                '@TOKEN': '$sfos$3$0$N=8000,r=8,p=1$w0k27Tt1Wv2vDfNp4S9b27Hsn0fu4JFba_srkvYE_6635dbp93vVAJUjJgWFRJMRTDicjYHZM2yL-W-apRZCUao5p-CeQfk3Bm1mB9YzyD_ksThJTMVata5iJK-vsJ3s1TgebibZQauWmJ2soe09tMq5WPBsaImt73yDyIcfIGqkJ27aOpTz7htq-L4rXsLs5s-Ad_f9CNWw7vfAI71TUUTLC8k_yKAozDjZ0T44_78~',
+                'Login': {'status': 'Authentication Successful'},
+                'BackupRestore': {'@transactionid': '',
+                'ScheduleBackup': {'BackupMode': 'FTP',
+                    'BackupPrefix': 'None',
+                    'FtpPath': 'test/backup',
+                    'Username': 'test123',
+                    'FTPServer': '1.1.1.1',
+                    'Password': {'@hashform': 'mode1',
+                    '#text': '$sfos$7$0$_uP4crmO9IvUxbbRdwJ1omfejijPzFh3I0EZq3_yUjsamDMk4VDXL0q8E8n1aiFeNdwemUPZA2WWWABH-PGAIA~~W0sy2lgIkTrO0sJvopvqb-w9sShSQLhq52AixbyPVuE~'},
+                    'EmailAddress': None,
+                    'BackupFrequency': 'Daily',
+                    'Day': None,
+                    'Hour': '10',
+                    'Minute': '00',
+                    'Date': None,
+                    'EncryptionPassword': {'@hashform': 'mode1',
+                    '#text': '$sfos$7$0$uC9DHfNOAliRvH-9BAUlKgwMe73tSLN33vTamdnKafjpX_b5ZjsGzW83OJ3LCIQPiYHf1Q9AIH1Il0UUoS5-hzdVX9gQWxDQ6HTFBqa0_h0~5XNN3_fPiAQT2Ry3ngsK8vi8KDh1MeXaOI4UkFQvIN4~'
+                    }}}}}
+
         mock_response = Mock()
         mock_response.content = (
             """
             <?xml version="1.0" encoding="utf-8"?>
-            <Response APIVersion="1905.1" IPS_CAT_VER="1">
+            <Response APIVersion="2000.1" IPS_CAT_VER="1">
             <Login>
               <status>Authentication Successful</status>
             </Login><BackupRestore transactionid="">
@@ -507,6 +531,7 @@ class TestSophosFirewall(unittest.TestCase):
             .strip()
             .encode()
         )
+        mocked_get_backup.return_value = mocked_get_backup
         mocked_post.return_value = mock_response
 
         backup_params = {
@@ -527,7 +552,7 @@ class TestSophosFirewall(unittest.TestCase):
 
         expected_result = {
             "Response": {
-                "@APIVersion": "1905.1",
+                "@APIVersion": "2000.1",
                 "@IPS_CAT_VER": "1",
                 "Login": {"status": "Authentication Successful"},
                 "BackupRestore": {
@@ -539,6 +564,8 @@ class TestSophosFirewall(unittest.TestCase):
                 },
             }
         }
+
+
 
         assert self.fw.update_backup(backup_params=backup_params) == expected_result
 
