@@ -218,7 +218,7 @@ def test_create_service(setup):
     }
 
     assert (
-        setup.create_service(name="FUNC_TESTSVC1", port=1234, protocol="tcp")
+        setup.create_service(name="FUNC_TESTSVC1", service_list=[{"dst_port": 1234, "protocol": "tcp"}])
         == expected_result
     )
 
