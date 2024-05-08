@@ -1028,6 +1028,75 @@ class SophosFirewall:
         )
         return resp
 
+    def update_service(
+        self, name: str, service_list: list[dict], action: str = "add", debug: bool = False
+    ):
+        """Add or remove a service entry to/from a service
+
+        Args:
+            name (str): Service name.
+            service_list (list[dict]): List of dicts containing port/protocol pairs to be added or removed.
+              src_port(str, optional): Source TCP/UDP port range. Default=1:65535.
+              dst_port(str): Destination TCP/UDP port range.
+              protocol(str): TCP or UDP
+            action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        if not isinstance(service_list, list):
+            raise SophosFirewallInvalidArgument(
+                "The update_service() argument `service_list` must be of type list!"
+            )
+
+        if action:
+            self._validate_arg(
+                arg_name="action",
+                arg_value=action,
+                valid_choices=["add", "remove", "replace"],
+            )
+
+        # Get the existing Service list first
+        resp = self.get_service(name=name)
+        if "ServiceDetail" in resp["Response"]["Services"]["ServiceDetails"]:
+            exist_list = (
+                resp.get("Response").get("Services").get("ServiceDetails").get("ServiceDetail")
+            )
+        else:
+            exist_list = None
+
+        # Add src_port to input if not present
+        for service in service_list:
+            if not "src_port" in service:
+                service["src_port"] = "1:65535"
+        if action == "replace":
+            exist_list = None
+        new_service_list = []
+        if exist_list:
+            if isinstance(exist_list, dict):
+                new_service_list.append({"src_port": exist_list["SourcePort"],
+                                         "dst_port": exist_list["DestinationPort"],
+                                         "protocol": exist_list["Protocol"]})
+            elif isinstance(exist_list, list):
+                for service in exist_list:
+                    new_service_list.append({"src_port": service["SourcePort"],
+                                             "dst_port": service["DestinationPort"],
+                                             "protocol": service["Protocol"]})
+        for service in service_list:
+            if action.lower() == "add" and service not in new_service_list:
+                new_service_list.append(service)
+            elif action.lower() == "remove" and service in new_service_list:
+                new_service_list.remove(service)
+            elif action.lower() == "replace":
+                new_service_list.append(service)
+
+        params = {"name": name, "service_list": new_service_list}
+        resp = self.submit_template(
+            "updateservice.j2", template_vars=params, debug=debug
+        )
+        return resp
+
     def update_ip_hostgroup(
         self,
         name: str,
