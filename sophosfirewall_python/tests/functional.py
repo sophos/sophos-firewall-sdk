@@ -84,6 +84,8 @@ def test_login(setup):
             "Login": {"status": "Authentication Successful"},
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert setup.login() == expected_result
 
@@ -105,6 +107,8 @@ def test_create_ip_host(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     hosts = [
         {"name": "FUNC_TESTHOST1", "ip": "1.1.1.1"},
@@ -134,6 +138,8 @@ def test_create_ip_hostgroup(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.create_ip_hostgroup(
@@ -162,6 +168,8 @@ def test_create_ip_network(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.create_ip_network(
@@ -190,6 +198,8 @@ def test_create_ip_range(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.create_ip_range(
@@ -216,9 +226,11 @@ def test_create_service(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
-        setup.create_service(name="FUNC_TESTSVC1", port=1234, protocol="tcp")
+        setup.create_service(name="FUNC_TESTSVC1", service_list=[{"dst_port": 1234, "protocol": "tcp"}])
         == expected_result
     )
 
@@ -240,6 +252,8 @@ def test_create_rule(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     rule_params = dict(
         rulename="FUNC_TESTRULE1",
@@ -274,6 +288,8 @@ def test_create_urlgroup(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.create_urlgroup(
@@ -300,6 +316,8 @@ def test_create_user(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.create_user(
@@ -333,10 +351,12 @@ def test_update_ip_hostgroup(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        update_result["Response"]["@IS_WIFI6"] = "0"
 
     get_result = {
         "Response": {
-            "@APIVersion": "2000.1",
+            "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
             "Login": {"status": "Authentication Successful"},
             "IPHostGroup": {
@@ -348,6 +368,8 @@ def test_update_ip_hostgroup(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        get_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.update_ip_hostgroup(name="FUNC_TESTGROUP1", host_list=["FUNC_TESTHOST2"])
@@ -374,10 +396,12 @@ def test_update_urlgroup(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        update_result["Response"]["@IS_WIFI6"] = "0"
 
     get_result = {
         "Response": {
-            "@APIVersion": "2000.1",
+            "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
             "Login": {"status": "Authentication Successful"},
             "WebFilterURLGroup": {
@@ -389,6 +413,8 @@ def test_update_urlgroup(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        get_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
         setup.update_urlgroup(name="FUNC_URLGROUP1", domain_list=["test3.com"])
@@ -397,6 +423,60 @@ def test_update_urlgroup(setup):
 
     assert setup.get_urlgroup(name="FUNC_URLGROUP1") == get_result
 
+def test_update_service(setup):
+    """Test update_service method."""
+
+    update_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "Services": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully.",
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        update_result["Response"]["@IS_WIFI6"] = "0"
+
+    get_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "Services": {
+                "@transactionid": "",
+                "Name": "FUNC_TESTSVC1",
+                "Description": None,
+                "Type": "TCPorUDP",
+                "ServiceDetails": {
+                    "ServiceDetail": [{
+                        "SourcePort": "1:65535",
+                        "DestinationPort": "1234",
+                        "Protocol": "TCP"
+                    },
+                    {
+                        "SourcePort": "1:65535",
+                        "DestinationPort": "2222",
+                        "Protocol": "TCP"
+                    }]
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        get_result["Response"]["@IS_WIFI6"] = "0"
+
+    assert (
+        setup.update_service(name="FUNC_TESTSVC1", service_list=[{"dst_port": "2222","protocol": "TCP"}])
+        == update_result
+    )
+
+    assert setup.get_service(name="FUNC_TESTSVC1") == get_result
 
 def test_update_service_acl(setup):
     """Test update_service_acl method."""
@@ -415,10 +495,12 @@ def test_update_service_acl(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        update_result["Response"]["@IS_WIFI6"] = "0"
 
     get_result = {
         "Response": {
-            "@APIVersion": "2000.1",
+            "@APIVersion": API_VERSION,
             "@IPS_CAT_VER": "1",
             "Login": {"status": "Authentication Successful"},
             "LocalServiceACL": {
@@ -430,10 +512,10 @@ def test_update_service_acl(setup):
                 "SourceZone": "Any",
                 "Hosts": {
                     "Host": [
-                        "Sophos Internal ACL",
-                        "Sophos External ACL",
                         "All EAA Hosts",
                         "FUNC_TESTHOST1",
+                        "Sophos Internal ACL",
+                        "Sophos External ACL",
                     ]
                 },
                 "Services": {
@@ -450,6 +532,9 @@ def test_update_service_acl(setup):
             },
         }
     }
+    if float(API_VERSION) >= 2000.2:
+        get_result["Response"]["@IS_WIFI6"] = "0"
+        get_result["Response"]["LocalServiceACL"]["Services"]["Service"].pop(3)  # Removal of extra 'ping' in response
 
     assert setup.update_service_acl(host_list=["FUNC_TESTHOST1"]) == update_result
 
