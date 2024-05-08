@@ -834,8 +834,8 @@ class SophosFirewall:
         """Create a TCP or UDP service
 
         Args:
-        name (str): Service name
-        service_list(list): List of dictionaries containing src_port (str, optional) Default=1:65535, dst_port(str), and protocol(str).
+        name (str): Service name.
+        service_list(list): List of dictionaries containing **src_port**(str, optional) default=1:65535, **dst_port**(str), and **protocol**(str).
         debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -1036,7 +1036,7 @@ class SophosFirewall:
 
         Args:
             name (str): Service name.
-            service_list(list): List of dictionaries containing src_port (str, optional) Default=1:65535, dst_port(str), and protocol(str).
+            service_list(list): List of dictionaries containing **src_port**(str, optional) default=1:65535, **dst_port**(str), and **protocol**(str).
             action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
