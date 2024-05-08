@@ -8,11 +8,13 @@
             <Name>{{ name }}</Name>
             <Type>TCPorUDP</Type>
             <ServiceDetails>
+            {% for service in service_list %}
                 <ServiceDetail>
-                    <SourcePort>1:65535</SourcePort>
-                    <DestinationPort>{{ port }}</DestinationPort>
-                    <Protocol>{{ protocol }}</Protocol>
+                    <SourcePort>{{ service.get(src_port, '1:65535') }}</SourcePort>
+                    <DestinationPort>{{ service.dst_port }}</DestinationPort>
+                    <Protocol>{{ service.protocol }}</Protocol>
                 </ServiceDetail>
+            {% endfor %}
             </ServiceDetails>
         </Services>
     </Set>

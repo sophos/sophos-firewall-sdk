@@ -828,21 +828,22 @@ class SophosFirewall:
     def create_service(
         self,
         name: str,
-        port: str,
-        protocol: str,
+        service_list: list[dict],
         debug: bool = False,
     ):
         """Create a TCP or UDP service
 
         Args:
-            name (str): Service name
-            port (str): TCP/UDP port
+        name (str): Service name
+        service_list(list): List of dictionaries containing the below keys for each port/proto pair
+            src_port (str, optional): Source TCP/UDP port. Default=1:65535.
+            dst_port (str): Destination TCP/UDP port
             protocol (str): TCP or UDP
-            debug (bool, optional): Enable debug mode. Defaults to False.
+        debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {"name": name, "port": port, "protocol": protocol}
+        params = {"name": name, "service_list": service_list}
         resp = self.submit_template(
             "createservice.j2", template_vars=params, debug=debug
         )
