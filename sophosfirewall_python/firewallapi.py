@@ -296,7 +296,7 @@ class SophosFirewall:
         update_params: dict,
         name: str = None,
         output_format: str = "dict",
-        debug: bool = False
+        debug: bool = False,
     ):
         """Update an existing object on the firewall.
 
@@ -305,7 +305,7 @@ class SophosFirewall:
             update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
             name (str, optional): The name of the object to be updated, if applicable.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
-            debug (bool): Displays the XML payload that was submitted 
+            debug (bool): Displays the XML payload that was submitted
         """
         if name:
             resp = self.get_tag_with_filter(
@@ -835,10 +835,7 @@ class SophosFirewall:
 
         Args:
         name (str): Service name
-        service_list(list): List of dictionaries containing the below keys for each port/proto pair
-            src_port (str, optional): Source TCP/UDP port. Default=1:65535.
-            dst_port (str): Destination TCP/UDP port
-            protocol (str): TCP or UDP
+        service_list(list): List of dictionaries containing src_port (str, optional) Default=1:65535, dst_port(str), and protocol(str).
         debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -1029,16 +1026,17 @@ class SophosFirewall:
         return resp
 
     def update_service(
-        self, name: str, service_list: list[dict], action: str = "add", debug: bool = False
+        self,
+        name: str,
+        service_list: list[dict],
+        action: str = "add",
+        debug: bool = False,
     ):
         """Add or remove a service entry to/from a service
 
         Args:
             name (str): Service name.
-            service_list (list[dict]): List of dicts containing port/protocol pairs to be added or removed.
-              src_port(str, optional): Source TCP/UDP port range. Default=1:65535.
-              dst_port(str): Destination TCP/UDP port range.
-              protocol(str): TCP or UDP
+            service_list(list): List of dictionaries containing src_port (str, optional) Default=1:65535, dst_port(str), and protocol(str).
             action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
@@ -1061,7 +1059,10 @@ class SophosFirewall:
         resp = self.get_service(name=name)
         if "ServiceDetail" in resp["Response"]["Services"]["ServiceDetails"]:
             exist_list = (
-                resp.get("Response").get("Services").get("ServiceDetails").get("ServiceDetail")
+                resp.get("Response")
+                .get("Services")
+                .get("ServiceDetails")
+                .get("ServiceDetail")
             )
         else:
             exist_list = None
@@ -1075,14 +1076,22 @@ class SophosFirewall:
         new_service_list = []
         if exist_list:
             if isinstance(exist_list, dict):
-                new_service_list.append({"src_port": exist_list["SourcePort"],
-                                         "dst_port": exist_list["DestinationPort"],
-                                         "protocol": exist_list["Protocol"]})
+                new_service_list.append(
+                    {
+                        "src_port": exist_list["SourcePort"],
+                        "dst_port": exist_list["DestinationPort"],
+                        "protocol": exist_list["Protocol"],
+                    }
+                )
             elif isinstance(exist_list, list):
                 for service in exist_list:
-                    new_service_list.append({"src_port": service["SourcePort"],
-                                             "dst_port": service["DestinationPort"],
-                                             "protocol": service["Protocol"]})
+                    new_service_list.append(
+                        {
+                            "src_port": service["SourcePort"],
+                            "dst_port": service["DestinationPort"],
+                            "protocol": service["Protocol"],
+                        }
+                    )
         for service in service_list:
             if action.lower() == "add" and service not in new_service_list:
                 new_service_list.append(service)
@@ -1186,13 +1195,15 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         updated_params = {}
-        current_params = self.get_backup()['Response']['BackupRestore']['ScheduleBackup']
+        current_params = self.get_backup()["Response"]["BackupRestore"][
+            "ScheduleBackup"
+        ]
         for param in current_params:
             if param in backup_params:
                 updated_params[param] = backup_params[param]
             else:
                 updated_params[param] = current_params[param]
-            
+
         resp = self.submit_template(
             "updatebackup.j2", template_vars=updated_params, debug=debug
         )
