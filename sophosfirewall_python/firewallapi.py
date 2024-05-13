@@ -828,6 +828,7 @@ class SophosFirewall:
     def create_service(
         self,
         name: str,
+        service_type: str,
         service_list: list[dict],
         debug: bool = False,
     ):
@@ -835,12 +836,15 @@ class SophosFirewall:
 
         Args:
             name (str): Service name.
-            service_list(list): List of dictionaries containing src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
+            service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
+            service_list(list): List of dictionaries. 
+                For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
+                For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {"name": name, "service_list": service_list}
+        params = {"name": name, "service_list": service_list, "type": service_type}
         resp = self.submit_template(
             "createservice.j2", template_vars=params, debug=debug
         )
@@ -1028,6 +1032,7 @@ class SophosFirewall:
     def update_service(
         self,
         name: str,
+        service_type: str,
         service_list: list[dict],
         action: str = "add",
         debug: bool = False,
@@ -1036,7 +1041,10 @@ class SophosFirewall:
 
         Args:
             name (str): Service name.
-            service_list(list): List of dictionaries containing src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
+            service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
+            service_list(list): List of dictionaries. 
+                For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
+                For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
 
@@ -1076,22 +1084,64 @@ class SophosFirewall:
         new_service_list = []
         if exist_list:
             if isinstance(exist_list, dict):
-                new_service_list.append(
-                    {
-                        "src_port": exist_list["SourcePort"],
-                        "dst_port": exist_list["DestinationPort"],
-                        "protocol": exist_list["Protocol"],
-                    }
-                )
-            elif isinstance(exist_list, list):
-                for service in exist_list:
+                if service_type == "TCPorUDP":
                     new_service_list.append(
                         {
-                            "src_port": service["SourcePort"],
-                            "dst_port": service["DestinationPort"],
-                            "protocol": service["Protocol"],
+                            "src_port": exist_list["SourcePort"],
+                            "dst_port": exist_list["DestinationPort"],
+                            "protocol": exist_list["Protocol"],
                         }
                     )
+                if service_type == "IP":
+                    new_service_list.append(
+                        {
+                            "protocol": exist_list["ProtocolName"]
+                        }
+                    )
+                if service_type == "ICMP":
+                    new_service_list.append(
+                        {
+                            "icmp_type": exist_list["ICMPType"],
+                            "icmp_code": exist_list["ICMPCode"]
+                        }
+                    )
+                if service_type == "ICMPv6":
+                    new_service_list.append(
+                        {
+                            "icmp_type": exist_list["ICMPv6Type"],
+                            "icmp_code": exist_list["ICMPv6Code"]
+                        }
+                    )
+            elif isinstance(exist_list, list):
+                for service in exist_list:
+                    if service_type == "TCPorUDP":
+                        new_service_list.append(
+                            {
+                                "src_port": service["SourcePort"],
+                                "dst_port": service["DestinationPort"],
+                                "protocol": service["Protocol"],
+                            }
+                        )
+                    if service_type == "IP":
+                        new_service_list.append(
+                            {
+                                "protocol": service["ProtocolName"]
+                            }
+                        )
+                    if service_type == "ICMP":
+                        new_service_list.append(
+                            {
+                                "icmp_type": service["ICMPType"],
+                                "icmp_code": service["ICMPCode"]
+                            }
+                        )
+                    if service_type == "ICMPv6":
+                        new_service_list.append(
+                            {
+                                "icmp_type": service["ICMPv6Type"],
+                                "icmp_code": service["ICMPv6Code"]
+                            }
+                        )
         for service in service_list:
             if action.lower() == "add" and service not in new_service_list:
                 new_service_list.append(service)
@@ -1100,7 +1150,7 @@ class SophosFirewall:
             elif action.lower() == "replace":
                 new_service_list.append(service)
 
-        params = {"name": name, "service_list": new_service_list}
+        params = {"name": name, "service_list": new_service_list, "type": service_type}
         resp = self.submit_template(
             "updateservice.j2", template_vars=params, debug=debug
         )
