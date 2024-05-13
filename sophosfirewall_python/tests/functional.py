@@ -230,7 +230,7 @@ def test_create_service(setup):
         expected_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
-        setup.create_service(name="FUNC_TESTSVC1", service_list=[{"dst_port": 1234, "protocol": "tcp"}])
+        setup.create_service(name="FUNC_TESTSVC1", service_type="TCPorUDP", service_list=[{"dst_port": 1234, "protocol": "tcp"}])
         == expected_result
     )
 
@@ -472,7 +472,7 @@ def test_update_service(setup):
         get_result["Response"]["@IS_WIFI6"] = "0"
 
     assert (
-        setup.update_service(name="FUNC_TESTSVC1", service_list=[{"dst_port": "2222","protocol": "TCP"}])
+        setup.update_service(name="FUNC_TESTSVC1", service_type="TCPorUDP", service_list=[{"dst_port": "2222","protocol": "TCP"}])
         == update_result
     )
 

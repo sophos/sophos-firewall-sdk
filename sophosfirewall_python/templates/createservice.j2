@@ -6,16 +6,35 @@
     <Set operation="add">
         <Services transactionid="">
             <Name>{{ name }}</Name>
-            <Type>TCPorUDP</Type>
+            <Type>{{ type }}</Type>
             <ServiceDetails>
             {% for service in service_list %}
+            {% if type == 'TCPorUDP' %}
                 <ServiceDetail>
                     <SourcePort>{{ service.get(src_port, '1:65535') }}</SourcePort>
                     <DestinationPort>{{ service.dst_port }}</DestinationPort>
                     <Protocol>{{ service.protocol }}</Protocol>
                 </ServiceDetail>
+            {% endif %}
+            {% if type == 'IP' %}
+                <ServiceDetail>
+                    <ProtocolName>{{ service.protocol }}</ProtocolName>
+                </ServiceDetail>
+            {% endif %}
+            {% if type == 'ICMP' %}
+                <ServiceDetail>
+                    <ICMPType>{{ service.icmp_type }}</ICMPType>
+                    <ICMPCode>{{ service.icmp_code }}</ICMPCode>
+                </ServiceDetail>
+            {% endif %}
+            {% if type == 'ICMPv6' %}
+                <ServiceDetail>
+                    <ICMPv6Type>{{ service.icmp_type }}</ICMPType>
+                    <ICMPv6Code>{{ service.icmp_code }}</ICMPCode>
+                </ServiceDetail>
+            {% endif %}
             {% endfor %}
-            </ServiceDetails>
+             </ServiceDetails>
         </Services>
     </Set>
 </Request>
