@@ -453,6 +453,22 @@ class SophosFirewall:
             )
         
         return self.get_tag(xml_tag="FQDNHostGroup")
+    
+    def get_service_group(
+        self, name: str = None, operator: str = "="
+        ):
+        """Get Service Group object(s)
+
+        Args:
+            name (str, optional): Service Group name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        if name:
+            return self.get_tag_with_filter(
+                xml_tag="ServiceGroup", key="Name", value=name, operator=operator
+            )
+        
+        return self.get_tag(xml_tag="ServiceGroup")
 
     def get_interface(self, name: str = None, operator: str = "="):
         """Get Interface object(s)
@@ -787,7 +803,7 @@ class SophosFirewall:
         Args:
             name (str): Name of the object
             ip_network (str): IP network address
-            mask (str): Subnet mask
+            mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0)
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -819,17 +835,17 @@ class SophosFirewall:
         return resp
     
     def create_fqdn_host(self, name: str,
-                         description: str,
                          fqdn: str,
                          fqdn_group_list: list = None,
+                         description: str = None,
                          debug: bool = False):
         """Create FQDN Host object.
 
         Args:
-            name (str): Name of the object.
-            description (str): Description. 
+            name (str): Name of the object. 
             fqdn (str): FQDN string.
             fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
@@ -842,15 +858,15 @@ class SophosFirewall:
         return resp
 
     def create_fqdn_hostgroup(self, name: str,
-                         description: str,
                          fqdn_host_list: list = None,
+                         description: str = None,
                          debug: bool = False):
         """Create FQDN HostGroup object.
 
         Args:
             name (str): Name of the object.
-            description (str): Description. 
             fqdn_host_list (list, optional): List containing FQDN Host(s) to associate the FQDN Host Group.
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
@@ -913,11 +929,32 @@ class SophosFirewall:
         )
         return resp
 
+    def create_service_group(self, name: str,
+                         service_list: list = None,
+                         description: str = None,
+                         debug: bool = False):
+        """Create Service Group object.
+
+        Args:
+            name (str): Name of the object.
+            service_list (list, optional): List containing Service(s) to associate the Services Group.
+            description (str): Description. 
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary.
+        """
+
+        params = {"name": name, "description": description, "service_list": service_list}
+        resp = self.submit_template(
+            "createservicegroup.j2", template_vars=params, debug=debug
+        )
+        return resp
+
     def create_ip_hostgroup(
         self,
         name: str,
-        description: str,
         host_list: list,
+        description: str = None,
         debug: bool = False,
     ):
         """Create an IP Host Group
@@ -1345,6 +1382,68 @@ class SophosFirewall:
         )
         return resp
 
+    def update_service_group(
+        self,
+        name: str,
+        service_list: list,
+        description: str = None,
+        action: str = "add",
+        debug: bool = False,
+    ):
+        """Add or remove a Service from an Service Group.
+
+        Args:
+            name (str): Service Group name.
+            description (str): Service Group description.
+            service_list (str): List of Service(s) to be added to or removed from the Service Group.
+            action (str): Options are 'add', 'remove' or 'replace'. Specify None to disable updating Service Group List. Defaults to 'add'.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        # Get the existing Host list first, if any
+
+        if action:
+            self._validate_arg(
+                arg_name="action",
+                arg_value=action,
+                valid_choices=["add", "remove", "replace"],
+            )
+
+        resp = self.get_service_group(name=name)
+        if "ServiceList" in resp["Response"]["ServiceGroup"]:
+            exist_list = (
+                resp.get("Response").get("ServiceGroup").get("ServiceList").get("Service")
+            )
+        else:
+            exist_list = None
+
+        if action.lower() == "replace":
+            exist_list = None
+
+        new_service_list = []
+        if exist_list:
+            if isinstance(exist_list, str):
+                new_service_list.append(exist_list)
+            elif isinstance(exist_list, list):
+                new_service_list = exist_list
+        for service_name in service_list:
+            if action:
+                if action.lower() == "add" and not service_name in new_service_list:
+                    new_service_list.append(service_name)
+                elif action.lower() == "remove" and service_name in new_service_list:
+                    new_service_list.remove(service_name)
+                elif action.lower() == "replace":
+                    new_service_list.append(service_name)
+        if not description:
+            description = resp.get("Response").get("ServiceGroup").get("Description")
+
+        params = {"name": name, "description": description, "service_list": new_service_list}
+        resp = self.submit_template(
+            "updateservicegroup.j2", template_vars=params, debug=debug
+        )
+        return resp
 
     def update_backup(self, backup_params: dict, debug: bool = False):
         """Updates scheduled backup settings

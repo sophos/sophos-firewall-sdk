@@ -4,15 +4,14 @@
         <Password >{{password}}</Password>
     </Login>
     <Set operation="update"> 
-    <IPHostGroup transactionid="">
+    <ServiceGroup transactionid="">
         <Name>{{ name }}</Name>
         <Description>{{ description if description else '' }}</Description>
-        <HostList>
-            {% for host in host_list %}
-            <Host>{{ host }}</Host>
+        <ServiceList>
+            {% for service in service_list %}
+            <Service>{{ service }}</Service>
             {% endfor %}
-        </HostList>
-        <IPFamily>IPv4</IPFamily>
-    </IPHostGroup>
+        </ServiceList>
+    </ServiceGroup>
    </Set>
 </Request>

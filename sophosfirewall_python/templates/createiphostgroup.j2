@@ -7,7 +7,7 @@
     <IPHostGroup transactionid="">
 		<Name>{{ name }}</Name>
 		<IPFamily>IPv4</IPFamily><!-- default IPv4 -->
-		<Description>{{ description }}</Description>
+		<Description>{{ description if description else '' }}</Description>
 		<HostList>
             {% for name in host_list %}
 			<Host>{{ name }}</Host>

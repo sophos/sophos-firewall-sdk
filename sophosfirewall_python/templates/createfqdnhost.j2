@@ -6,7 +6,7 @@
     <Set operation="add"> 
     <FQDNHost transactionid="">
         <Name>{{ name }}</Name>
-        <Description>{{ description }}</Description>
+        <Description>{{ description if description else '' }}</Description>
         <FQDN>{{ fqdn }}</FQDN>
         {% if fqdn_group_list %}
         <FQDNHostGroupList>
