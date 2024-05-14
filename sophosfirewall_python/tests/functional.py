@@ -70,7 +70,9 @@ def setup(request):
         remove(tag="IPHost", name="FUNC_TESTHOST2")
         remove(tag="FQDNHost", name="FUNC_TESTFQDNHOST1")
         remove(tag="FQDNHost", name="FUNC_TESTFQDNHOST2")
+        remove(tag="ServiceGroup", name="FUNC_TESTSVCGROUP1")
         remove(tag="Services", name="FUNC_TESTSVC1")
+        remove(tag="Services", name="FUNC_TESTSVC2")
         remove(tag="WebFilterURLGroup", name="FUNC_URLGROUP1")
         remove(tag="User", name="func_testuser1")
 
@@ -290,11 +292,55 @@ def test_create_service(setup):
     if float(API_VERSION) >= 2000.2:
         expected_result["Response"]["@IS_WIFI6"] = "0"
 
+    service_list = [
+        {
+            "name": "FUNC_TESTSVC1",
+            "service_type": "TCPorUDP",
+            "service_list": [{"dst_port": 1234, "protocol": "tcp"}]
+        },
+        {
+            "name": "FUNC_TESTSVC2",
+            "service_type": "TCPorUDP",
+            "service_list": [{"dst_port": 5555, "protocol": "tcp"}]
+        }
+    ]
+
+    for service in service_list:
+        assert (
+            setup.create_service(name=service["name"], 
+                                 service_type=service["service_type"], 
+                                 service_list=service["service_list"])
+            == expected_result
+        )
+
+def test_create_service_group(setup):
+    """Test create_servicegroup method."""
+
+    expected_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "ServiceGroup": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully.",
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
+
     assert (
-        setup.create_service(name="FUNC_TESTSVC1", service_type="TCPorUDP", service_list=[{"dst_port": 1234, "protocol": "tcp"}])
+        setup.create_service_group(
+            name="FUNC_TESTSVCGROUP1",
+            description="Test group created during functional test",
+            service_list=["FUNC_TESTSVC1"],
+        )
         == expected_result
     )
-
 
 def test_create_rule(setup):
     """Test create_rule method."""
@@ -482,7 +528,48 @@ def test_update_fqdn_hostgroup(setup):
 
     assert setup.get_fqdn_hostgroup(name="FUNC_TESTFQDNGROUP1") == get_result
 
+def test_update_service_group(setup):
+    """Test update_servicegroup method."""
 
+    update_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "ServiceGroup": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully.",
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        update_result["Response"]["@IS_WIFI6"] = "0"
+
+    get_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "ServiceGroup": {
+                "@transactionid": "",
+                "Name": "FUNC_TESTSVCGROUP1",
+                "Description": "Test group created during functional test",
+                "ServiceList": {"Service": ["FUNC_TESTSVC1", "FUNC_TESTSVC2"]}
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        get_result["Response"]["@IS_WIFI6"] = "0"
+
+    assert (
+        setup.update_service_group(name="FUNC_TESTSVCGROUP1", service_list=["FUNC_TESTSVC2"])
+        == update_result
+    )
+
+    assert setup.get_service_group(name="FUNC_TESTSVCGROUP1") == get_result
 
 def test_update_urlgroup(setup):
     """Test update_urlgroup method."""

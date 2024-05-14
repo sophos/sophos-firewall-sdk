@@ -1,0 +1,17 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="set"> 
+    <ServiceGroup transactionid="">
+        <Name>{{ name }}</Name>
+        <Description>{{ description }}</Description>
+        <ServiceList>
+            {% for service in service_list %}
+            <Service>{{ service }}</Service>
+            {% endfor %}
+        </ServiceList>
+    </ServiceGroup>
+   </Set>
+</Request>
