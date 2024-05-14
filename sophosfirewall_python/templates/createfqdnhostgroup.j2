@@ -1,0 +1,19 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add"> 
+    <FQDNHostGroup transactionid="">
+        <Name>{{ name }}</Name>
+        <Description>{{ description }}</Description>
+        {% if fqdn_host_list %}
+        <FQDNHostList>
+        {% for fqdn_host in fqdn_host_list %}
+            <FQDNHost>{{ fqdn_host }}</FQDNHost>
+        {% endfor %}
+        </FQDNHostList>
+        {% endif %}
+    </FQDNHostGroup>
+   </Set>
+</Request>

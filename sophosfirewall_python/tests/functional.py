@@ -65,8 +65,11 @@ def setup(request):
         remove(tag="IPHost", name="FUNC_TESTNETWORK2")
         remove(tag="IPHost", name="FUNC_TESTNETWORK1")
         remove(tag="IPHostGroup", name="FUNC_TESTGROUP1")
+        remove(tag="FQDNHostGroup", name="FUNC_TESTFQDNGROUP1")
         remove(tag="IPHost", name="FUNC_TESTHOST1")
         remove(tag="IPHost", name="FUNC_TESTHOST2")
+        remove(tag="FQDNHost", name="FUNC_TESTFQDNHOST1")
+        remove(tag="FQDNHost", name="FUNC_TESTFQDNHOST2")
         remove(tag="Services", name="FUNC_TESTSVC1")
         remove(tag="WebFilterURLGroup", name="FUNC_URLGROUP1")
         remove(tag="User", name="func_testuser1")
@@ -150,6 +153,64 @@ def test_create_ip_hostgroup(setup):
         == expected_result
     )
 
+def test_create_fqdn_host(setup):
+    """Test create_fqdn_host method."""
+
+    expected_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "FQDNHost": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully.",
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
+
+    fqdn_hosts = [
+        {"name": "FUNC_TESTFQDNHOST1", "fqdn": "*.test1.com"},
+        {"name": "FUNC_TESTFQDNHOST2", "fqdn": "*.test2.com"},
+    ]
+    for host in fqdn_hosts:
+        assert (
+            setup.create_fqdn_host(name=host["name"], description="Created during automated functional testing", fqdn=host["fqdn"])
+            == expected_result
+        )
+
+def test_create_fqdn_hostgroup(setup):
+    """Test create_fqdn_hostgroup method."""
+
+    expected_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "FQDNHostGroup": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully.",
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        expected_result["Response"]["@IS_WIFI6"] = "0"
+
+    assert (
+        setup.create_fqdn_hostgroup(
+            name="FUNC_TESTFQDNGROUP1",
+            description="Test group created during functional test",
+            fqdn_host_list=["FUNC_TESTFQDNHOST1"],
+        )
+        == expected_result
+    )
 
 def test_create_ip_network(setup):
     """Test create_ip_network method."""
@@ -377,6 +438,50 @@ def test_update_ip_hostgroup(setup):
     )
 
     assert setup.get_ip_hostgroup(name="FUNC_TESTGROUP1") == get_result
+
+def test_update_fqdn_hostgroup(setup):
+    """Test update_fqdn_hostgroup method."""
+
+    update_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "FQDNHostGroup": {
+                "@transactionid": "",
+                "Status": {
+                    "@code": "200",
+                    "#text": "Configuration applied successfully.",
+                },
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        update_result["Response"]["@IS_WIFI6"] = "0"
+
+    get_result = {
+        "Response": {
+            "@APIVersion": API_VERSION,
+            "@IPS_CAT_VER": "1",
+            "Login": {"status": "Authentication Successful"},
+            "FQDNHostGroup": {
+                "@transactionid": "",
+                "Name": "FUNC_TESTFQDNGROUP1",
+                "Description": "Test group created during functional test",
+                "FQDNHostList": {"FQDNHost": ["FUNC_TESTFQDNHOST1", "FUNC_TESTFQDNHOST2"]}
+            },
+        }
+    }
+    if float(API_VERSION) >= 2000.2:
+        get_result["Response"]["@IS_WIFI6"] = "0"
+
+    assert (
+        setup.update_fqdn_hostgroup(name="FUNC_TESTFQDNGROUP1", fqdn_host_list=["FUNC_TESTFQDNHOST2"])
+        == update_result
+    )
+
+    assert setup.get_fqdn_hostgroup(name="FUNC_TESTFQDNGROUP1") == get_result
+
 
 
 def test_update_urlgroup(setup):

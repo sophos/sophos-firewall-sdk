@@ -421,6 +421,38 @@ class SophosFirewall:
                 operator=operator,
             )
         return self.get_tag(xml_tag="IPHost")
+    
+    def get_fqdn_host(
+        self, name: str = None, operator: str = "="
+    ):
+        """Get FQDN Host object(s)
+
+        Args:
+            name (str, optional): FQDN Host name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        if name:
+            return self.get_tag_with_filter(
+                xml_tag="FQDNHost", key="Name", value=name, operator=operator
+            )
+        
+        return self.get_tag(xml_tag="FQDNHost")
+    
+    def get_fqdn_hostgroup(
+        self, name: str = None, operator: str = "="
+    ):
+        """Get FQDN HostGroup object(s)
+
+        Args:
+            name (str, optional): FQDN HostGroup name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        if name:
+            return self.get_tag_with_filter(
+                xml_tag="FQDNHostGroup", key="Name", value=name, operator=operator
+            )
+        
+        return self.get_tag(xml_tag="FQDNHostGroup")
 
     def get_interface(self, name: str = None, operator: str = "="):
         """Get Interface object(s)
@@ -798,6 +830,50 @@ class SophosFirewall:
             "createiphost.j2", template_vars=params, debug=debug
         )
         return resp
+    
+    def create_fqdn_host(self, name: str,
+                         description: str,
+                         fqdn: str,
+                         fqdn_group_list: list = None,
+                         debug: bool = False):
+        """Create FQDN Host object.
+
+        Args:
+            name (str): Name of the object.
+            description (str): Description. 
+            fqdn (str): FQDN string.
+            fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary.
+        """
+
+        params = {"name": name, "description": description, "fqdn": fqdn, "fqdn_group_list": fqdn_group_list}
+        resp = self.submit_template(
+            "createfqdnhost.j2", template_vars=params, debug=debug
+        )
+        return resp
+
+    def create_fqdn_hostgroup(self, name: str,
+                         description: str,
+                         fqdn_host_list: list = None,
+                         debug: bool = False):
+        """Create FQDN HostGroup object.
+
+        Args:
+            name (str): Name of the object.
+            description (str): Description. 
+            fqdn_host_list (list, optional): List containing FQDN Host(s) to associate the FQDN Host Group.
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary.
+        """
+
+        params = {"name": name, "description": description, "fqdn_host_list": fqdn_host_list}
+        resp = self.submit_template(
+            "createfqdnhostgroup.j2", template_vars=params, debug=debug
+        )
+        return resp
 
     def create_ip_range(
         self,
@@ -1164,7 +1240,7 @@ class SophosFirewall:
         action: str = "add",
         debug: bool = False,
     ):
-        """Add or remove a specified domain to/from a web URL Group
+        """Add or remove an IP Host from an IP HostGroup.
 
         Args:
             name (str): IP Host Group name.
@@ -1218,6 +1294,70 @@ class SophosFirewall:
             "updateiphostgroup.j2", template_vars=params, debug=debug
         )
         return resp
+
+    def update_fqdn_hostgroup(
+        self,
+        name: str,
+        fqdn_host_list: list,
+        description: str = None,
+        action: str = "add",
+        debug: bool = False,
+    ):
+        """Add or remove a FQDN Host from an FQDN Host Group.
+
+        Args:
+            name (str): FQDN Host Group name.
+            description (str): FQDN Host Group description.
+            fqdn_host_list (str): List of FQDN Hosts to be added to or removed from the FQDN Host list.
+            action (str): Options are 'add', 'remove' or 'replace'. Specify None to disable updating FQDN Host List. Defaults to 'add'.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        # Get the existing Host list first, if any
+
+        if action:
+            self._validate_arg(
+                arg_name="action",
+                arg_value=action,
+                valid_choices=["add", "remove", "replace"],
+            )
+
+        resp = self.get_fqdn_hostgroup(name=name)
+        if "FQDNHostList" in resp["Response"]["FQDNHostGroup"]:
+            exist_list = (
+                resp.get("Response").get("FQDNHostGroup").get("FQDNHostList").get("FQDNHost")
+            )
+        else:
+            exist_list = None
+
+        if action.lower() == "replace":
+            exist_list = None
+
+        new_host_list = []
+        if exist_list:
+            if isinstance(exist_list, str):
+                new_host_list.append(exist_list)
+            elif isinstance(exist_list, list):
+                new_host_list = exist_list
+        for fqdn_host in fqdn_host_list:
+            if action:
+                if action.lower() == "add" and not fqdn_host in new_host_list:
+                    new_host_list.append(fqdn_host)
+                elif action.lower() == "remove" and fqdn_host in new_host_list:
+                    new_host_list.remove(fqdn_host)
+                elif action.lower() == "replace":
+                    new_host_list.append(fqdn_host)
+        if not description:
+            description = resp.get("Response").get("FQDNHostGroup").get("Description")
+
+        params = {"name": name, "description": description, "fqdn_host_list": new_host_list}
+        resp = self.submit_template(
+            "updatefqdnhostgroup.j2", template_vars=params, debug=debug
+        )
+        return resp
+
 
     def update_backup(self, backup_params: dict, debug: bool = False):
         """Updates scheduled backup settings
