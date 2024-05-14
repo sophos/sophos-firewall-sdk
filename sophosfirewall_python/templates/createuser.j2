@@ -7,7 +7,7 @@
 		<User transactionid = "">
             <Username>{{ user }}</Username>
             <Name>{{ name }}</Name>
-            <Description>{{ description }}</Description>
+            <Description>{{ description if description else '' }}</Description>
             <Password>{{ user_password }}</Password>
             <UserType>{{ user_type }}</UserType>
             {% if user_type == 'Administrator' %}

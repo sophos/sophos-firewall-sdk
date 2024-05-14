@@ -835,17 +835,17 @@ class SophosFirewall:
         return resp
     
     def create_fqdn_host(self, name: str,
-                         description: str,
                          fqdn: str,
                          fqdn_group_list: list = None,
+                         description: str = None,
                          debug: bool = False):
         """Create FQDN Host object.
 
         Args:
-            name (str): Name of the object.
-            description (str): Description. 
+            name (str): Name of the object. 
             fqdn (str): FQDN string.
             fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
@@ -858,15 +858,15 @@ class SophosFirewall:
         return resp
 
     def create_fqdn_hostgroup(self, name: str,
-                         description: str,
                          fqdn_host_list: list = None,
+                         description: str = None,
                          debug: bool = False):
         """Create FQDN HostGroup object.
 
         Args:
             name (str): Name of the object.
-            description (str): Description. 
             fqdn_host_list (list, optional): List containing FQDN Host(s) to associate the FQDN Host Group.
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
@@ -930,15 +930,15 @@ class SophosFirewall:
         return resp
 
     def create_service_group(self, name: str,
-                         description: str,
                          service_list: list = None,
+                         description: str = None,
                          debug: bool = False):
         """Create Service Group object.
 
         Args:
             name (str): Name of the object.
-            description (str): Description. 
             service_list (list, optional): List containing Service(s) to associate the Services Group.
+            description (str): Description. 
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
@@ -953,8 +953,8 @@ class SophosFirewall:
     def create_ip_hostgroup(
         self,
         name: str,
-        description: str,
         host_list: list,
+        description: str = None,
         debug: bool = False,
     ):
         """Create an IP Host Group

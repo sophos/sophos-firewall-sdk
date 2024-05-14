@@ -231,7 +231,7 @@ at the same time if desired.
                     <URL>{{ url }}</URL>
                     {% endfor %}
                 </URLlist>
-                <Description>{{ description }}</Description>
+                <Description>{{ description if description else '' }}</Description>
                 <IsDefault>{{ isdefault }}</IsDefault>
             </WebFilterURLGroup>
         </Set>

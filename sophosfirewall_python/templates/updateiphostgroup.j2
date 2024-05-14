@@ -6,7 +6,7 @@
     <Set operation="update"> 
     <IPHostGroup transactionid="">
         <Name>{{ name }}</Name>
-        <Description>{{ description }}</Description>
+        <Description>{{ description if description else '' }}</Description>
         <HostList>
             {% for host in host_list %}
             <Host>{{ host }}</Host>

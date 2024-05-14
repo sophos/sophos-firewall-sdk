@@ -6,7 +6,7 @@
     <Set operation="add">
        <FirewallRule transactionid="">
         <Name>{{ rulename }}</Name>
-        <Description>{{ description }}</Description>
+        <Description>{{ description if description else '' }}</Description>
         <IPFamily>IPv4</IPFamily>
         <Status>Enable</Status>
         <Position>After</Position>

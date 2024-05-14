@@ -6,7 +6,7 @@
     <Set operation="update"> 
     <ServiceGroup transactionid="">
         <Name>{{ name }}</Name>
-        <Description>{{ description }}</Description>
+        <Description>{{ description if description else '' }}</Description>
         <ServiceList>
             {% for service in service_list %}
             <Service>{{ service }}</Service>
