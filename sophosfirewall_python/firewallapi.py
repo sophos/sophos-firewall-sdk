@@ -787,7 +787,7 @@ class SophosFirewall:
         Args:
             name (str): Name of the object
             ip_network (str): IP network address
-            mask (str): Subnet mask
+            mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0)
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
