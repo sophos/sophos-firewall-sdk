@@ -496,19 +496,6 @@ class SophosFirewall:
             )
         return self.get_tag(xml_tag="IPHostGroup")
 
-    def get_fqdn_host(self, name: str = None, operator: str = "="):
-        """Get FQDN object(s)
-
-        Args:
-            name (str, optional): FQDN object name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="FQDNHost", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="FQDNHost")
-
     def get_acl_rule(self, name: str = None, operator: str = "="):
         """Get ACL rules
 
