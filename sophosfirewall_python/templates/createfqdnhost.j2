@@ -1,0 +1,20 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add"> 
+    <FQDNHost transactionid="">
+        <Name>{{ name }}</Name>
+        <Description>{{ description }}</Description>
+        <FQDN>{{ fqdn }}</FQDN>
+        {% if fqdn_group_list %}
+        <FQDNHostGroupList>
+        {% for fqdn_group in fqdn_group_list %}
+            <FQDNHostGroup>{{ fqdn_group }}</FQDNHostGroup>
+        {% endfor %}
+        </FQDNHostGroupList>
+        {% endif %}
+    </FQDNHost>
+   </Set>
+</Request>
