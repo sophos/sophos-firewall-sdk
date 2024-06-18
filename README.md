@@ -151,4 +151,4 @@ To run the functional tests:
 pytest sophosfirewall_python/tests/functional.py -s -vv
 ```
 
-> The tests will create objects on the firewall prefixed with `FUNC_`. At the end of the test run, these objects will be deleted.
+> The tests will create objects on the firewall prefixed with `FUNC_`. At the end of the test run, these objects will be deleted. 
