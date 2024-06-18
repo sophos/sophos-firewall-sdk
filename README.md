@@ -133,5 +133,22 @@ Below is the code to update a URL Group on the firewall. It first does a get req
         return resp
 ```
 
-#### Tests
+### Testing
+#### Unit Tests
 Pytest test cases are in the `unittests.py` module. The tests are executed by Github Actions on commits to the `develop` and/or `main` branch. It is not required to create new tests for Get methods, but it is recommended for Create or Update methods. Success and failure cases should be covered. The existing tests utilize the methods under test with sample input data and compare against a mocked API response. Please see the `test_create_rule` and `test_failed_create_rule` tests in the `unittests.py` for reference. 
+
+#### Functional Tests
+Functional tests can be run against an actual firewall to ensure SDK functions are working properly. The functional tests are also run with Pytest, and require a few environment variables to connect to the target firewall:
+
+```bash
+export XG_USERNAME="<your firewall username>"
+export XG_PASSWORD="<your firewall password>"
+export XG_HOSTNAME="<your firewall hostname>"
+```
+  
+To run the functional tests:
+```
+pytest sophosfirewall_python/tests/functional.py -s -vv
+```
+
+> The tests will create objects on the firewall prefixed with `FUNC_`. At the end of the test run, these objects will be deleted.
