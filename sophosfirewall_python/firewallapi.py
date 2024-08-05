@@ -10,13 +10,14 @@ permissions and limitations under the License.
 """
 
 import urllib3
+import xmltodict
 from sophosfirewall_python.api_client import APIClient
 from sophosfirewall_python.firewallrule import FirewallRule
 from sophosfirewall_python.host import (
     IPHost,
     IPHostGroup,
-    FQDNHost, 
-    FQDNHostGroup, 
+    FQDNHost,
+    FQDNHostGroup,
     URLGroup,
     IPNetwork,
     IPRange
@@ -67,6 +68,54 @@ class SophosFirewall:
         self.backup = Backup(self.client)
         self.report_retention = Retention(self.client)
         self.url_group = URLGroup(self.client)
+
+    def login(self, output_format: str = "dict"):
+        """Test login credentials.
+
+        Args:
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        payload = f"""
+        <Request>
+            <Login>
+                <Username>{self.client.username}</Username>
+                <Password>{self.client.password}</Password>
+            </Login>
+        </Request>
+        """
+        resp = self.client._post(xmldata=payload)
+        if output_format == "xml":
+            return resp.content.decode()
+        return xmltodict.parse(resp.content.decode())
+
+    def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
+        """Remove an object from the firewall.
+
+        Args:
+            xml_tag (str): The XML tag indicating the type of object to be removed.
+            name (str): The name of the object to be removed.
+            output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        return self.client.remove(xml_tag, name, output_format)
+    
+    def update(
+        self,
+        xml_tag: str,
+        update_params: dict,
+        name: str = None,
+        output_format: str = "dict",
+        debug: bool = False,
+    ):
+        """Update an existing object on the firewall.
+
+        Args:
+            xml_tag (str): The XML tag indicating the type of object to be updated.
+            update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
+            name (str, optional): The name of the object to be updated, if applicable.
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+            debug (bool): Displays the XML payload that was submitted
+        """
+        return self.client.update(xml_tag, update_params, name, output_format, debug)
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
@@ -446,7 +495,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        self.fqdn_hostgroup.create(name, fqdn_host_list, description, debug)
+        return self.fqdn_hostgroup.create(name, fqdn_host_list, description, debug)
         
 
     def create_ip_range(
@@ -487,7 +536,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        self.service.create(name, service_type, service_list, debug)
+        return self.service.create(name, service_type, service_list, debug)
         
 
     def create_service_group(self, name: str,
@@ -523,7 +572,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        self.ip_hostgroup.create(name, host_list, description, debug)
+        return self.ip_hostgroup.create(name, host_list, description, debug)
         
 
     def create_urlgroup(self, name: str, domain_list: list, debug: bool = False):
