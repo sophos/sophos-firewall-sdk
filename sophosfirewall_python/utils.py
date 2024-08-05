@@ -33,11 +33,10 @@ class Utils:
         
     @staticmethod
     def validate_ip_address(ip_address):
-        """Validate IP network and mask
+        """Validate IP address.
 
         Args:
-            ip_subnet (str): IP network address
-            mask (str): Subnet mask
+            ip_address (str): IP address
 
         Raises:
             SophosFirewallIPAddressingError: Custom error class

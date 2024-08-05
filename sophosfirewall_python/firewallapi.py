@@ -148,29 +148,6 @@ class SophosFirewall:
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
         return self.ip_hostgroup.get(name, operator)
-    
-    def get_ip_network(
-        self, name: str = None, ip_address: str = None, operator: str = "="
-    ):
-        """Get IP Network object(s)
-
-        Args:
-            name (str, optional): IP object name. Returns all objects if not specified.
-            ip_address (str, optional): Query by IP Address.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        return self.ip_network.get(name, ip_address, operator)
-    
-    def get_ip_range(
-        self, name: str = None, operator: str = "="
-    ):
-        """Get IP Range object(s)
-
-        Args:
-            name (str, optional): IP object name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        return self.ip_range.get(name, operator)
 
     def get_fqdn_host(
         self, name: str = None, operator: str = "="
@@ -432,6 +409,29 @@ class SophosFirewall:
         """
         return self.firewall_rule.create(rule_params, debug)      
 
+
+    def create_ip_host(self, name: str,
+                       ip_address: str = None,
+                       mask: str = None,
+                       start_ip: str = None,
+                       end_ip: str = None, 
+                       host_type: str = "IP", 
+                       debug: bool = False):
+        """Create IP Host. 
+
+        Args:
+            name (str): Name of the object
+            ip_address (str): Host IP address or network in case of host_type=Network.
+            mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0). Only used with type: Network.
+            start_ip (str): Starting IP address in case of host_type=IPRange.
+            end_ip (str): Ending IP address in case of host_type=IPRange. 
+            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.  
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return self.ip_host.create(name, ip_address, mask, start_ip, end_ip, host_type, debug)
+
     def create_ip_network(
         self,
         name: str,
@@ -451,18 +451,26 @@ class SophosFirewall:
         """
         return self.ip_network.create(name, ip_network, mask, debug)
 
-    def create_ip_host(self, name: str, ip_address: str, debug: bool = False):
-        """Create IP address object
+    def create_ip_range(
+        self,
+        name: str,
+        start_ip: str,
+        end_ip: str,
+        debug: bool = False,
+    ):
+        """Create IP range object
 
         Args:
             name (str): Name of the object
-            ip_address (str): Host IP address
+            start_ip (str): Starting IP address
+            end_ip (str): Ending IP address
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ip_host.create(name, ip_address, debug)
-    
+        return self.ip_range.create(name, start_ip, end_ip, debug)
+
+
     def create_fqdn_host(self, name: str,
                          fqdn: str,
                          fqdn_group_list: list = None,
@@ -497,26 +505,6 @@ class SophosFirewall:
         """
         return self.fqdn_hostgroup.create(name, fqdn_host_list, description, debug)
         
-
-    def create_ip_range(
-        self,
-        name: str,
-        start_ip: str,
-        end_ip: str,
-        debug: bool = False,
-    ):
-        """Create IP range object
-
-        Args:
-            name (str): Name of the object
-            start_ip (str): Starting IP address
-            end_ip (str): Ending IP address
-            debug (bool, optional): Turn on debugging. Defaults to False.
-        Returns:
-            dict: XML response converted to Python dictionary
-        """
-        return self.ip_range.create(name, start_ip, end_ip, debug)
-
     def create_service(
         self,
         name: str,

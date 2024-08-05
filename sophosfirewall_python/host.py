@@ -35,22 +35,38 @@ class IPHost:
             )
         return self.client.get_tag(xml_tag="IPHost")
     
-    def create(self, name, ip_address, debug):
-        """Create IP address object
+    def create(self, name, ip_address, mask, start_ip, end_ip, host_type, debug):
+        """Create IP Host. 
 
         Args:
             name (str): Name of the object
-            ip_address (str): Host IP address
+            ip_address (str): Host IP address or network in case of host_type=Network.
+            mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0). Only used with type: Network.
+            start_ip (str): Starting IP address in case of host_type=IPRange.
+            end_ip (str): Ending IP address in case of host_type=IPRange. 
+            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.  
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        Utils.validate_ip_address(ip_address)
 
-        params = {"name": name, "ip_address": ip_address}
+        if host_type == "IP":
+            Utils.validate_ip_address(ip_address)
+            params = {"name": name, "ip_address": ip_address, "host_type": host_type}
+
+        if host_type == "Network":
+            Utils.validate_ip_network(ip_address, mask)
+            params = {"name": name, "ip_address": ip_address, "mask": mask, "host_type": host_type}
+
+        if host_type == "IPRange":
+            Utils.validate_ip_address(start_ip)
+            Utils.validate_ip_address(end_ip)
+            params = {"name": name, "start_ip": start_ip, "end_ip": end_ip, "host_type": host_type}
+
         resp = self.client.submit_template(
             "createiphost.j2", template_vars=params, debug=debug
         )
+        
         return resp
 
 
@@ -425,32 +441,12 @@ class URLGroup:
         return resp
 
 class IPNetwork:
-    """Class for working with IP Network(s)."""
+    """Class for working with Host of type Network."""
     def __init__(self, api_client):
         self.client = api_client
-    
-    def get(self, name, ip_address, operator):
-        """Get Network(s).
-
-        Args:
-            name (str, optional): Get Network by name. Defaults to None.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-
-        Returns:
-            dict
-        """
-        if name:
-            return self.client.get_tag_with_filter(
-                xml_tag="Network", key="Name", operator=operator, value=name
-            )
-        if ip_address:
-            return self.client.get_tag_with_filter(
-                xml_tag="Network", key="IPAddress", operator=operator, value=ip_address
-            )
-        return self.client.get_tag(xml_tag="Network")
 
     def create(self, name, ip_network, mask, debug):
-        """Create IP network object
+        """Create IP Host of type Network.
 
         Args:
             name (str): Name of the object
@@ -469,28 +465,12 @@ class IPNetwork:
         return resp
 
 class IPRange:
-    """Class for working with IP Network(s)."""
+    """Class for working with Host of type IPRange."""
     def __init__(self, api_client):
         self.client = api_client
     
-    def get(self, name, operator):
-        """Get IP Range(s).
-
-        Args:
-            name (str, optional): Get IP Range by name. Defaults to None.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-
-        Returns:
-            dict
-        """
-        if name:
-            return self.client.get_tag_with_filter(
-                xml_tag="IPRange", key="Name", operator=operator, value=name
-            )
-        return self.client.get_tag(xml_tag="IPRange")
-    
     def create(self, name, start_ip, end_ip, debug):
-        """Create IP range object
+        """Create IP Host of type IPRange.
 
         Args:
             name (str): Name of the object

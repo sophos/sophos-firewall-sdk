@@ -7,8 +7,20 @@
     <IPHost transactionid="">
         <Name>{{ name }}</Name>
         <IPFamily>IPv4</IPFamily>
+        {% if host_type == 'IP'%}
         <HostType>IP</HostType>
         <IPAddress>{{ ip_address }}</IPAddress>
+        {% endif %}
+        {% if host_type == 'Network' %}
+        <HostType>Network</HostType>
+        <IPAddress>{{ ip_address }}</IPAddress>
+        <Subnet>{{ mask }}</Subnet>
+        {% endif %}
+        {% if host_type == 'IPRange' %}
+        <HostType>IPRange</HostType>
+        <StartIPAddress>{{ start_ip }}</StartIPAddress>
+        <EndIPAddress>{{ end_ip }}</EndIPAddress>
+        {% endif %}
     </IPHost>
    </Set>
 </Request>
