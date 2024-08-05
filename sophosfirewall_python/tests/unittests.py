@@ -9,27 +9,31 @@ permissions and limitations under the License.
 """
 import unittest
 from unittest.mock import patch, Mock, MagicMock
-from firewallapi import (
-    SophosFirewall,
+from sophosfirewall_python.firewallapi import SophosFirewall
+from sophosfirewall_python.api_client import (
+    APIClient,
     SophosFirewallZeroRecords,
     SophosFirewallAuthFailure,
     SophosFirewallAPIError,
 )
+from sophosfirewall_python.backup import Backup
+from sophosfirewall_python.admin import AclRule
 
 
-class TestSophosFirewall(unittest.TestCase):
-    """Tests for SophosFirewall module"""
+class TestAPIClient(unittest.TestCase):
+    """Tests for APIClient module"""
 
     def setUp(self):
         """Test setup"""
-        self.fw = SophosFirewall(
+        self.fw = APIClient(
             username="fakeusername",
             password="fakepassword",
             hostname="fakehostname",
             port=4444,
+            verify=False,
         )
 
-    @patch("firewallapi.requests")
+    @patch("sophosfirewall_python.api_client.requests")
     def test_post(self, mocked_requests):
         """Test _post() method"""
         mock_response = Mock()
@@ -94,7 +98,7 @@ class TestSophosFirewall(unittest.TestCase):
 
         assert self.fw._post(xmldata=payload).content == expected_result
 
-    @patch("firewallapi.requests")
+    @patch("sophosfirewall_python.api_client.requests")
     def test_auth_failure(self, mocked_requests):
         """Test _post() method"""
         mock_response = Mock()
@@ -135,7 +139,7 @@ class TestSophosFirewall(unittest.TestCase):
             SophosFirewallAuthFailure, self.fw._post, {"xmldata": payload}
         )
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_get_tag(self, mocked_post):
         """Test get_tag() method"""
         mock_response = Mock()
@@ -192,7 +196,7 @@ class TestSophosFirewall(unittest.TestCase):
         }
         assert self.fw.get_tag("IPHost") == expected_result
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_get_tag_with_filter(self, mocked_post):
         """Test get_tag_with_filter() method"""
         mock_response = Mock()
@@ -239,7 +243,7 @@ class TestSophosFirewall(unittest.TestCase):
             == expected_result
         )
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_no_records(self, mocked_post):
         """Test get_tag_with_filter() method when no records available"""
         mock_response = Mock()
@@ -268,7 +272,7 @@ class TestSophosFirewall(unittest.TestCase):
             SophosFirewallZeroRecords, self.fw.get_tag_with_filter, **kwargs
         )
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_submit_template(self, mocked_post):
         """Test submit_template() method"""
         mock_response = Mock()
@@ -320,7 +324,20 @@ class TestSophosFirewall(unittest.TestCase):
             == expected_result
         )
 
-    @patch.object(SophosFirewall, "_post")
+
+class TestSophosFirewall(unittest.TestCase):
+    """Tests for SophosFirewall module"""
+
+    def setUp(self):
+        """Test setup"""
+        self.fw = SophosFirewall(
+            username="fakeusername",
+            password="fakepassword",
+            hostname="fakehostname",
+            port=4444,
+        )
+
+    @patch.object(APIClient, "_post")
     def test_login(self, mocked_post):
         """Test login() method"""
         mock_response = Mock()
@@ -349,7 +366,7 @@ class TestSophosFirewall(unittest.TestCase):
 
         assert self.fw.login() == expected_result
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_create_rule(self, mocked_post):
         """Test create_rule() method"""
         mock_response = Mock()
@@ -400,7 +417,7 @@ class TestSophosFirewall(unittest.TestCase):
 
         assert self.fw.create_rule(rule_params=rule_params) == expected_result
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_failed_create_rule(self, mocked_post):
         """Test failed creation response"""
         mock_response = Mock()
@@ -439,7 +456,7 @@ class TestSophosFirewall(unittest.TestCase):
             SophosFirewallAPIError, self.fw.create_rule, {"rule_params": rule_params}
         )
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_create_user(self, mocked_post):
         """Test create_user() method"""
         mock_response = Mock()
@@ -488,32 +505,43 @@ class TestSophosFirewall(unittest.TestCase):
 
         assert self.fw.create_user(**user_params) == expected_result
 
-    @patch.object(SophosFirewall, "_post")
-    @patch.object(SophosFirewall, "get_backup")
+    @patch.object(APIClient, "_post")
+    @patch.object(Backup, "get")
     def test_update_backup(self, mocked_get_backup, mocked_post):
         """Test update_backup() method"""
         mock_get = MagicMock()
-        mock_get.__getitem__.return_value = {'Response': {'@APIVersion': '2000.1',
-                '@IPS_CAT_VER': '1',
-                '@TOKEN': '$sfos$3$0$N=8000,r=8,p=1$w0k27Tt1Wv2vDfNp4S9b27Hsn0fu4JFba_srkvYE_6635dbp93vVAJUjJgWFRJMRTDicjYHZM2yL-W-apRZCUao5p-CeQfk3Bm1mB9YzyD_ksThJTMVata5iJK-vsJ3s1TgebibZQauWmJ2soe09tMq5WPBsaImt73yDyIcfIGqkJ27aOpTz7htq-L4rXsLs5s-Ad_f9CNWw7vfAI71TUUTLC8k_yKAozDjZ0T44_78~',
-                'Login': {'status': 'Authentication Successful'},
-                'BackupRestore': {'@transactionid': '',
-                'ScheduleBackup': {'BackupMode': 'FTP',
-                    'BackupPrefix': 'None',
-                    'FtpPath': 'test/backup',
-                    'Username': 'test123',
-                    'FTPServer': '1.1.1.1',
-                    'Password': {'@hashform': 'mode1',
-                    '#text': '$sfos$7$0$_uP4crmO9IvUxbbRdwJ1omfejijPzFh3I0EZq3_yUjsamDMk4VDXL0q8E8n1aiFeNdwemUPZA2WWWABH-PGAIA~~W0sy2lgIkTrO0sJvopvqb-w9sShSQLhq52AixbyPVuE~'},
-                    'EmailAddress': None,
-                    'BackupFrequency': 'Daily',
-                    'Day': None,
-                    'Hour': '10',
-                    'Minute': '00',
-                    'Date': None,
-                    'EncryptionPassword': {'@hashform': 'mode1',
-                    '#text': '$sfos$7$0$uC9DHfNOAliRvH-9BAUlKgwMe73tSLN33vTamdnKafjpX_b5ZjsGzW83OJ3LCIQPiYHf1Q9AIH1Il0UUoS5-hzdVX9gQWxDQ6HTFBqa0_h0~5XNN3_fPiAQT2Ry3ngsK8vi8KDh1MeXaOI4UkFQvIN4~'
-                    }}}}}
+        mock_get.__getitem__.return_value = {
+            "Response": {
+                "@APIVersion": "2000.1",
+                "@IPS_CAT_VER": "1",
+                "@TOKEN": "$sfos$3$0$N=8000,r=8,p=1$w0k27Tt1Wv2vDfNp4S9b27Hsn0fu4JFba_srkvYE_6635dbp93vVAJUjJgWFRJMRTDicjYHZM2yL-W-apRZCUao5p-CeQfk3Bm1mB9YzyD_ksThJTMVata5iJK-vsJ3s1TgebibZQauWmJ2soe09tMq5WPBsaImt73yDyIcfIGqkJ27aOpTz7htq-L4rXsLs5s-Ad_f9CNWw7vfAI71TUUTLC8k_yKAozDjZ0T44_78~",
+                "Login": {"status": "Authentication Successful"},
+                "BackupRestore": {
+                    "@transactionid": "",
+                    "ScheduleBackup": {
+                        "BackupMode": "FTP",
+                        "BackupPrefix": "None",
+                        "FtpPath": "test/backup",
+                        "Username": "test123",
+                        "FTPServer": "1.1.1.1",
+                        "Password": {
+                            "@hashform": "mode1",
+                            "#text": "$sfos$7$0$_uP4crmO9IvUxbbRdwJ1omfejijPzFh3I0EZq3_yUjsamDMk4VDXL0q8E8n1aiFeNdwemUPZA2WWWABH-PGAIA~~W0sy2lgIkTrO0sJvopvqb-w9sShSQLhq52AixbyPVuE~",
+                        },
+                        "EmailAddress": None,
+                        "BackupFrequency": "Daily",
+                        "Day": None,
+                        "Hour": "10",
+                        "Minute": "00",
+                        "Date": None,
+                        "EncryptionPassword": {
+                            "@hashform": "mode1",
+                            "#text": "$sfos$7$0$uC9DHfNOAliRvH-9BAUlKgwMe73tSLN33vTamdnKafjpX_b5ZjsGzW83OJ3LCIQPiYHf1Q9AIH1Il0UUoS5-hzdVX9gQWxDQ6HTFBqa0_h0~5XNN3_fPiAQT2Ry3ngsK8vi8KDh1MeXaOI4UkFQvIN4~",
+                        },
+                    },
+                },
+            }
+        }
 
         mock_response = Mock()
         mock_response.content = (
@@ -565,12 +593,10 @@ class TestSophosFirewall(unittest.TestCase):
             }
         }
 
-
-
         assert self.fw.update_backup(backup_params=backup_params) == expected_result
 
-    @patch.object(SophosFirewall, "_post")
-    @patch.object(SophosFirewall, "get_acl_rule")
+    @patch.object(APIClient, "_post")
+    @patch.object(AclRule, "get")
     def test_update_service_acl(self, mocked_get_acl_rule, mocked_post):
         """Test update_service_acl() method"""
         mock_get = MagicMock()
@@ -646,7 +672,7 @@ class TestSophosFirewall(unittest.TestCase):
             == expected_result
         )
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     @patch.object(SophosFirewall, "get_urlgroup")
     def test_update_urlgroup(self, mocked_get_urlgroup, mocked_post):
         """Test update_urlgroup() method"""
@@ -704,7 +730,7 @@ class TestSophosFirewall(unittest.TestCase):
             == expected_result
         )
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_get_ip_host_all(self, mocked_post):
         """Test get_ip_host() method for all hosts"""
         mock_response = Mock()
@@ -761,7 +787,7 @@ class TestSophosFirewall(unittest.TestCase):
         }
         assert self.fw.get_ip_host() == expected_result
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_get_ip_host_queryparams(self, mocked_post):
         """Test get_tag_ip_host() method with query parameters"""
         mock_response = Mock()
@@ -803,7 +829,7 @@ class TestSophosFirewall(unittest.TestCase):
         }
         assert self.fw.get_ip_host(name="TEST1") == expected_result
 
-    @patch.object(SophosFirewall, "_post")
+    @patch.object(APIClient, "_post")
     def test_remove(self, mocked_post):
         """Test remove() method"""
         mock_response = Mock()
@@ -844,8 +870,8 @@ class TestSophosFirewall(unittest.TestCase):
 
         assert self.fw.remove(xml_tag="IPHost", name="TESTHOST") == expected_result
 
-    @patch.object(SophosFirewall, "_post")
-    @patch.object(SophosFirewall, "get_tag_with_filter")
+    @patch.object(APIClient, "_post")
+    @patch.object(APIClient, "get_tag_with_filter")
     def test_update(self, mocked_get_tag_with_filter, mocked_post):
         """Test update() method"""
         mock_get = MagicMock()

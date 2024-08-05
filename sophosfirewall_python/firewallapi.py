@@ -9,172 +9,42 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 
-import os
-import re
-from ipaddress import IPv4Network, IPv4Address
-import requests
-import xmltodict
 import urllib3
-from jinja2 import Environment, FileSystemLoader
-
+from sophosfirewall_python.api_client import APIClient
+from sophosfirewall_python.firewallrule import FirewallRule
+from sophosfirewall_python.host import (
+    IPHost,
+    IPHostGroup,
+    FQDNHost,
+    FQDNHostGroup,
+    URLGroup,
+    IPNetwork,
+    IPRange,
+)
+from sophosfirewall_python.service import Service, ServiceGroup
+from sophosfirewall_python.network import Interface, Vlan, Zone
+from sophosfirewall_python.admin import AclRule, Notification
+from sophosfirewall_python.authen import User, AdminAuthen
+from sophosfirewall_python.profile import AdminProfile
+from sophosfirewall_python.ips import IPS
+from sophosfirewall_python.system import Syslog, NotificationList
+from sophosfirewall_python.backup import Backup
+from sophosfirewall_python.reports import Retention
 
 urllib3.disable_warnings()
-
-
-class SophosFirewallIPAddressingError(Exception):
-    """Error raised when invalid IP address detected"""
-
-
-class SophosFirewallAuthFailure(Exception):
-    """Error raised when authentication to firewall fails"""
-
-
-class SophosFirewallAPIError(Exception):
-    """Error raised when an API operation fails"""
-
-
-class SophosFirewallZeroRecords(Exception):
-    """Error raised when a get request returns zero records"""
-
-
-class SophosFirewallOperatorError(Exception):
-    """Error raised when an invalid operator is specified"""
-
-
-class SophosFirewallInvalidArgument(Exception):
-    """Error raised when an invalid argument is specified"""
 
 
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
     def __init__(self, username, password, hostname, port, verify=True):
-        self.username = username
-        self.password = password
-        self.hostname = hostname
-        self.port = port
-        self.url = f"https://{hostname}:{port}/webconsole/APIController"
-        self.verify = verify
-
-    # INTERNAL UTILITY CLASS METHODS
-
-    def _validate_ip_network(self, ip_subnet, mask):
-        """Validate IP network and mask
-
-        Args:
-            ip_subnet (str): IP network address
-            mask (str): Subnet mask
-
-        Raises:
-            SophosFirewallIPAddressingError: Custom error class
-        """
-        try:
-            IPv4Network(f"{ip_subnet}/{mask}")
-        except Exception as exc:
-            raise SophosFirewallIPAddressingError(
-                f"Invalid network or mask provided - {ip_subnet}/{mask}"
-            ) from exc
-
-    def _validate_ip_address(self, ip_address):
-        """Validate IP network and mask
-
-        Args:
-            ip_subnet (str): IP network address
-            mask (str): Subnet mask
-
-        Raises:
-            SophosFirewallIPAddressingError: Custom error class
-        """
-        try:
-            IPv4Address(ip_address)
-        except Exception as exc:
-            raise SophosFirewallIPAddressingError(
-                f"Invalid IP address provided - {ip_address}"
-            ) from exc
-
-    def _post(self, xmldata: str) -> requests.Response:
-        """Post XML request to the firewall returning response as a dict object
-
-        Args:
-            xmldata (str): XML payload
-            verify (bool):  SSL certificate verification. Default=True.
-
-        Returns:
-            requests.Response object
-        """
-        headers = {"Accept": "application/xml"}
-        resp = requests.post(
-            self.url,
-            headers=headers,
-            data={"reqxml": xmldata},
-            verify=self.verify,
-            timeout=30,
+        self.client = APIClient(
+            username=username,
+            password=password,
+            hostname=hostname,
+            port=port,
+            verify=verify,
         )
-
-        resp_dict = xmltodict.parse(resp.content.decode())["Response"]
-        if "Status" in resp_dict:
-            if resp_dict["Status"]["@code"] == "534":
-                # IP not allowed in API Access List
-                raise SophosFirewallAPIError(resp_dict["Status"]["#text"])
-
-            if resp_dict["Status"]["@code"] == "532":
-                # API access not enabled
-                raise SophosFirewallAPIError(resp_dict["Status"]["#text"])
-
-        if "Login" in resp_dict:
-            if resp_dict["Login"]["status"] == "Authentication Failure":
-                raise SophosFirewallAuthFailure("Login failed!")
-        return resp
-
-    def _validate_arg(self, arg_name, arg_value, valid_choices):
-        if not arg_value in valid_choices:
-            raise SophosFirewallInvalidArgument(
-                f"Invalid choice for {arg_name} argument, valid choices are {valid_choices}"
-            )
-
-    def submit_template(
-        self,
-        filename: str,
-        template_vars: dict,
-        template_dir: str = None,
-        debug: bool = False,
-    ) -> dict:
-        """Submits XML payload stored as a Jinja2 file
-
-        Args:
-            filename (str): Jinja2 template filename. Place in "templates" directory or configure template_dir.
-            template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.
-            template_dir (str): Directory to look for templates. Default is "./templates".
-            debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.
-
-        Returns:
-            dict
-        """
-        if not template_dir:
-            template_dir = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "templates"
-            )
-        environment = Environment(
-            trim_blocks=True,
-            lstrip_blocks=True,
-            loader=FileSystemLoader(template_dir),
-            autoescape=True,
-        )
-        template = environment.get_template(filename)
-        template_vars["username"] = self.username
-        template_vars["password"] = self.password
-        payload = template.render(**template_vars)
-        if debug:
-            print(f"REQUEST: {payload}")
-        resp = self._post(xmldata=payload)
-
-        resp_dict = xmltodict.parse(resp.content.decode())["Response"]
-        success_pattern = "2[0-9][0-9]"
-        for key in resp_dict:
-            if "Status" in resp_dict[key]:
-                if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
-                    raise SophosFirewallAPIError(resp_dict[key])
-        return xmltodict.parse(resp.content.decode())
 
     def login(self, output_format: str = "dict"):
         """Test login credentials.
@@ -182,86 +52,7 @@ class SophosFirewall:
         Args:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
-        payload = f"""
-        <Request>
-            <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
-            </Login>
-        </Request>
-        """
-        resp = self._post(xmldata=payload)
-        if output_format == "xml":
-            return resp.content.decode()
-        return xmltodict.parse(resp.content.decode())
-
-    def get_tag(self, xml_tag: str, output_format: str = "dict"):
-        """Execute a get for a specified XML tag.
-
-        Args:
-            xml_tag (str): XML tag for the request
-            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
-        """
-        payload = f"""
-        <Request>
-            <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
-            </Login>
-            <Get>
-                <{xml_tag}>
-                </{xml_tag}>
-            </Get>
-        </Request>
-        """
-        resp = self._post(xmldata=payload)
-        self._error_check(resp, xml_tag)
-        if output_format == "xml":
-            return resp.content.decode()
-        return xmltodict.parse(resp.content.decode())
-
-    def get_tag_with_filter(
-        self,
-        xml_tag: str,
-        key: str,
-        value: str,
-        operator: str = "like",
-        output_format: str = dict,
-    ):
-        """Execute a get for a specified XML tag with filter criteria.
-
-        Args:
-            xml_tag (str): XML tag for the request.
-            key (str): Search key
-            value (str): Search value
-            operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to "like".
-            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
-        """
-        valid_operators = ["=", "!=", "like"]
-        if operator not in valid_operators:
-            raise SophosFirewallOperatorError(
-                f"Invalid operator '{operator}'!  Supported operators: [ {', '.join(valid_operators)} ]"
-            )
-        payload = f"""
-        <Request>
-            <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
-            </Login>
-            <Get>
-                <{xml_tag}>
-                    <Filter>
-                        <key name="{key}" criteria="{operator}">{value}</key>
-                    </Filter>
-                </{xml_tag}>
-            </Get>
-        </Request>
-        """
-        resp = self._post(xmldata=payload)
-        self._error_check(resp, xml_tag)
-        if output_format == "xml":
-            return resp.content.decode()
-        return xmltodict.parse(resp.content.decode())
+        return self.client.login(output_format)
 
     def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
         """Remove an object from the firewall.
@@ -271,24 +62,7 @@ class SophosFirewall:
             name (str): The name of the object to be removed.
             output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
-        payload = f"""
-        <Request>
-            <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
-            </Login>
-            <Remove>
-              <{xml_tag}>
-                <Name>{name}</Name>
-              </{xml_tag}>
-            </Remove>
-        </Request>
-        """
-        resp = self._post(xmldata=payload)
-        self._error_check(resp, xml_tag)
-        if output_format == "xml":
-            return resp.content.decode()
-        return xmltodict.parse(resp.content.decode())
+        return self.client.remove(xml_tag, name, output_format)
 
     def update(
         self,
@@ -307,81 +81,7 @@ class SophosFirewall:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
             debug (bool): Displays the XML payload that was submitted
         """
-        if name:
-            resp = self.get_tag_with_filter(
-                xml_tag=xml_tag, key="Name", value=name, operator="="
-            )
-        else:
-            resp = self.get_tag(xml_tag=xml_tag)
-
-        for key in update_params:
-            resp["Response"][xml_tag][key] = update_params[key]
-
-        update_body = {}
-        update_body[xml_tag] = resp["Response"][xml_tag]
-        xml_update_body = xmltodict.unparse(update_body, pretty=True).lstrip(
-            '<?xml version="1.0" encoding="utf-8"?>'
-        )
-        payload = f"""
-        <Request>
-            <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
-            </Login>
-            <Set operation="update"> 
-                {xml_update_body}
-            </Set>
-        </Request>
-        """
-        if debug:
-            print(payload)
-        resp = self._post(xmldata=payload)
-        self._error_check(resp, xml_tag)
-        if output_format == "xml":
-            return resp.content.decode()
-        return xmltodict.parse(resp.content.decode())
-
-    def _dict_to_lower(self, target_dict):
-        """Convert the keys of a dictionary to lower-case
-
-        Args:
-            target_dict (dict): Dictionary to be converted
-
-        Returns:
-            dict: Dictionary with all keys converted to lower case
-        """
-        return {key.lower(): val for key, val in target_dict.items()}
-
-    def _error_check(self, api_response, xml_tag):
-        """Check for errors in the API response and raise exception if present
-
-        Args:
-            api_response (Requests.response): The response object returned from the requests module
-            xml_tag (str): The XML tag being operated on
-
-        Raises:
-            SophosFirewallZeroRecords: Error raised when there are no records matching the request parameters
-            SophosFirewallAPIError: Error raised when there is a problem with the request parameters
-        """
-        response = xmltodict.parse(api_response.content.decode())["Response"]
-        lower_response = self._dict_to_lower(response)
-        if xml_tag.lower() in lower_response:
-            resp_dict = lower_response[xml_tag.lower()]
-            if "Status" in resp_dict:
-                if (
-                    resp_dict["Status"] == "Number of records Zero."
-                    or resp_dict["Status"] == "No. of records Zero."
-                ):
-                    raise SophosFirewallZeroRecords(resp_dict["Status"])
-                if "@code" in resp_dict["Status"]:
-                    if not resp_dict["Status"]["@code"].startswith("2"):
-                        raise SophosFirewallAPIError(
-                            f"{resp_dict['Status']['@code']}: {resp_dict['Status']['#text']}"
-                        )
-        else:
-            raise SophosFirewallAPIError(
-                str(xmltodict.parse(api_response.content.decode()))
-            )
+        return self.client.update(xml_tag, update_params, name, output_format, debug)
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
@@ -391,13 +91,8 @@ class SophosFirewall:
         Args:
             name (str, optional): Firewall Rule name.  Returns all rules if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-            debug(bool, optional): Enable debug mode
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="FirewallRule", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="FirewallRule")
+        return FirewallRule(self.client).get(name=name, operator=operator)
 
     def get_ip_host(
         self, name: str = None, ip_address: str = None, operator: str = "="
@@ -409,92 +104,7 @@ class SophosFirewall:
             ip_address (str, optional): Query by IP Address.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="IPHost", key="Name", value=name, operator=operator
-            )
-        if ip_address:
-            return self.get_tag_with_filter(
-                xml_tag="IPHost",
-                key="IPAddress",
-                value=ip_address,
-                operator=operator,
-            )
-        return self.get_tag(xml_tag="IPHost")
-    
-    def get_fqdn_host(
-        self, name: str = None, operator: str = "="
-    ):
-        """Get FQDN Host object(s)
-
-        Args:
-            name (str, optional): FQDN Host name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="FQDNHost", key="Name", value=name, operator=operator
-            )
-        
-        return self.get_tag(xml_tag="FQDNHost")
-    
-    def get_fqdn_hostgroup(
-        self, name: str = None, operator: str = "="
-    ):
-        """Get FQDN HostGroup object(s)
-
-        Args:
-            name (str, optional): FQDN HostGroup name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="FQDNHostGroup", key="Name", value=name, operator=operator
-            )
-        
-        return self.get_tag(xml_tag="FQDNHostGroup")
-    
-    def get_service_group(
-        self, name: str = None, operator: str = "="
-        ):
-        """Get Service Group object(s)
-
-        Args:
-            name (str, optional): Service Group name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="ServiceGroup", key="Name", value=name, operator=operator
-            )
-        
-        return self.get_tag(xml_tag="ServiceGroup")
-
-    def get_interface(self, name: str = None, operator: str = "="):
-        """Get Interface object(s)
-
-        Args:
-            name (str, optional): Interface name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="Interface", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="Interface")
-
-    def get_vlan(self, name: str = None, operator: str = "="):
-        """Get VLAN object(s)
-
-        Args:
-            name (str, optional): VLAN name. Returns all objects if not specified.
-            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
-        """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="VLAN", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="VLAN")
+        return IPHost(self.client).get(name, ip_address, operator)
 
     def get_ip_hostgroup(self, name: str = None, operator: str = "="):
         """Get IP hostgroup(s)
@@ -503,14 +113,52 @@ class SophosFirewall:
             name (str, optional): Name of IP host group. Returns all if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="IPHostGroup",
-                key="Name",
-                value=name,
-                operator=operator,
-            )
-        return self.get_tag(xml_tag="IPHostGroup")
+        return IPHostGroup(self.client).get(name, operator)
+
+    def get_fqdn_host(self, name: str = None, operator: str = "="):
+        """Get FQDN Host object(s)
+
+        Args:
+            name (str, optional): FQDN Host name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return FQDNHost(self.client).get(name, operator)
+
+    def get_fqdn_hostgroup(self, name: str = None, operator: str = "="):
+        """Get FQDN HostGroup object(s)
+
+        Args:
+            name (str, optional): FQDN HostGroup name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return FQDNHostGroup(self.client).get(name, operator)
+
+    def get_service_group(self, name: str = None, operator: str = "="):
+        """Get Service Group object(s)
+
+        Args:
+            name (str, optional): Service Group name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return ServiceGroup(self.client).get(name, operator)
+
+    def get_interface(self, name: str = None, operator: str = "="):
+        """Get Interface object(s)
+
+        Args:
+            name (str, optional): Interface name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return Interface(self.client).get(name, operator)
+
+    def get_vlan(self, name: str = None, operator: str = "="):
+        """Get VLAN object(s)
+
+        Args:
+            name (str, optional): VLAN name. Returns all objects if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return Vlan(self.client).get(name, operator)
 
     def get_acl_rule(self, name: str = None, operator: str = "="):
         """Get ACL rules
@@ -522,11 +170,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="LocalServiceACL", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="LocalServiceACL")
+        return AclRule(self.client).get(name, operator)
 
     def get_user(self, name: str = None, operator: str = "="):
         """Get local users
@@ -538,11 +182,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="User", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="User")
+        return User(self.client).get(name, operator)
 
     def get_admin_profile(self, name: str = None, operator: str = "="):
         """Get admin profiles
@@ -554,14 +194,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="AdministrationProfile",
-                key="Name",
-                value=name,
-                operator=operator,
-            )
-        return self.get_tag(xml_tag="AdministrationProfile")
+        return AdminProfile(self.client).get(name, operator)
 
     def get_zone(self, name: str = None, operator: str = "="):
         """Get zone(s)
@@ -573,11 +206,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="Zone", key="Name", value=name, operator=operator
-            )
-        return self.get_tag(xml_tag="Zone")
+        return Zone(self.client).get(name, operator)
 
     def get_admin_authen(self):
         """Get admin authentication settings
@@ -585,7 +214,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="AdminAuthentication")
+        return AdminAuthen(self.client).get()
 
     def get_ips_policy(self, name: str = None):
         """Get IPS policy
@@ -596,9 +225,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(xml_tag="IPSPolicy", key="Name", value=name)
-        return self.get_tag(xml_tag="IPSPolicy")
+        return IPS(self.client).get(name)
 
     def get_syslog_server(self, name: str = None):
         """Get syslog server.
@@ -609,11 +236,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="SyslogServers", key="Name", value=name
-            )
-        return self.get_tag(xml_tag="SyslogServers")
+        return Syslog(self.client).get(name)
 
     def get_notification(self, name: str = None):
         """Get notification.
@@ -624,11 +247,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="Notification", key="Name", value=name
-            )
-        return self.get_tag(xml_tag="Notification")
+        return Notification(self.client).get(name)
 
     def get_notification_list(self, name: str = None):
         """Get notification list.
@@ -639,11 +258,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="NotificationList", key="Name", value=name
-            )
-        return self.get_tag(xml_tag="NotificationList")
+        return NotificationList(self.client).get(name)
 
     def get_backup(self, name: str = None):
         """Get backup details.
@@ -654,11 +269,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="BackupRestore", key="Name", value=name
-            )
-        return self.get_tag(xml_tag="BackupRestore")
+        return Backup(self.client).get(name)
 
     def get_reports_retention(self, name: str = None):
         """Get Reports retention period.
@@ -669,11 +280,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="DataManagement", key="Name", value=name
-            )
-        return self.get_tag(xml_tag="DataManagement")
+        return Retention(self.client).get(name)
 
     def get_admin_settings(self):
         """Get Web Admin Settings (Administration > Settings)
@@ -681,7 +288,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="AdminSettings")
+        return self.client.get_tag(xml_tag="AdminSettings")
 
     def get_dns_forwarders(self):
         """Get DNS forwarders.
@@ -689,7 +296,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="DNS")
+        return self.client.get_tag(xml_tag="DNS")
 
     def get_snmpv3_user(self):
         """Get SNMP v3 Users
@@ -697,7 +304,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.get_tag(xml_tag="SNMPv3User")
+        return self.client.get_tag(xml_tag="SNMPv3User")
 
     def get_urlgroup(self, name: str = None, operator: str = "="):
         """Get URLGroup(s)
@@ -709,11 +316,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="WebFilterURLGroup", key="Name", operator=operator, value=name
-            )
-        return self.get_tag(xml_tag="WebFilterURLGroup")
+        return URLGroup(self.client).get(name, operator)
 
     def get_service(
         self,
@@ -733,36 +336,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if name:
-            return self.get_tag_with_filter(
-                xml_tag="Services", key="Name", value=name, operator=operator
-            )
-        if dst_proto and dst_port:
-            resp = self.get_tag(xml_tag="Services")
-            svc_list = resp["Response"]["Services"].copy()
-            for svc in svc_list:
-                matched = False
-                if isinstance(svc["ServiceDetails"]["ServiceDetail"], dict):
-                    port = svc["ServiceDetails"]["ServiceDetail"].get("DestinationPort")
-                    if "Protocol" in svc["ServiceDetails"]["ServiceDetail"]:
-                        proto = svc["ServiceDetails"]["ServiceDetail"]["Protocol"]
-                    if "ProtocolName" in svc["ServiceDetails"]["ServiceDetail"]:
-                        proto = svc["ServiceDetails"]["ServiceDetail"]["ProtocolName"]
-                    if proto == dst_proto.upper() and port == dst_port:
-                        matched = True
-                elif isinstance(svc["ServiceDetails"]["ServiceDetail"], list):
-                    for subsvc in svc["ServiceDetails"]["ServiceDetail"]:
-                        port = subsvc.get("DestinationPort")
-                        if "Protocol" in subsvc:
-                            proto = subsvc["Protocol"]
-                        if "ProtocolName" in subsvc:
-                            proto = subsvc["ProtocolName"]
-                        if proto == dst_proto.upper() and port == dst_port:
-                            matched = True
-                if not matched:
-                    resp["Response"]["Services"].remove(svc)
-            return resp
-        return self.get_tag(xml_tag="Services")
+        return Service(self.client).get(name, operator, dst_proto, dst_port)
 
     # METHODS FOR OBJECT CREATION
 
@@ -786,10 +360,34 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        resp = self.submit_template(
-            "createfwrule.j2", template_vars=rule_params, debug=debug
+        return FirewallRule(self.client).create(rule_params, debug)
+
+    def create_ip_host(
+        self,
+        name: str,
+        ip_address: str = None,
+        mask: str = None,
+        start_ip: str = None,
+        end_ip: str = None,
+        host_type: str = "IP",
+        debug: bool = False,
+    ):
+        """Create IP Host.
+
+        Args:
+            name (str): Name of the object
+            ip_address (str): Host IP address or network in case of host_type=Network.
+            mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0). Only used with type: Network.
+            start_ip (str): Starting IP address in case of host_type=IPRange.
+            end_ip (str): Ending IP address in case of host_type=IPRange.
+            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return IPHost(self.client).create(
+            name, ip_address, mask, start_ip, end_ip, host_type, debug
         )
-        return resp
 
     def create_ip_network(
         self,
@@ -808,75 +406,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        self._validate_ip_network(ip_network, mask)
-
-        params = {"name": name, "ip_network": ip_network, "mask": mask}
-        resp = self.submit_template(
-            "createipnetwork.j2", template_vars=params, debug=debug
-        )
-        return resp
-
-    def create_ip_host(self, name: str, ip_address: str, debug: bool = False):
-        """Create IP address object
-
-        Args:
-            name (str): Name of the object
-            ip_address (str): Host IP address
-            debug (bool, optional): Turn on debugging. Defaults to False.
-        Returns:
-            dict: XML response converted to Python dictionary
-        """
-        self._validate_ip_address(ip_address)
-
-        params = {"name": name, "ip_address": ip_address}
-        resp = self.submit_template(
-            "createiphost.j2", template_vars=params, debug=debug
-        )
-        return resp
-    
-    def create_fqdn_host(self, name: str,
-                         fqdn: str,
-                         fqdn_group_list: list = None,
-                         description: str = None,
-                         debug: bool = False):
-        """Create FQDN Host object.
-
-        Args:
-            name (str): Name of the object. 
-            fqdn (str): FQDN string.
-            fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
-            description (str): Description.
-            debug (bool, optional): Turn on debugging. Defaults to False.
-        Returns:
-            dict: XML response converted to Python dictionary.
-        """
-
-        params = {"name": name, "description": description, "fqdn": fqdn, "fqdn_group_list": fqdn_group_list}
-        resp = self.submit_template(
-            "createfqdnhost.j2", template_vars=params, debug=debug
-        )
-        return resp
-
-    def create_fqdn_hostgroup(self, name: str,
-                         fqdn_host_list: list = None,
-                         description: str = None,
-                         debug: bool = False):
-        """Create FQDN HostGroup object.
-
-        Args:
-            name (str): Name of the object.
-            fqdn_host_list (list, optional): List containing FQDN Host(s) to associate the FQDN Host Group.
-            description (str): Description.
-            debug (bool, optional): Turn on debugging. Defaults to False.
-        Returns:
-            dict: XML response converted to Python dictionary.
-        """
-
-        params = {"name": name, "description": description, "fqdn_host_list": fqdn_host_list}
-        resp = self.submit_template(
-            "createfqdnhostgroup.j2", template_vars=params, debug=debug
-        )
-        return resp
+        return IPNetwork(self.client).create(name, ip_network, mask, debug)
 
     def create_ip_range(
         self,
@@ -895,14 +425,51 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        self._validate_ip_address(start_ip)
-        self._validate_ip_address(end_ip)
+        return IPRange(self.client).create(name, start_ip, end_ip, debug)
 
-        params = {"name": name, "start_ip": start_ip, "end_ip": end_ip}
-        resp = self.submit_template(
-            "createiprange.j2", template_vars=params, debug=debug
+    def create_fqdn_host(
+        self,
+        name: str,
+        fqdn: str,
+        fqdn_group_list: list = None,
+        description: str = None,
+        debug: bool = False,
+    ):
+        """Create FQDN Host object.
+
+        Args:
+            name (str): Name of the object.
+            fqdn (str): FQDN string.
+            fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
+            description (str): Description.
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary.
+        """
+        return FQDNHost(self.client).create(
+            name, fqdn, fqdn_group_list, description, debug
         )
-        return resp
+
+    def create_fqdn_hostgroup(
+        self,
+        name: str,
+        fqdn_host_list: list = None,
+        description: str = None,
+        debug: bool = False,
+    ):
+        """Create FQDN HostGroup object.
+
+        Args:
+            name (str): Name of the object.
+            fqdn_host_list (list, optional): List containing FQDN Host(s) to associate the FQDN Host Group.
+            description (str): Description.
+            debug (bool, optional): Turn on debugging. Defaults to False.
+        Returns:
+            dict: XML response converted to Python dictionary.
+        """
+        return FQDNHostGroup(self.client).create(
+            name, fqdn_host_list, description, debug
+        )
 
     def create_service(
         self,
@@ -916,39 +483,33 @@ class SophosFirewall:
         Args:
             name (str): Service name.
             service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
-            service_list(list): List of dictionaries. 
+            service_list(list): List of dictionaries.
                 For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
                 For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {"name": name, "service_list": service_list, "type": service_type}
-        resp = self.submit_template(
-            "createservice.j2", template_vars=params, debug=debug
-        )
-        return resp
+        return Service(self.client).create(name, service_type, service_list, debug)
 
-    def create_service_group(self, name: str,
-                         service_list: list = None,
-                         description: str = None,
-                         debug: bool = False):
+    def create_service_group(
+        self,
+        name: str,
+        service_list: list = None,
+        description: str = None,
+        debug: bool = False,
+    ):
         """Create Service Group object.
 
         Args:
             name (str): Name of the object.
             service_list (list, optional): List containing Service(s) to associate the Services Group.
-            description (str): Description. 
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
         """
-
-        params = {"name": name, "description": description, "service_list": service_list}
-        resp = self.submit_template(
-            "createservicegroup.j2", template_vars=params, debug=debug
-        )
-        return resp
+        return ServiceGroup(self.client).create(name, service_list, description, debug)
 
     def create_ip_hostgroup(
         self,
@@ -967,11 +528,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {"name": name, "description": description, "host_list": host_list}
-        resp = self.submit_template(
-            "createiphostgroup.j2", template_vars=params, debug=debug
-        )
-        return resp
+        return IPHostGroup(self.client).create(name, host_list, description, debug)
 
     def create_urlgroup(self, name: str, domain_list: list, debug: bool = False):
         """Create a web URL Group
@@ -984,11 +541,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {"name": name, "domain_list": domain_list}
-        resp = self.submit_template(
-            "createurlgroup.j2", template_vars=params, debug=debug
-        )
-        return resp
+        return URLGroup(self.client).create(name, domain_list, debug)
 
     def create_user(self, debug: bool = False, **kwargs):
         """Create a User
@@ -1023,9 +576,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-
-        resp = self.submit_template("createuser.j2", template_vars=kwargs, debug=debug)
-        return resp
+        return User(self.client).create(debug, **kwargs)
 
     def update_user_password(
         self, username: str, new_password: str, debug: bool = False
@@ -1040,17 +591,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        # Get the existing user
-        resp = self.get_user(name=username)
-        user_params = resp["Response"]["User"]
-        user_params["Password"] = new_password
-        user_params.pop("PasswordHash")
-
-        # Update the user
-        resp = self.submit_template(
-            "updateuserpassword.j2", template_vars=user_params, debug=debug
-        )
-        return resp
+        return User(self.client).update_user_password(username, new_password, debug)
 
     def update_admin_password(
         self, current_password: str, new_password: str, debug: bool = False
@@ -1065,12 +606,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        params = {"current_password": current_password, "new_password": new_password}
-
-        resp = self.submit_template(
-            "updateadminpassword.j2", template_vars=params, debug=debug
+        return User(self.client).update_admin_password(
+            current_password, new_password, debug
         )
-        return resp
 
     def update_urlgroup(
         self, name: str, domain_list: list, action: str = "add", debug: bool = False
@@ -1086,48 +624,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if not isinstance(domain_list, list):
-            raise SophosFirewallInvalidArgument(
-                "The update_urlgroup() argument `domain_list` must be of type list!"
-            )
-
-        if action:
-            self._validate_arg(
-                arg_name="action",
-                arg_value=action,
-                valid_choices=["add", "remove", "replace"],
-            )
-
-        # Get the existing URL list first, if any
-        resp = self.get_urlgroup(name=name)
-        if "URLlist" in resp["Response"]["WebFilterURLGroup"]:
-            exist_list = (
-                resp.get("Response").get("WebFilterURLGroup").get("URLlist").get("URL")
-            )
-        else:
-            exist_list = None
-        if action == "replace":
-            exist_list = None
-        new_domain_list = []
-        if exist_list:
-            if isinstance(exist_list, str):
-                new_domain_list.append(exist_list)
-            elif isinstance(exist_list, list):
-                for domain in exist_list:
-                    new_domain_list.append(domain)
-        for domain in domain_list:
-            if action.lower() == "add" and domain not in new_domain_list:
-                new_domain_list.append(domain)
-            elif action.lower() == "remove" and domain in new_domain_list:
-                new_domain_list.remove(domain)
-            elif action.lower() == "replace":
-                new_domain_list.append(domain)
-
-        params = {"name": name, "domain_list": new_domain_list}
-        resp = self.submit_template(
-            "updateurlgroup.j2", template_vars=params, debug=debug
-        )
-        return resp
+        return URLGroup(self.client).update(name, domain_list, action, debug)
 
     def update_service(
         self,
@@ -1142,7 +639,7 @@ class SophosFirewall:
         Args:
             name (str): Service name.
             service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
-            service_list(list): List of dictionaries. 
+            service_list(list): List of dictionaries.
                 For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
                 For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
@@ -1151,110 +648,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        if not isinstance(service_list, list):
-            raise SophosFirewallInvalidArgument(
-                "The update_service() argument `service_list` must be of type list!"
-            )
-
-        if action:
-            self._validate_arg(
-                arg_name="action",
-                arg_value=action,
-                valid_choices=["add", "remove", "replace"],
-            )
-
-        # Get the existing Service list first
-        resp = self.get_service(name=name)
-        if "ServiceDetail" in resp["Response"]["Services"]["ServiceDetails"]:
-            exist_list = (
-                resp.get("Response")
-                .get("Services")
-                .get("ServiceDetails")
-                .get("ServiceDetail")
-            )
-        else:
-            exist_list = None
-
-        # Add src_port to input if not present
-        for service in service_list:
-            if not "src_port" in service:
-                service["src_port"] = "1:65535"
-        if action == "replace":
-            exist_list = None
-        new_service_list = []
-        if exist_list:
-            if isinstance(exist_list, dict):
-                if service_type == "TCPorUDP":
-                    new_service_list.append(
-                        {
-                            "src_port": exist_list["SourcePort"],
-                            "dst_port": exist_list["DestinationPort"],
-                            "protocol": exist_list["Protocol"],
-                        }
-                    )
-                if service_type == "IP":
-                    new_service_list.append(
-                        {
-                            "protocol": exist_list["ProtocolName"]
-                        }
-                    )
-                if service_type == "ICMP":
-                    new_service_list.append(
-                        {
-                            "icmp_type": exist_list["ICMPType"],
-                            "icmp_code": exist_list["ICMPCode"]
-                        }
-                    )
-                if service_type == "ICMPv6":
-                    new_service_list.append(
-                        {
-                            "icmp_type": exist_list["ICMPv6Type"],
-                            "icmp_code": exist_list["ICMPv6Code"]
-                        }
-                    )
-            elif isinstance(exist_list, list):
-                for service in exist_list:
-                    if service_type == "TCPorUDP":
-                        new_service_list.append(
-                            {
-                                "src_port": service["SourcePort"],
-                                "dst_port": service["DestinationPort"],
-                                "protocol": service["Protocol"],
-                            }
-                        )
-                    if service_type == "IP":
-                        new_service_list.append(
-                            {
-                                "protocol": service["ProtocolName"]
-                            }
-                        )
-                    if service_type == "ICMP":
-                        new_service_list.append(
-                            {
-                                "icmp_type": service["ICMPType"],
-                                "icmp_code": service["ICMPCode"]
-                            }
-                        )
-                    if service_type == "ICMPv6":
-                        new_service_list.append(
-                            {
-                                "icmp_type": service["ICMPv6Type"],
-                                "icmp_code": service["ICMPv6Code"]
-                            }
-                        )
-        for service in service_list:
-            if action.lower() == "add" and service not in new_service_list:
-                new_service_list.append(service)
-            elif action.lower() == "remove" and service in new_service_list:
-                new_service_list.remove(service)
-            elif action.lower() == "replace":
-                new_service_list.append(service)
-
-        params = {"name": name, "service_list": new_service_list, "type": service_type}
-        resp = self.submit_template(
-            "updateservice.j2", template_vars=params, debug=debug
+        return Service(self.client).update(
+            name, service_type, service_list, action, debug
         )
-        return resp
 
     def update_ip_hostgroup(
         self,
@@ -1276,48 +672,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        # Get the existing Host list first, if any
-
-        if action:
-            self._validate_arg(
-                arg_name="action",
-                arg_value=action,
-                valid_choices=["add", "remove", "replace"],
-            )
-
-        resp = self.get_ip_hostgroup(name=name)
-        if "HostList" in resp["Response"]["IPHostGroup"]:
-            exist_list = (
-                resp.get("Response").get("IPHostGroup").get("HostList").get("Host")
-            )
-        else:
-            exist_list = None
-
-        if action.lower() == "replace":
-            exist_list = None
-
-        new_host_list = []
-        if exist_list:
-            if isinstance(exist_list, str):
-                new_host_list.append(exist_list)
-            elif isinstance(exist_list, list):
-                new_host_list = exist_list
-        for ip_host in host_list:
-            if action:
-                if action.lower() == "add" and not ip_host in new_host_list:
-                    new_host_list.append(ip_host)
-                elif action.lower() == "remove" and ip_host in new_host_list:
-                    new_host_list.remove(ip_host)
-                elif action.lower() == "replace":
-                    new_host_list.append(ip_host)
-        if not description:
-            description = resp.get("Response").get("IPHostGroup").get("Description")
-
-        params = {"name": name, "description": description, "host_list": new_host_list}
-        resp = self.submit_template(
-            "updateiphostgroup.j2", template_vars=params, debug=debug
+        return IPHostGroup(self.client).update(
+            name, host_list, description, action, debug
         )
-        return resp
 
     def update_fqdn_hostgroup(
         self,
@@ -1339,48 +696,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        # Get the existing Host list first, if any
-
-        if action:
-            self._validate_arg(
-                arg_name="action",
-                arg_value=action,
-                valid_choices=["add", "remove", "replace"],
-            )
-
-        resp = self.get_fqdn_hostgroup(name=name)
-        if "FQDNHostList" in resp["Response"]["FQDNHostGroup"]:
-            exist_list = (
-                resp.get("Response").get("FQDNHostGroup").get("FQDNHostList").get("FQDNHost")
-            )
-        else:
-            exist_list = None
-
-        if action.lower() == "replace":
-            exist_list = None
-
-        new_host_list = []
-        if exist_list:
-            if isinstance(exist_list, str):
-                new_host_list.append(exist_list)
-            elif isinstance(exist_list, list):
-                new_host_list = exist_list
-        for fqdn_host in fqdn_host_list:
-            if action:
-                if action.lower() == "add" and not fqdn_host in new_host_list:
-                    new_host_list.append(fqdn_host)
-                elif action.lower() == "remove" and fqdn_host in new_host_list:
-                    new_host_list.remove(fqdn_host)
-                elif action.lower() == "replace":
-                    new_host_list.append(fqdn_host)
-        if not description:
-            description = resp.get("Response").get("FQDNHostGroup").get("Description")
-
-        params = {"name": name, "description": description, "fqdn_host_list": new_host_list}
-        resp = self.submit_template(
-            "updatefqdnhostgroup.j2", template_vars=params, debug=debug
+        return FQDNHostGroup(self.client).update(
+            name, description, fqdn_host_list, action, debug
         )
-        return resp
 
     def update_service_group(
         self,
@@ -1403,47 +721,9 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         # Get the existing Host list first, if any
-
-        if action:
-            self._validate_arg(
-                arg_name="action",
-                arg_value=action,
-                valid_choices=["add", "remove", "replace"],
-            )
-
-        resp = self.get_service_group(name=name)
-        if "ServiceList" in resp["Response"]["ServiceGroup"]:
-            exist_list = (
-                resp.get("Response").get("ServiceGroup").get("ServiceList").get("Service")
-            )
-        else:
-            exist_list = None
-
-        if action.lower() == "replace":
-            exist_list = None
-
-        new_service_list = []
-        if exist_list:
-            if isinstance(exist_list, str):
-                new_service_list.append(exist_list)
-            elif isinstance(exist_list, list):
-                new_service_list = exist_list
-        for service_name in service_list:
-            if action:
-                if action.lower() == "add" and not service_name in new_service_list:
-                    new_service_list.append(service_name)
-                elif action.lower() == "remove" and service_name in new_service_list:
-                    new_service_list.remove(service_name)
-                elif action.lower() == "replace":
-                    new_service_list.append(service_name)
-        if not description:
-            description = resp.get("Response").get("ServiceGroup").get("Description")
-
-        params = {"name": name, "description": description, "service_list": new_service_list}
-        resp = self.submit_template(
-            "updateservicegroup.j2", template_vars=params, debug=debug
+        return ServiceGroup(self.client).update(
+            name, service_list, description, action, debug
         )
-        return resp
 
     def update_backup(self, backup_params: dict, debug: bool = False):
         """Updates scheduled backup settings
@@ -1470,20 +750,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        updated_params = {}
-        current_params = self.get_backup()["Response"]["BackupRestore"][
-            "ScheduleBackup"
-        ]
-        for param in current_params:
-            if param in backup_params:
-                updated_params[param] = backup_params[param]
-            else:
-                updated_params[param] = current_params[param]
-
-        resp = self.submit_template(
-            "updatebackup.j2", template_vars=updated_params, debug=debug
-        )
-        return resp
+        return Backup(self.client).update(backup_params, debug)
 
     def update_service_acl(
         self,
@@ -1501,33 +768,4 @@ class SophosFirewall:
             verify (bool, optional): SSL Certificate checking. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
-        if action:
-            self._validate_arg(
-                arg_name="action", arg_value=action, valid_choices=["add", "remove"]
-            )
-        resp = self.get_acl_rule()
-
-        exist_hosts = resp["Response"]["LocalServiceACL"]["Hosts"]["Host"]
-        exist_services = resp["Response"]["LocalServiceACL"]["Services"]["Service"]
-
-        if not host_list:
-            host_list = []
-        if not service_list:
-            service_list = []
-
-        if action == "add":
-            template_vars = {
-                "host_list": exist_hosts + host_list,
-                "service_list": exist_services + service_list,
-            }
-        elif action == "remove":
-            for host in host_list:
-                exist_hosts.remove(host)
-            for service in service_list:
-                exist_services.remove(service)
-            template_vars = {"host_list": exist_hosts, "service_list": exist_services}
-        resp = self.submit_template(
-            "updateserviceacl.j2", template_vars=template_vars, debug=debug
-        )
-
-        return resp
+        return AclRule(self.client).update(host_list, service_list, action, debug)
