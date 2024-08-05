@@ -6,8 +6,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
 permissions and limitations under the License.
 """
+
+
 class User:
     """Class for working with User(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -26,7 +29,7 @@ class User:
                 xml_tag="User", key="Name", value=name, operator=operator
             )
         return self.client.get_tag(xml_tag="User")
-    
+
     def create(self, debug, **kwargs):
         """Create a User
 
@@ -60,9 +63,11 @@ class User:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        resp = self.client.submit_template("createuser.j2", template_vars=kwargs, debug=debug)
+        resp = self.client.submit_template(
+            "createuser.j2", template_vars=kwargs, debug=debug
+        )
         return resp
-    
+
     def update_user_password(self, username, new_password, debug):
         """Update user password.
 
@@ -104,8 +109,10 @@ class User:
         )
         return resp
 
+
 class AdminAuthen:
     """Class for working with Admin Authentication Settings."""
+
     def __init__(self, api_client):
         self.client = api_client
 

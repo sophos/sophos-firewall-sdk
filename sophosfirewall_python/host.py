@@ -9,8 +9,10 @@ permissions and limitations under the License.
 from sophosfirewall_python.utils import Utils
 from sophosfirewall_python.api_client import SophosFirewallInvalidArgument
 
+
 class IPHost:
     """Class for working with IP Host(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -34,17 +36,17 @@ class IPHost:
                 operator=operator,
             )
         return self.client.get_tag(xml_tag="IPHost")
-    
+
     def create(self, name, ip_address, mask, start_ip, end_ip, host_type, debug):
-        """Create IP Host. 
+        """Create IP Host.
 
         Args:
             name (str): Name of the object
             ip_address (str): Host IP address or network in case of host_type=Network.
             mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0). Only used with type: Network.
             start_ip (str): Starting IP address in case of host_type=IPRange.
-            end_ip (str): Ending IP address in case of host_type=IPRange. 
-            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.  
+            end_ip (str): Ending IP address in case of host_type=IPRange.
+            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
@@ -56,17 +58,27 @@ class IPHost:
 
         if host_type == "Network":
             Utils.validate_ip_network(ip_address, mask)
-            params = {"name": name, "ip_address": ip_address, "mask": mask, "host_type": host_type}
+            params = {
+                "name": name,
+                "ip_address": ip_address,
+                "mask": mask,
+                "host_type": host_type,
+            }
 
         if host_type == "IPRange":
             Utils.validate_ip_address(start_ip)
             Utils.validate_ip_address(end_ip)
-            params = {"name": name, "start_ip": start_ip, "end_ip": end_ip, "host_type": host_type}
+            params = {
+                "name": name,
+                "start_ip": start_ip,
+                "end_ip": end_ip,
+                "host_type": host_type,
+            }
 
         resp = self.client.submit_template(
             "createiphost.j2", template_vars=params, debug=debug
         )
-        
+
         return resp
 
 
@@ -75,7 +87,6 @@ class IPHostGroup:
 
     def __init__(self, api_client):
         self.client = api_client
-
 
     def get(self, name, operator="="):
         """Get IP Host object(s)
@@ -93,7 +104,7 @@ class IPHostGroup:
                 operator=operator,
             )
         return self.client.get_tag(xml_tag="IPHostGroup")
-    
+
     def create(self, name, host_list, description, debug):
         """Create an IP Host Group
 
@@ -110,7 +121,7 @@ class IPHostGroup:
             "createiphostgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def update(self, name, host_list, description, action, debug):
         """Add or remove an IP Host from an IP HostGroup.
 
@@ -168,6 +179,7 @@ class IPHostGroup:
 
 class FQDNHost:
     """Class for working with FQDN Hosts."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -182,14 +194,14 @@ class FQDNHost:
             return self.client.get_tag_with_filter(
                 xml_tag="FQDNHost", key="Name", value=name, operator=operator
             )
-        
+
         return self.client.get_tag(xml_tag="FQDNHost")
-    
+
     def create(self, name, fqdn, fqdn_group_list, description, debug):
         """Create FQDN Host object.
 
         Args:
-            name (str): Name of the object. 
+            name (str): Name of the object.
             fqdn (str): FQDN string.
             fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
             description (str): Description.
@@ -197,12 +209,17 @@ class FQDNHost:
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        params = {"name": name, "description": description, "fqdn": fqdn, "fqdn_group_list": fqdn_group_list}
+        params = {
+            "name": name,
+            "description": description,
+            "fqdn": fqdn,
+            "fqdn_group_list": fqdn_group_list,
+        }
         resp = self.client.submit_template(
             "createfqdnhost.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def update(self, name, fqdn_host_list, description, action, debug):
         """Add or remove a FQDN Host from an FQDN Host Group.
 
@@ -226,7 +243,10 @@ class FQDNHost:
         resp = self.get(name=name)
         if "FQDNHostList" in resp["Response"]["FQDNHostGroup"]:
             exist_list = (
-                resp.get("Response").get("FQDNHostGroup").get("FQDNHostList").get("FQDNHost")
+                resp.get("Response")
+                .get("FQDNHostGroup")
+                .get("FQDNHostList")
+                .get("FQDNHost")
             )
         else:
             exist_list = None
@@ -251,17 +271,23 @@ class FQDNHost:
         if not description:
             description = resp.get("Response").get("FQDNHostGroup").get("Description")
 
-        params = {"name": name, "description": description, "fqdn_host_list": new_host_list}
+        params = {
+            "name": name,
+            "description": description,
+            "fqdn_host_list": new_host_list,
+        }
         resp = self.client.submit_template(
             "updatefqdnhostgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
+
 class FQDNHostGroup:
     """Class for working with FQDN HostGroup(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
-    
+
     def get(self, name, operator="="):
         """Get FQDN HostGroup object(s)
 
@@ -273,9 +299,9 @@ class FQDNHostGroup:
             return self.client.get_tag_with_filter(
                 xml_tag="FQDNHostGroup", key="Name", value=name, operator=operator
             )
-        
+
         return self.client.get_tag(xml_tag="FQDNHostGroup")
-    
+
     def create(self, name, fqdn_host_list, description, debug):
         """Create FQDN HostGroup object.
 
@@ -287,12 +313,16 @@ class FQDNHostGroup:
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        params = {"name": name, "description": description, "fqdn_host_list": fqdn_host_list}
+        params = {
+            "name": name,
+            "description": description,
+            "fqdn_host_list": fqdn_host_list,
+        }
         resp = self.client.submit_template(
             "createfqdnhostgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def update(self, name, description, fqdn_host_list, action, debug):
         """Add or remove a FQDN Host from an FQDN Host Group.
 
@@ -316,7 +346,10 @@ class FQDNHostGroup:
         resp = self.get(name=name)
         if "FQDNHostList" in resp["Response"]["FQDNHostGroup"]:
             exist_list = (
-                resp.get("Response").get("FQDNHostGroup").get("FQDNHostList").get("FQDNHost")
+                resp.get("Response")
+                .get("FQDNHostGroup")
+                .get("FQDNHostList")
+                .get("FQDNHost")
             )
         else:
             exist_list = None
@@ -341,17 +374,23 @@ class FQDNHostGroup:
         if not description:
             description = resp.get("Response").get("FQDNHostGroup").get("Description")
 
-        params = {"name": name, "description": description, "fqdn_host_list": new_host_list}
+        params = {
+            "name": name,
+            "description": description,
+            "fqdn_host_list": new_host_list,
+        }
         resp = self.client.submit_template(
             "updatefqdnhostgroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
+
 class URLGroup:
     """Class for working with URL Group(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
-    
+
     def get(self, name, operator="="):
         """Get URLGroup(s)
 
@@ -367,7 +406,7 @@ class URLGroup:
                 xml_tag="WebFilterURLGroup", key="Name", operator=operator, value=name
             )
         return self.client.get_tag(xml_tag="WebFilterURLGroup")
-    
+
     def create(self, name, domain_list, debug):
         """Create a web URL Group
 
@@ -440,8 +479,10 @@ class URLGroup:
         )
         return resp
 
+
 class IPNetwork:
     """Class for working with Host of type Network."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -464,11 +505,13 @@ class IPNetwork:
         )
         return resp
 
+
 class IPRange:
     """Class for working with Host of type IPRange."""
+
     def __init__(self, api_client):
         self.client = api_client
-    
+
     def create(self, name, start_ip, end_ip, debug):
         """Create IP Host of type IPRange.
 

@@ -8,11 +8,14 @@ permissions and limitations under the License.
 """
 from ipaddress import IPv4Network, IPv4Address
 
+
 class SophosFirewallIPAddressingError(Exception):
     """Error raised when invalid IP address detected"""
 
+
 class Utils:
     """Class containing utility methods."""
+
     @staticmethod
     def validate_ip_network(ip_subnet, mask):
         """Validate IP network and mask
@@ -30,7 +33,7 @@ class Utils:
             raise SophosFirewallIPAddressingError(
                 f"Invalid network or mask provided - {ip_subnet}/{mask}"
             ) from exc
-        
+
     @staticmethod
     def validate_ip_address(ip_address):
         """Validate IP address.

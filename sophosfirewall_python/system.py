@@ -7,11 +7,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 
+
 class Syslog:
     """Class for working with Syslog Server(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
-    
+
     def get(self, name):
         """Get syslog server.
 
@@ -27,11 +29,13 @@ class Syslog:
             )
         return self.client.get_tag(xml_tag="SyslogServers")
 
+
 class NotificationList:
     """Class for working with Notification List settings."""
+
     def __init__(self, api_client):
         self.client = api_client
-    
+
     def get(self, name):
         """Get notification list.
 

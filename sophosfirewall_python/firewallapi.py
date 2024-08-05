@@ -10,7 +10,6 @@ permissions and limitations under the License.
 """
 
 import urllib3
-import xmltodict
 from sophosfirewall_python.api_client import APIClient
 from sophosfirewall_python.firewallrule import FirewallRule
 from sophosfirewall_python.host import (
@@ -20,7 +19,7 @@ from sophosfirewall_python.host import (
     FQDNHostGroup,
     URLGroup,
     IPNetwork,
-    IPRange
+    IPRange,
 )
 from sophosfirewall_python.service import Service, ServiceGroup
 from sophosfirewall_python.network import Interface, Vlan, Zone
@@ -34,6 +33,7 @@ from sophosfirewall_python.reports import Retention
 
 urllib3.disable_warnings()
 
+
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
@@ -43,31 +43,8 @@ class SophosFirewall:
             password=password,
             hostname=hostname,
             port=port,
-            verify=verify
+            verify=verify,
         )
-        self.firewall_rule = FirewallRule(self.client)
-        self.ip_host = IPHost(self.client)
-        self.ip_hostgroup = IPHostGroup(self.client)
-        self.fqdn_host = FQDNHost(self.client)
-        self.fqdn_hostgroup = FQDNHostGroup(self.client)
-        self.ip_network = IPNetwork(self.client)
-        self.ip_range = IPRange(self.client)
-        self.service = Service(self.client)
-        self.service_group = ServiceGroup(self.client)
-        self.interface = Interface(self.client)
-        self.vlan = Vlan(self.client)
-        self.acl_rule = AclRule(self.client)
-        self.user = User(self.client)
-        self.admin_profile = AdminProfile(self.client)
-        self.admin_auth = AdminAuthen(self.client)
-        self.zone = Zone(self.client)
-        self.ips = IPS(self.client)
-        self.syslog_server = Syslog(self.client)
-        self.notification = Notification(self.client)
-        self.notification_list = NotificationList(self.client)
-        self.backup = Backup(self.client)
-        self.report_retention = Retention(self.client)
-        self.url_group = URLGroup(self.client)
 
     def login(self, output_format: str = "dict"):
         """Test login credentials.
@@ -75,18 +52,7 @@ class SophosFirewall:
         Args:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
-        payload = f"""
-        <Request>
-            <Login>
-                <Username>{self.client.username}</Username>
-                <Password>{self.client.password}</Password>
-            </Login>
-        </Request>
-        """
-        resp = self.client._post(xmldata=payload)
-        if output_format == "xml":
-            return resp.content.decode()
-        return xmltodict.parse(resp.content.decode())
+        return self.client.login(output_format)
 
     def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
         """Remove an object from the firewall.
@@ -97,7 +63,7 @@ class SophosFirewall:
             output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         return self.client.remove(xml_tag, name, output_format)
-    
+
     def update(
         self,
         xml_tag: str,
@@ -126,7 +92,7 @@ class SophosFirewall:
             name (str, optional): Firewall Rule name.  Returns all rules if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.firewall_rule.get(name=name, operator=operator)
+        return FirewallRule(self.client).get(name=name, operator=operator)
 
     def get_ip_host(
         self, name: str = None, ip_address: str = None, operator: str = "="
@@ -138,8 +104,8 @@ class SophosFirewall:
             ip_address (str, optional): Query by IP Address.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.ip_host.get(name, ip_address, operator)
-    
+        return IPHost(self.client).get(name, ip_address, operator)
+
     def get_ip_hostgroup(self, name: str = None, operator: str = "="):
         """Get IP hostgroup(s)
 
@@ -147,41 +113,34 @@ class SophosFirewall:
             name (str, optional): Name of IP host group. Returns all if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.ip_hostgroup.get(name, operator)
+        return IPHostGroup(self.client).get(name, operator)
 
-    def get_fqdn_host(
-        self, name: str = None, operator: str = "="
-    ):
+    def get_fqdn_host(self, name: str = None, operator: str = "="):
         """Get FQDN Host object(s)
 
         Args:
             name (str, optional): FQDN Host name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.fqdn_host.get(name, operator)
-    
-    def get_fqdn_hostgroup(
-        self, name: str = None, operator: str = "="
-    ):
+        return FQDNHost(self.client).get(name, operator)
+
+    def get_fqdn_hostgroup(self, name: str = None, operator: str = "="):
         """Get FQDN HostGroup object(s)
 
         Args:
             name (str, optional): FQDN HostGroup name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.fqdn_hostgroup.get(name, operator)
+        return FQDNHostGroup(self.client).get(name, operator)
 
-    
-    def get_service_group(
-        self, name: str = None, operator: str = "="
-        ):
+    def get_service_group(self, name: str = None, operator: str = "="):
         """Get Service Group object(s)
 
         Args:
             name (str, optional): Service Group name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.service_group.get(name, operator)
+        return ServiceGroup(self.client).get(name, operator)
 
     def get_interface(self, name: str = None, operator: str = "="):
         """Get Interface object(s)
@@ -190,8 +149,7 @@ class SophosFirewall:
             name (str, optional): Interface name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.interface.get(name, operator)
-
+        return Interface(self.client).get(name, operator)
 
     def get_vlan(self, name: str = None, operator: str = "="):
         """Get VLAN object(s)
@@ -200,7 +158,7 @@ class SophosFirewall:
             name (str, optional): VLAN name. Returns all objects if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
-        return self.vlan.get(name, operator)
+        return Vlan(self.client).get(name, operator)
 
     def get_acl_rule(self, name: str = None, operator: str = "="):
         """Get ACL rules
@@ -212,8 +170,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.acl_rule.get(name, operator)
-
+        return AclRule(self.client).get(name, operator)
 
     def get_user(self, name: str = None, operator: str = "="):
         """Get local users
@@ -225,8 +182,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.user.get(name, operator)
-
+        return User(self.client).get(name, operator)
 
     def get_admin_profile(self, name: str = None, operator: str = "="):
         """Get admin profiles
@@ -238,8 +194,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.admin_profile.get(name, operator)
-
+        return AdminProfile(self.client).get(name, operator)
 
     def get_zone(self, name: str = None, operator: str = "="):
         """Get zone(s)
@@ -251,7 +206,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.zone.get(name, operator)
+        return Zone(self.client).get(name, operator)
 
     def get_admin_authen(self):
         """Get admin authentication settings
@@ -259,7 +214,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.admin_auth.get()
+        return AdminAuthen(self.client).get()
 
     def get_ips_policy(self, name: str = None):
         """Get IPS policy
@@ -270,7 +225,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ips.get(name)
+        return IPS(self.client).get(name)
 
     def get_syslog_server(self, name: str = None):
         """Get syslog server.
@@ -281,7 +236,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.syslog_server.get(name)
+        return Syslog(self.client).get(name)
 
     def get_notification(self, name: str = None):
         """Get notification.
@@ -292,8 +247,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.notification.get(name)
-
+        return Notification(self.client).get(name)
 
     def get_notification_list(self, name: str = None):
         """Get notification list.
@@ -304,7 +258,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        self.notification_list.get(name)
+        return NotificationList(self.client).get(name)
 
     def get_backup(self, name: str = None):
         """Get backup details.
@@ -315,7 +269,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.backup.get(name)
+        return Backup(self.client).get(name)
 
     def get_reports_retention(self, name: str = None):
         """Get Reports retention period.
@@ -326,7 +280,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.report_retention.get(name)
+        return Retention(self.client).get(name)
 
     def get_admin_settings(self):
         """Get Web Admin Settings (Administration > Settings)
@@ -362,8 +316,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.url_group.get(name, operator)
-
+        return URLGroup(self.client).get(name, operator)
 
     def get_service(
         self,
@@ -383,7 +336,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.service.get(name, operator, dst_proto, dst_port)
+        return Service(self.client).get(name, operator, dst_proto, dst_port)
 
     # METHODS FOR OBJECT CREATION
 
@@ -407,30 +360,34 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.firewall_rule.create(rule_params, debug)      
+        return FirewallRule(self.client).create(rule_params, debug)
 
-
-    def create_ip_host(self, name: str,
-                       ip_address: str = None,
-                       mask: str = None,
-                       start_ip: str = None,
-                       end_ip: str = None, 
-                       host_type: str = "IP", 
-                       debug: bool = False):
-        """Create IP Host. 
+    def create_ip_host(
+        self,
+        name: str,
+        ip_address: str = None,
+        mask: str = None,
+        start_ip: str = None,
+        end_ip: str = None,
+        host_type: str = "IP",
+        debug: bool = False,
+    ):
+        """Create IP Host.
 
         Args:
             name (str): Name of the object
             ip_address (str): Host IP address or network in case of host_type=Network.
             mask (str): Subnet mask in dotted decimal format (ex. 255.255.255.0). Only used with type: Network.
             start_ip (str): Starting IP address in case of host_type=IPRange.
-            end_ip (str): Ending IP address in case of host_type=IPRange. 
-            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.  
+            end_ip (str): Ending IP address in case of host_type=IPRange.
+            host_type (str, optional): Type of Host. Valid options: IP, Network, IPRange.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ip_host.create(name, ip_address, mask, start_ip, end_ip, host_type, debug)
+        return IPHost(self.client).create(
+            name, ip_address, mask, start_ip, end_ip, host_type, debug
+        )
 
     def create_ip_network(
         self,
@@ -449,7 +406,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ip_network.create(name, ip_network, mask, debug)
+        return IPNetwork(self.client).create(name, ip_network, mask, debug)
 
     def create_ip_range(
         self,
@@ -468,18 +425,20 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ip_range.create(name, start_ip, end_ip, debug)
+        return IPRange(self.client).create(name, start_ip, end_ip, debug)
 
-
-    def create_fqdn_host(self, name: str,
-                         fqdn: str,
-                         fqdn_group_list: list = None,
-                         description: str = None,
-                         debug: bool = False):
+    def create_fqdn_host(
+        self,
+        name: str,
+        fqdn: str,
+        fqdn_group_list: list = None,
+        description: str = None,
+        debug: bool = False,
+    ):
         """Create FQDN Host object.
 
         Args:
-            name (str): Name of the object. 
+            name (str): Name of the object.
             fqdn (str): FQDN string.
             fqdn_group_list (list, optional): List containing FQDN Host Group(s) to associate the FQDN Host.
             description (str): Description.
@@ -487,12 +446,17 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        return self.fqdn_host.create(name, fqdn, fqdn_group_list, description, debug)
+        return FQDNHost(self.client).create(
+            name, fqdn, fqdn_group_list, description, debug
+        )
 
-    def create_fqdn_hostgroup(self, name: str,
-                         fqdn_host_list: list = None,
-                         description: str = None,
-                         debug: bool = False):
+    def create_fqdn_hostgroup(
+        self,
+        name: str,
+        fqdn_host_list: list = None,
+        description: str = None,
+        debug: bool = False,
+    ):
         """Create FQDN HostGroup object.
 
         Args:
@@ -503,8 +467,10 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        return self.fqdn_hostgroup.create(name, fqdn_host_list, description, debug)
-        
+        return FQDNHostGroup(self.client).create(
+            name, fqdn_host_list, description, debug
+        )
+
     def create_service(
         self,
         name: str,
@@ -517,31 +483,33 @@ class SophosFirewall:
         Args:
             name (str): Service name.
             service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
-            service_list(list): List of dictionaries. 
+            service_list(list): List of dictionaries.
                 For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
                 For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             debug (bool, optional): Enable debug mode. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.service.create(name, service_type, service_list, debug)
-        
+        return Service(self.client).create(name, service_type, service_list, debug)
 
-    def create_service_group(self, name: str,
-                         service_list: list = None,
-                         description: str = None,
-                         debug: bool = False):
+    def create_service_group(
+        self,
+        name: str,
+        service_list: list = None,
+        description: str = None,
+        debug: bool = False,
+    ):
         """Create Service Group object.
 
         Args:
             name (str): Name of the object.
             service_list (list, optional): List containing Service(s) to associate the Services Group.
-            description (str): Description. 
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        return self.service_group.create(name, service_list, description, debug)
+        return ServiceGroup(self.client).create(name, service_list, description, debug)
 
     def create_ip_hostgroup(
         self,
@@ -560,8 +528,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ip_hostgroup.create(name, host_list, description, debug)
-        
+        return IPHostGroup(self.client).create(name, host_list, description, debug)
 
     def create_urlgroup(self, name: str, domain_list: list, debug: bool = False):
         """Create a web URL Group
@@ -574,8 +541,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.url_group.create(name, domain_list, debug)
-        
+        return URLGroup(self.client).create(name, domain_list, debug)
 
     def create_user(self, debug: bool = False, **kwargs):
         """Create a User
@@ -610,8 +576,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.user.create(debug, **kwargs)
-
+        return User(self.client).create(debug, **kwargs)
 
     def update_user_password(
         self, username: str, new_password: str, debug: bool = False
@@ -626,8 +591,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.user.update_user_password(username, new_password, debug)
-        
+        return User(self.client).update_user_password(username, new_password, debug)
 
     def update_admin_password(
         self, current_password: str, new_password: str, debug: bool = False
@@ -642,7 +606,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.user.update_admin_password(current_password, new_password, debug)
+        return User(self.client).update_admin_password(
+            current_password, new_password, debug
+        )
 
     def update_urlgroup(
         self, name: str, domain_list: list, action: str = "add", debug: bool = False
@@ -658,7 +624,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.url_group.update(name, domain_list, action, debug)
+        return URLGroup(self.client).update(name, domain_list, action, debug)
 
     def update_service(
         self,
@@ -673,7 +639,7 @@ class SophosFirewall:
         Args:
             name (str): Service name.
             service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
-            service_list(list): List of dictionaries. 
+            service_list(list): List of dictionaries.
                 For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
                 For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
@@ -682,7 +648,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.service.update(name, service_type, service_list, action, debug)
+        return Service(self.client).update(
+            name, service_type, service_list, action, debug
+        )
 
     def update_ip_hostgroup(
         self,
@@ -704,7 +672,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.ip_hostgroup.update(name, host_list, description, action, debug)
+        return IPHostGroup(self.client).update(
+            name, host_list, description, action, debug
+        )
 
     def update_fqdn_hostgroup(
         self,
@@ -726,7 +696,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.fqdn_hostgroup.update(name, description,fqdn_host_list, action, debug)
+        return FQDNHostGroup(self.client).update(
+            name, description, fqdn_host_list, action, debug
+        )
 
     def update_service_group(
         self,
@@ -749,7 +721,9 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         # Get the existing Host list first, if any
-        return self.service_group.update(name, service_list, description, action, debug)
+        return ServiceGroup(self.client).update(
+            name, service_list, description, action, debug
+        )
 
     def update_backup(self, backup_params: dict, debug: bool = False):
         """Updates scheduled backup settings
@@ -776,7 +750,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.backup.update(backup_params, debug)
+        return Backup(self.client).update(backup_params, debug)
 
     def update_service_acl(
         self,
@@ -794,4 +768,4 @@ class SophosFirewall:
             verify (bool, optional): SSL Certificate checking. Defaults to True.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
-        return self.acl_rule.update(host_list, service_list, action, debug)
+        return AclRule(self.client).update(host_list, service_list, action, debug)

@@ -7,8 +7,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 
+
 class Retention:
     """Class for working with Report Retention settings."""
+
     def __init__(self, api_client):
         self.client = api_client
 

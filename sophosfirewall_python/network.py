@@ -7,8 +7,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 
+
 class Interface:
     """Class for working with Interface(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -24,9 +26,11 @@ class Interface:
                 xml_tag="Interface", key="Name", value=name, operator=operator
             )
         return self.client.get_tag(xml_tag="Interface")
-    
+
+
 class Vlan:
     """Class for working with Vlan(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -42,9 +46,11 @@ class Vlan:
                 xml_tag="VLAN", key="Name", value=name, operator=operator
             )
         return self.client.get_tag(xml_tag="VLAN")
-    
+
+
 class Zone:
     """Class for working with Zone(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
 

@@ -6,8 +6,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
 permissions and limitations under the License.
 """
+
+
 class AclRule:
     """Class for working with ACL Exception Rules."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -26,7 +29,7 @@ class AclRule:
                 xml_tag="LocalServiceACL", key="Name", value=name, operator=operator
             )
         return self.client.get_tag(xml_tag="LocalServiceACL")
-    
+
     def update(self, host_list, service_list, action, debug):
         """Update Local Service ACL (System > Administration > Device Access > Local service ACL exception)
 
@@ -68,8 +71,10 @@ class AclRule:
 
         return resp
 
+
 class Notification:
     """Class for working with Notification settings."""
+
     def __init__(self, api_client):
         self.client = api_client
 

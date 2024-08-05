@@ -12,20 +12,26 @@ import requests
 import xmltodict
 from jinja2 import Environment, FileSystemLoader
 
+
 class SophosFirewallAPIError(Exception):
     """Error raised when an API operation fails"""
+
 
 class SophosFirewallAuthFailure(Exception):
     """Error raised when authentication to firewall fails"""
 
+
 class SophosFirewallZeroRecords(Exception):
     """Error raised when a get request returns zero records"""
+
 
 class SophosFirewallOperatorError(Exception):
     """Error raised when an invalid operator is specified"""
 
+
 class SophosFirewallInvalidArgument(Exception):
     """Error raised when an invalid argument is specified"""
+
 
 class APIClient:
     """Class for making the requests to the firewall XML API."""
@@ -37,7 +43,7 @@ class APIClient:
         self.port = port
         self.url = f"https://{hostname}:{port}/webconsole/APIController"
         self.verify = verify
-    
+
     def _dict_to_lower(self, target_dict):
         """Convert the keys of a dictionary to lower-case
 
@@ -113,6 +119,25 @@ class APIClient:
             if resp_dict["Login"]["status"] == "Authentication Failure":
                 raise SophosFirewallAuthFailure("Login failed!")
         return resp
+
+    def login(self, output_format):
+        """Test login credentials.
+
+        Args:
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        payload = f"""
+        <Request>
+            <Login>
+                <Username>{self.username}</Username>
+                <Password>{self.password}</Password>
+            </Login>
+        </Request>
+        """
+        resp = self._post(xmldata=payload)
+        if output_format == "xml":
+            return resp.content.decode()
+        return xmltodict.parse(resp.content.decode())
 
     def submit_template(
         self,
@@ -303,7 +328,7 @@ class APIClient:
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
-    
+
     def validate_arg(self, arg_name, arg_value, valid_choices):
         if not arg_value in valid_choices:
             raise SophosFirewallInvalidArgument(

@@ -6,8 +6,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
 permissions and limitations under the License.
 """
+
+
 class Backup:
     """Class for working with Backup settings."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -25,7 +28,7 @@ class Backup:
                 xml_tag="BackupRestore", key="Name", value=name
             )
         return self.client.get_tag(xml_tag="BackupRestore")
-    
+
     def update(self, backup_params, debug):
         """Updates scheduled backup settings
 
@@ -52,9 +55,7 @@ class Backup:
             dict: XML response converted to Python dictionary
         """
         updated_params = {}
-        current_params = self.get()["Response"]["BackupRestore"][
-            "ScheduleBackup"
-        ]
+        current_params = self.get()["Response"]["BackupRestore"]["ScheduleBackup"]
         for param in current_params:
             if param in backup_params:
                 updated_params[param] = backup_params[param]

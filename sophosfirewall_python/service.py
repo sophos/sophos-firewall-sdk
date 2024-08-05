@@ -8,11 +8,13 @@ permissions and limitations under the License.
 """
 from sophosfirewall_python.api_client import SophosFirewallInvalidArgument
 
+
 class Service:
     """Class for working with Service(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
-        
+
     def get(self, name, operator="=", dst_proto=None, dst_port=None):
         """Get Service(s)
 
@@ -55,14 +57,14 @@ class Service:
                     resp["Response"]["Services"].remove(svc)
             return resp
         return self.client.get_tag(xml_tag="Services")
-    
+
     def create(self, name, service_type, service_list, debug):
         """Create a TCP or UDP service
 
         Args:
             name (str): Service name.
             service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
-            service_list(list): List of dictionaries. 
+            service_list(list): List of dictionaries.
                 For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
                 For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             debug (bool, optional): Enable debug mode. Defaults to False.
@@ -74,14 +76,14 @@ class Service:
             "createservice.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def update(self, name, service_type, service_list, action, debug):
         """Add or remove a service entry to/from a service
 
         Args:
             name (str): Service name.
             service_type (str): Service type. Valid values are TCPorUDP, IP, ICMP, or ICMPv6.
-            service_list(list): List of dictionaries. 
+            service_list(list): List of dictionaries.
                 For type TCPorUDP, src_port(str, optional) default=1:65535, dst_port(str), and protocol(str).
                 For type IP, protocol(str). For type ICMP and ICMPv6, icmp_type (str) and icmp_code (str).
             action (str): Options are 'add', 'remove' or 'replace'. Defaults to 'add'.
@@ -132,23 +134,19 @@ class Service:
                         }
                     )
                 if service_type == "IP":
-                    new_service_list.append(
-                        {
-                            "protocol": exist_list["ProtocolName"]
-                        }
-                    )
+                    new_service_list.append({"protocol": exist_list["ProtocolName"]})
                 if service_type == "ICMP":
                     new_service_list.append(
                         {
                             "icmp_type": exist_list["ICMPType"],
-                            "icmp_code": exist_list["ICMPCode"]
+                            "icmp_code": exist_list["ICMPCode"],
                         }
                     )
                 if service_type == "ICMPv6":
                     new_service_list.append(
                         {
                             "icmp_type": exist_list["ICMPv6Type"],
-                            "icmp_code": exist_list["ICMPv6Code"]
+                            "icmp_code": exist_list["ICMPv6Code"],
                         }
                     )
             elif isinstance(exist_list, list):
@@ -162,23 +160,19 @@ class Service:
                             }
                         )
                     if service_type == "IP":
-                        new_service_list.append(
-                            {
-                                "protocol": service["ProtocolName"]
-                            }
-                        )
+                        new_service_list.append({"protocol": service["ProtocolName"]})
                     if service_type == "ICMP":
                         new_service_list.append(
                             {
                                 "icmp_type": service["ICMPType"],
-                                "icmp_code": service["ICMPCode"]
+                                "icmp_code": service["ICMPCode"],
                             }
                         )
                     if service_type == "ICMPv6":
                         new_service_list.append(
                             {
                                 "icmp_type": service["ICMPv6Type"],
-                                "icmp_code": service["ICMPv6Code"]
+                                "icmp_code": service["ICMPv6Code"],
                             }
                         )
         for service in service_list:
@@ -195,8 +189,10 @@ class Service:
         )
         return resp
 
+
 class ServiceGroup:
     """Class for working with Service Group(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -211,26 +207,30 @@ class ServiceGroup:
             return self.client.get_tag_with_filter(
                 xml_tag="ServiceGroup", key="Name", value=name, operator=operator
             )
-        
+
         return self.client.get_tag(xml_tag="ServiceGroup")
-    
+
     def create(self, name, service_list, description, debug):
         """Create Service Group object.
 
         Args:
             name (str): Name of the object.
             service_list (list, optional): List containing Service(s) to associate the Services Group.
-            description (str): Description. 
+            description (str): Description.
             debug (bool, optional): Turn on debugging. Defaults to False.
         Returns:
             dict: XML response converted to Python dictionary.
         """
-        params = {"name": name, "description": description, "service_list": service_list}
+        params = {
+            "name": name,
+            "description": description,
+            "service_list": service_list,
+        }
         resp = self.client.submit_template(
             "createservicegroup.j2", template_vars=params, debug=debug
         )
         return resp
-    
+
     def update(self, name, service_list, description, action, debug):
         """Add or remove a Service from an Service Group.
 
@@ -254,7 +254,10 @@ class ServiceGroup:
         resp = self.get(name=name)
         if "ServiceList" in resp["Response"]["ServiceGroup"]:
             exist_list = (
-                resp.get("Response").get("ServiceGroup").get("ServiceList").get("Service")
+                resp.get("Response")
+                .get("ServiceGroup")
+                .get("ServiceList")
+                .get("Service")
             )
         else:
             exist_list = None
@@ -279,9 +282,12 @@ class ServiceGroup:
         if not description:
             description = resp.get("Response").get("ServiceGroup").get("Description")
 
-        params = {"name": name, "description": description, "service_list": new_service_list}
+        params = {
+            "name": name,
+            "description": description,
+            "service_list": new_service_list,
+        }
         resp = self.client.submit_template(
             "updateservicegroup.j2", template_vars=params, debug=debug
         )
         return resp
-

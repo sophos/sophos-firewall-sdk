@@ -7,11 +7,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 
+
 class FirewallRule:
     """Class for working with firewall rule(s)."""
+
     def __init__(self, api_client):
         self.client = api_client
-    
+
     def get(self, name, operator):
         """Get firewall rule(s)
 
@@ -24,7 +26,7 @@ class FirewallRule:
                 xml_tag="FirewallRule", key="Name", value=name, operator=operator
             )
         return self.client.get_tag(xml_tag="FirewallRule")
-    
+
     def create(self, rule_params, debug):
         """Create a firewall rule
 

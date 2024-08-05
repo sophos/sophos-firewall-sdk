@@ -7,8 +7,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 
+
 class IPS:
     """Class for working with IPS Policies."""
+
     def __init__(self, api_client):
         self.client = api_client
 
@@ -22,5 +24,7 @@ class IPS:
             dict: XML response converted to Python dictionary
         """
         if name:
-            return self.client.get_tag_with_filter(xml_tag="IPSPolicy", key="Name", value=name)
+            return self.client.get_tag_with_filter(
+                xml_tag="IPSPolicy", key="Name", value=name
+            )
         return self.client.get_tag(xml_tag="IPSPolicy")
