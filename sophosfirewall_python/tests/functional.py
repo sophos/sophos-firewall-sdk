@@ -18,16 +18,14 @@ version is expected to be seen during testing.
 """
 import os
 import pytest
-from sophosfirewall_python.firewallapi import (
-    SophosFirewall,
+from sophosfirewall_python.firewallapi import SophosFirewall
+from sophosfirewall_python.api_client import (
     SophosFirewallZeroRecords,
     SophosFirewallAuthFailure,
-    SophosFirewallAPIError,
+    SophosFirewallAPIError
 )
 
-
 API_VERSION = os.environ["API_VERSION"]
-
 
 @pytest.fixture(scope="session", autouse=True)
 def setup(request):
