@@ -6,3 +6,14 @@ sophosfirewall_python
 
    firewallapi
    api_client
+   admin
+   authen
+   backup
+   firewallrule
+   host
+   ips
+   network
+   profile
+   reports
+   service
+   system
