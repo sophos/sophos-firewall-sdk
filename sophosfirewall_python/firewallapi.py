@@ -33,7 +33,6 @@ from sophosfirewall_python.reports import Retention
 
 urllib3.disable_warnings()
 
-
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
@@ -53,6 +52,54 @@ class SophosFirewall:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         return self.client.login(output_format)
+
+    def get_tag(self, xml_tag: str, output_format: str = "dict"):
+        """Execute a get for a specified XML tag.
+
+        Args:
+            xml_tag (str): XML tag for the request
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        return self.client.get_tag(xml_tag, output_format)
+    
+    def get_tag_with_filter(
+        self,
+        xml_tag: str,
+        key: str,
+        value: str,
+        operator: str = "like",
+        output_format: str = dict,
+    ):
+        """Execute a get for a specified XML tag with filter criteria.
+
+        Args:
+            xml_tag (str): XML tag for the request.
+            key (str): Search key
+            value (str): Search value
+            operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to "like".
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        return self.client.get_tag_with_filter(xml_tag, key, value, operator, output_format)
+
+    def submit_template(
+        self,
+        filename: str,
+        template_vars: dict,
+        template_dir: str = None,
+        debug: bool = False,
+    ) -> dict:
+        """Submits XML payload stored as a Jinja2 file
+
+        Args:
+            filename (str): Jinja2 template filename. Place in "templates" directory or configure template_dir.
+            template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.
+            template_dir (str): Directory to look for templates. Default is "./templates".
+            debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.
+
+        Returns:
+            dict
+        """
+        return self.client.submit_template(filename, template_vars, template_dir, debug)
 
     def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
         """Remove an object from the firewall.
