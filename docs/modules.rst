@@ -5,3 +5,4 @@ sophosfirewall_python
    :maxdepth: 4
 
    firewallapi
+   api_client
