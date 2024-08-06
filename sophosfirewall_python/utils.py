@@ -50,3 +50,17 @@ class Utils:
             raise SophosFirewallIPAddressingError(
                 f"Invalid IP address provided - {ip_address}"
             ) from exc
+    
+    @staticmethod
+    def ensure_list(val):
+        """Checks whether provided object is a string or a list.
+           If string, create a new list and append it to the list.
+           If list, just return the list as-is. 
+
+        Args:
+            val (str or list): A string or a list
+        """
+        if isinstance(val, str):
+            new_list = [val]
+            return new_list
+        return val

@@ -43,10 +43,13 @@ def setup(request):
     def cleanup():
         """Test completion tasks."""
 
-        def remove(tag, name):
+        def remove(tag, name, key=None):
             print(f"Removing {tag} {name}")
             try:
-                resp = fw.remove(xml_tag=tag, name=name)
+                if key:
+                    resp = fw.remove(xml_tag=tag, name=name, key=key)
+                else:
+                    resp = fw.remove(xml_tag=tag, name=name)
             except SophosFirewallAPIError as e:
                 print(f"Error {e}")
             else:
@@ -56,10 +59,11 @@ def setup(request):
 
         print("\nTest cleanup...")
         print("Removing FUNC_TESTHOST1 from LocalServiceACL")
-        resp = fw.update_service_acl(host_list=["FUNC_TESTHOST1"], action="remove")
+        resp = fw.update_acl_rule(name="FUNC_SVCACL", source_list=["FUNC_TESTHOST1"], update_action="remove")
         print(
             f"{resp['Response']['LocalServiceACL']['Status']['@code']}: {resp['Response']['LocalServiceACL']['Status']['#text']}"
         )
+        remove(tag="LocalServiceACL", name="FUNC_SVCACL", key="RuleName")
         remove(tag="FirewallRule", name="FUNC_TESTRULE1")
         remove(tag="IPHost", name="FUNC_TESTNETWORK2")
         remove(tag="IPHost", name="FUNC_TESTNETWORK1")
@@ -413,16 +417,37 @@ def test_update_service(setup):
     assert response["Response"]["Services"] == get_result
 
 
-def test_update_service_acl(setup):
-    """Test update_service_acl method."""
+def test_create_acl_rule(setup):
+    """Test create_acl_rule method."""
 
     update_result = {
         "@code": "200",
         "#text": "Configuration applied successfully.",
     }
 
-    response = setup.update_service_acl(host_list=["FUNC_TESTHOST1"])
+    response = setup.create_acl_rule(name="FUNC_SVCACL",
+                                     description="Created by Functional testing, ok to delete",
+                                     source_list=["FUNC_TESTHOST1"],
+                                     dest_list=["FUNC_TESTHOST2"],
+                                     service_list=["DNS"],
+                                    )
     assert response["Response"]["LocalServiceACL"]["Status"] == update_result
 
-    response = setup.get_acl_rule()
+    response = setup.get_acl_rule(name="FUNC_SVCACL")
     assert "FUNC_TESTHOST1" in response["Response"]["LocalServiceACL"]["Hosts"]["Host"]
+    assert "FUNC_TESTHOST2" in response["Response"]["LocalServiceACL"]["Hosts"]["DstHost"]
+    assert "DNS" in response["Response"]["LocalServiceACL"]["Services"]["Service"]
+
+def test_update_acl_rule(setup):
+    """Test update_acl_rule method."""
+
+    update_result = {
+        "@code": "200",
+        "#text": "Configuration applied successfully.",
+    }
+
+    response = setup.update_acl_rule(name="FUNC_SVCACL", dest_list=["FUNC_TESTHOST2"], update_action="remove")
+    assert response["Response"]["LocalServiceACL"]["Status"] == update_result
+
+    response = setup.get_acl_rule(name="FUNC_SVCACL")
+    assert "DstHost" not in response["Response"]["LocalServiceACL"]["Hosts"]

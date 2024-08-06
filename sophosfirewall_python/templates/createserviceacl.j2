@@ -3,29 +3,34 @@
         <Username>{{username}}</Username>
         <Password >{{password}}</Password>
     </Login>
-    <Set operation="update"> 
+    <Set operation="add"> 
 		<LocalServiceACL>
 			<RuleName>{{ name }}</RuleName>
 			<Description>{{ description }}</Description>
+            <Position>{{ position }}</Position>
 			<IPFamily>IPv4</IPFamily>
+            {% if source_zone %}
 			<SourceZone>{{ source_zone }}</SourceZone>
+            {% endif %}
 			{% if source_list %}
 			<Hosts>
 				{% for host in source_list %}
 				<Host>{{ host }}</Host>
 				{% endfor %}
-				{% if dest_list %}
+                {% if dest_list %}
                 {% for dsthost in dest_list %}
                 <DstHost>{{ dsthost }}</DstHost>
                 {% endfor %}
                 {% endif %}
 			</Hosts>
 			{% endif %}
+            {% if service_list %}
 			<Services>
 				{% for service in service_list %}
 				<Service>{{ service }}</Service>
 				{% endfor %}
 			</Services>
+            {% endif %}
 			<Action>{{ action | lower }}</Action>
 		</LocalServiceACL>
    </Set>
