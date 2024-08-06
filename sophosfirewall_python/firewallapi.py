@@ -33,7 +33,6 @@ from sophosfirewall_python.reports import Retention
 
 urllib3.disable_warnings()
 
-
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
 
@@ -53,6 +52,34 @@ class SophosFirewall:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         return self.client.login(output_format)
+
+    def get_tag(self, xml_tag: str, output_format: str = "dict"):
+        """Execute a get for a specified XML tag.
+
+        Args:
+            xml_tag (str): XML tag for the request
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        return self.client.get_tag(xml_tag, output_format)
+    
+    def get_tag_with_filter(
+        self,
+        xml_tag: str,
+        key: str,
+        value: str,
+        operator: str = "like",
+        output_format: str = dict,
+    ):
+        """Execute a get for a specified XML tag with filter criteria.
+
+        Args:
+            xml_tag (str): XML tag for the request.
+            key (str): Search key
+            value (str): Search value
+            operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to "like".
+            output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+        """
+        return self.client.get_tag_with_filter(xml_tag, key, value, operator, output_format)
 
     def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
         """Remove an object from the firewall.
