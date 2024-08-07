@@ -10,7 +10,14 @@ permissions and limitations under the License.
 """
 
 import urllib3
-from sophosfirewall_python.api_client import APIClient
+from sophosfirewall_python.api_client import (
+    APIClient,
+    SophosFirewallZeroRecords,
+    SophosFirewallInvalidArgument,
+    SophosFirewallAPIError,
+    SophosFirewallAuthFailure,
+    SophosFirewallOperatorError
+)
 from sophosfirewall_python.firewallrule import FirewallRule
 from sophosfirewall_python.host import (
     IPHost,
@@ -44,6 +51,11 @@ class SophosFirewall:
             port=port,
             verify=verify,
         )
+        self.username = self.client.username
+        self.password = self.client.password
+        self.hostname = self.client.hostname
+        self.port = self.client.port
+        self.verify = self.client.verify
 
     def login(self, output_format: str = "dict"):
         """Test login credentials.
@@ -134,6 +146,15 @@ class SophosFirewall:
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
     def get_fw_rule(self, name: str = None, operator: str = "="):
+        """Get firewall rule(s). DEPRECATED: Use `get_rule()` instead. Will be removed in a later version.
+
+        Args:
+            name (str, optional): Firewall Rule name.  Returns all rules if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return FirewallRule(self.client).get(name=name, operator=operator)
+    
+    def get_rule(self, name: str = None, operator: str = "="):
         """Get firewall rule(s)
 
         Args:
@@ -870,3 +891,12 @@ class SophosFirewall:
                     "debug": debug
                   }
         return AclRule(self.client).update(**params)
+
+# Export the error classes for backward compatibility
+__all__ = [
+    "SophosFirewallZeroRecords",
+    "SophosFirewallAPIError",
+    "SophosFirewallAuthFailure",
+    "SophosFirewallInvalidArgument",
+    "SophosFirewallOperatorError",
+]
