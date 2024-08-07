@@ -134,7 +134,7 @@ class SophosFirewall:
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
     def get_fw_rule(self, name: str = None, operator: str = "="):
-        """Get firewall rule(s)
+        """Get firewall rule(s). DEPRECATED: Use `get_rule()` instead. Will be removed in a later version.
 
         Args:
             name (str, optional): Firewall Rule name.  Returns all rules if not specified.
