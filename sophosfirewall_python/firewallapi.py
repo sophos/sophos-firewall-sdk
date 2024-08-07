@@ -51,6 +51,11 @@ class SophosFirewall:
             port=port,
             verify=verify,
         )
+        self.username = self.client.username
+        self.password = self.client.password
+        self.hostname = self.client.hostname
+        self.port = self.client.port
+        self.verify = self.client.verify
 
     def login(self, output_format: str = "dict"):
         """Test login credentials.
