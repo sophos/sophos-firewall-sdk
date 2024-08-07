@@ -209,7 +209,7 @@ class SophosFirewall:
         return Vlan(self.client).get(name, operator)
 
     def get_acl_rule(self, name: str = None, operator: str = "="):
-        """Get ACL rules
+        """Get Local Service ACL Exception rule(s) (System > Administration > Device Access > Local service ACL exception)
 
         Args:
             name (str, optional): Name of rule to retrieve. Returns all if not specified.
