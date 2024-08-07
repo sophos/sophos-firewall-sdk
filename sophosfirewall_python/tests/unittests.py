@@ -596,9 +596,60 @@ class TestSophosFirewall(unittest.TestCase):
         assert self.fw.update_backup(backup_params=backup_params) == expected_result
 
     @patch.object(APIClient, "_post")
+    def test_create_acl_rule(self, mocked_post):
+        """Test create_acl_rule() method"""
+
+        mock_response = Mock()
+        mock_response.content = (
+            """
+            <?xml version="1.0" encoding="utf-8"?>
+            <Response APIVersion="1905.1" IPS_CAT_VER="1">
+            <Login>
+              <status>Authentication Successful</status>
+            </Login><LocalServiceACL transactionid="">
+              <Status code="200">Configuration applied successfully.</Status>
+            </LocalServiceACL>
+            </Response>""".replace(
+                "\n", ""
+            )
+            .strip()
+            .encode()
+        )
+
+        mocked_post.return_value = mock_response
+
+        expected_result = {
+            "Response": {
+                "@APIVersion": "1905.1",
+                "@IPS_CAT_VER": "1",
+                "Login": {"status": "Authentication Successful"},
+                "LocalServiceACL": {
+                    "@transactionid": "",
+                    "Status": {
+                        "@code": "200",
+                        "#text": "Configuration applied successfully.",
+                    },
+                },
+            }
+        }
+
+        assert (
+            self.fw.create_acl_rule(name="Appliance Access",
+                                    description="Test",
+                                    position="Bottom",
+                                    source_zone="LAN",
+                                    source_list=["Any"], 
+                                    dest_list=["Any"],
+                                    service_list=["SSH"],
+                                    action="Accept"
+                                    )
+            == expected_result
+        )
+
+    @patch.object(APIClient, "_post")
     @patch.object(AclRule, "get")
-    def test_update_service_acl(self, mocked_get_acl_rule, mocked_post):
-        """Test update_service_acl() method"""
+    def test_update_acl_rule(self, mocked_get_acl_rule, mocked_post):
+        """Test update_acl_rule() method"""
         mock_get = MagicMock()
         mock_get.__getitem__.return_value = {
             "@APIVersion": "2000.1",
@@ -668,7 +719,7 @@ class TestSophosFirewall(unittest.TestCase):
         }
 
         assert (
-            self.fw.update_service_acl(host_list=["Any"], action="add")
+            self.fw.update_acl_rule(name="Appliance Access", source_list=["Any"], update_action="add")
             == expected_result
         )
 

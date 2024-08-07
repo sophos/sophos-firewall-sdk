@@ -251,12 +251,13 @@ class APIClient:
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
 
-    def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
+    def remove(self, xml_tag: str, name: str, key: str = "Name", output_format: str = "dict"):
         """Remove an object from the firewall.
 
         Args:
             xml_tag (str): The XML tag indicating the type of object to be removed.
             name (str): The name of the object to be removed.
+            key (str): The primary XML key that is used to look up the object. Defaults to Name.
             output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         payload = f"""
@@ -267,7 +268,7 @@ class APIClient:
             </Login>
             <Remove>
               <{xml_tag}>
-                <Name>{name}</Name>
+                <{key}>{name}</{key}>
               </{xml_tag}>
             </Remove>
         </Request>

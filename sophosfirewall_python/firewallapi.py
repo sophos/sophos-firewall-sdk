@@ -101,15 +101,16 @@ class SophosFirewall:
         """
         return self.client.submit_template(filename, template_vars, template_dir, debug)
 
-    def remove(self, xml_tag: str, name: str, output_format: str = "dict"):
+    def remove(self, xml_tag: str, name: str, key: str = "Name", output_format: str = "dict"):
         """Remove an object from the firewall.
 
         Args:
             xml_tag (str): The XML tag indicating the type of object to be removed.
             name (str): The name of the object to be removed.
+            key (str): The primary XML key that is used to look up the object. Defaults to Name.
             output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
-        return self.client.remove(xml_tag, name, output_format)
+        return self.client.remove(xml_tag, name, key, output_format)
 
     def update(
         self,
@@ -208,7 +209,7 @@ class SophosFirewall:
         return Vlan(self.client).get(name, operator)
 
     def get_acl_rule(self, name: str = None, operator: str = "="):
-        """Get ACL rules
+        """Get Local Service ACL Exception rule(s) (System > Administration > Device Access > Local service ACL exception)
 
         Args:
             name (str, optional): Name of rule to retrieve. Returns all if not specified.
@@ -386,6 +387,39 @@ class SophosFirewall:
         return Service(self.client).get(name, operator, dst_proto, dst_port)
 
     # METHODS FOR OBJECT CREATION
+
+    def create_acl_rule(self,
+                         name: str,
+                         description: str = None,
+                         position: str = "Bottom",
+                         source_zone: str = "Any",
+                         source_list: list = None,
+                         dest_list: list = None,
+                         service_list: list = None,
+                         action: str = "Accept",
+                         debug: bool = False):
+        """Create Local Service ACL Exception Rule (System > Administration > Device Access > Local service ACL exception)
+
+        Args:
+            name (str): Name of the ACL exception rule to create.
+            description (str): Rule description. 
+            position (str): Location to place the ACL (Top or Bottom). 
+            source_zone (str): Source Zone. Defaults to Any. 
+            source_list (list, optional): List of source network or host groups. Defaults to None.
+            dest_list (list, optional): List of destination hosts. Defaults to None.
+            service_list (list, optional): List of services. Defaults to None.
+            action (str, optional): Accept or Drop. Default is Accept.
+            debug (bool, optional): Enable debug mode. Defaults to False.
+        """
+        return AclRule(self.client).create(name,
+                                           description, 
+                                           position, 
+                                           source_zone, 
+                                           source_list, 
+                                           dest_list, 
+                                           service_list, 
+                                           action, 
+                                           debug)
 
     def create_rule(self, rule_params: dict, debug: bool = False):
         """Create a firewall rule
@@ -799,20 +833,40 @@ class SophosFirewall:
         """
         return Backup(self.client).update(backup_params, debug)
 
-    def update_service_acl(
+    def update_acl_rule(
         self,
-        host_list: list = None,
+        name: str,
+        description: str = None,
+        source_zone: str = None,
+        source_list: list = None,
+        dest_list: list = None,
         service_list: list = None,
-        action: str = "add",
+        action: str = None,
+        update_action: str = "add",
         debug: bool = False,
     ):
-        """Update Local Service ACL (System > Administration > Device Access > Local service ACL exception)
+        """Update Local Service ACL Exception Rule (System > Administration > Device Access > Local service ACL exception)
 
         Args:
-            host_list (list, optional): List of network or host groups. Defaults to [].
+            name (str): Name of the ACL rule to update.
+            description (str): Rule description.
+            source_zone (str): Name of the source zone. Defaults to None. 
+            source_list (list, optional): List of network or host groups. Defaults to [].
+            dest_list (list, optional): List of destinations. Defaults to [].
             service_list (list, optional): List of services. Defaults to [].
-            action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'.
-            verify (bool, optional): SSL Certificate checking. Defaults to True.
+            action (str, optional): Accept or Drop.
+            update_action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
-        return AclRule(self.client).update(host_list, service_list, action, debug)
+        params = {
+                    "name": name,
+                    "description": description,
+                    "source_zone": source_zone,
+                    "source_list": source_list,
+                    "dest_list": dest_list,
+                    "service_list": service_list,
+                    "action": action,
+                    "update_action": update_action,
+                    "debug": debug
+                  }
+        return AclRule(self.client).update(**params)
