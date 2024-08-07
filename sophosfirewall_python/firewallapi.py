@@ -894,6 +894,7 @@ class SophosFirewall:
 
 # Export the error classes for backward compatibility
 __all__ = [
+    "SophosFirewall",
     "SophosFirewallZeroRecords",
     "SophosFirewallAPIError",
     "SophosFirewallAuthFailure",
