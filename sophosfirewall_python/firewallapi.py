@@ -141,6 +141,15 @@ class SophosFirewall:
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
         return FirewallRule(self.client).get(name=name, operator=operator)
+    
+    def get_rule(self, name: str = None, operator: str = "="):
+        """Get firewall rule(s)
+
+        Args:
+            name (str, optional): Firewall Rule name.  Returns all rules if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return FirewallRule(self.client).get(name=name, operator=operator)
 
     def get_ip_host(
         self, name: str = None, ip_address: str = None, operator: str = "="
