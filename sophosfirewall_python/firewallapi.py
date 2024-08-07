@@ -10,7 +10,14 @@ permissions and limitations under the License.
 """
 
 import urllib3
-from sophosfirewall_python.api_client import APIClient
+from sophosfirewall_python.api_client import (
+    APIClient,
+    SophosFirewallZeroRecords,
+    SophosFirewallInvalidArgument,
+    SophosFirewallAPIError,
+    SophosFirewallAuthFailure,
+    SophosFirewallOperatorError
+)
 from sophosfirewall_python.firewallrule import FirewallRule
 from sophosfirewall_python.host import (
     IPHost,
@@ -879,3 +886,12 @@ class SophosFirewall:
                     "debug": debug
                   }
         return AclRule(self.client).update(**params)
+
+# Export the error classes for backward compatibility
+__all__ = [
+    "SophosFirewallZeroRecords",
+    "SophosFirewallAPIError",
+    "SophosFirewallAuthFailure",
+    "SophosFirewallInvalidArgument",
+    "SophosFirewallOperatorError",
+]
