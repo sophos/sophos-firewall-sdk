@@ -876,7 +876,7 @@ class SophosFirewall:
             dest_list (list, optional): List of destinations. Defaults to [].
             service_list (list, optional): List of services. Defaults to [].
             action (str, optional): Accept or Drop.
-            update_action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'.
+            update_action (str, optional): Indicate whether to 'add' or 'remove' from source, dest, or service lists, or to 'replace' the lists. Default is 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
         params = {
