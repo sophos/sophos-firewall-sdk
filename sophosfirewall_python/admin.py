@@ -71,12 +71,12 @@ class AclRule:
             dest_list (list, optional): List of destinations. Defaults to [].
             service_list (list, optional): List of services. Defaults to [].
             action (str, optional): Accept or Drop.
-            update_action (str, optional): Indicate 'add' or 'remove' from list. Default is 'add'.
+            update_action (str, optional): Indicate whether to 'add' or 'remove' from source, dest, or service lists, or to 'replace' the lists. Default is 'add'.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
         if update_action:
             self.client.validate_arg(
-                arg_name="update_action", arg_value=update_action, valid_choices=["add", "remove"]
+                arg_name="update_action", arg_value=update_action, valid_choices=["add", "remove", "replace"]
             )
 
         if action:
@@ -123,6 +123,16 @@ class AclRule:
                 "source_list": exist_sources + source_list,
                 "dest_list": exist_dests + dest_list,
                 "service_list": exist_services + service_list,
+                "action": action
+            }
+        elif update_action == "replace":
+            template_vars = {
+                "name": name,
+                "description": description,
+                "source_zone": source_zone,
+                "source_list": source_list,
+                "dest_list": dest_list,
+                "service_list": service_list,
                 "action": action
             }
         elif update_action == "remove":
