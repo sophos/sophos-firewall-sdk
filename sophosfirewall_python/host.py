@@ -51,6 +51,7 @@ class IPHost:
         Returns:
             dict: XML response converted to Python dictionary
         """
+        self.client.validate_arg("host_type", host_type, ["IP", "Network", "IPRange"])
 
         if host_type == "IP":
             Utils.validate_ip_address(ip_address)
