@@ -148,7 +148,9 @@ class AclRule:
                 "source_zone": source_zone,
                 "source_list": exist_sources,
                 "dest_list": exist_dests,
-                "service_list": exist_services}
+                "service_list": exist_services,
+                "action": action
+            }
 
         resp = self.client.submit_template(
             "updateserviceacl.j2", template_vars=template_vars, debug=debug
