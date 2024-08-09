@@ -21,11 +21,13 @@
                 {% endif %}
 			</Hosts>
 			{% endif %}
+			{% if service_list %}
 			<Services>
 				{% for service in service_list %}
 				<Service>{{ service }}</Service>
 				{% endfor %}
 			</Services>
+			{% endif %}
 			<Action>{{ action | lower }}</Action>
 		</LocalServiceACL>
    </Set>

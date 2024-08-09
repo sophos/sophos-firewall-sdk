@@ -130,9 +130,9 @@ class AclRule:
                 "name": name,
                 "description": description,
                 "source_zone": source_zone,
-                "source_list": source_list,
-                "dest_list": dest_list,
-                "service_list": service_list,
+                "source_list": source_list if source_list else exist_sources,
+                "dest_list": dest_list if dest_list else exist_dests,
+                "service_list": service_list if service_list else exist_services,
                 "action": action
             }
         elif update_action == "remove":
