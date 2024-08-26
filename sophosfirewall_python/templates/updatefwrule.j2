@@ -3,7 +3,7 @@
         <Username>{{username}}</Username>
         <Password >{{password}}</Password>
     </Login>
-    <Set operation="add">
+    <Set operation="update">
        <FirewallRule transactionid="">
         <Name>{{ rulename }}</Name>
         <Description>{{ description if description else '' }}</Description>
@@ -23,9 +23,7 @@
         {% endif %}
         <NetworkPolicy>
             <Action>{{ action }}</Action>
-            {% if log %}
             <LogTraffic>{{ log }}</LogTraffic>
-            {% endif %}
             <SkipLocalDestined>Disable</SkipLocalDestined>
             {% if src_zones %}
             <SourceZones>

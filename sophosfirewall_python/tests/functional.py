@@ -255,6 +255,19 @@ def test_create_rule(setup):
     response = setup.create_rule(rule_params=rule_params)
     assert response["Response"]["FirewallRule"]["Status"] == expected_result
 
+def test_update_rule(setup):
+    """Test update_rule method."""
+
+    update_result = {
+        "@code": "200",
+        "#text": "Configuration applied successfully.",
+    }
+
+    response = setup.update_rule(name="FUNC_TESTRULE1", rule_params={"action": "Drop"})
+    assert response["Response"]["FirewallRule"]["Status"] == update_result
+
+    response = setup.get_rule(name="FUNC_TESTRULE1")
+    assert response["Response"]["FirewallRule"]["NetworkPolicy"]["Action"] == "Drop"
 
 def test_create_urlgroup(setup):
     """Test create_urlgroup method."""

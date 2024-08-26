@@ -450,7 +450,10 @@ class SophosFirewall:
 
         Keyword Args:
             rulename(str): Name of the firewall rule
-            after_rulename(str): Name of the rule to insert this rule after
+            status(str): Enable/Disable
+            position(str): Where the rule should be positioned (top/bottom/after/before)
+            after_rulename(str, optional): Name of the rule to insert this rule after if position = after
+            before_rulename(str, optional): Name of the rule to insert this rule before if position = before
             action(str): Accept, Drop, Reject
             description(str): Rule description
             log(str): Enable, Disable
@@ -891,6 +894,30 @@ class SophosFirewall:
                     "debug": debug
                   }
         return AclRule(self.client).update(**params)
+
+    def update_rule(self, name: str, rule_params: dict, debug: bool = False):
+        """Update a firewall rule
+
+        Args:
+            name(str): Name of the firewall rule to be updated.
+            rule_params (dict): Configuration parmeters for the rule, see Keyword Args for supported parameters.
+
+        Keyword Args:
+            position(str): Where the rule should be positioned (top/bottom/after/before)
+            after_rulename(str): Name of the rule to insert this rule after if position = after
+            before_rulename(str): Name of the rule to insert this rule before if position = before
+            action(str): Accept, Drop, Reject
+            description(str): Rule description
+            log(str): Enable, Disable
+            src_zones(list): Name(s) of the source zone(s)
+            dst_zones(list): Name(s) of the destination zone(s)
+            src_networks(list): Name(s) of the source network(s)
+            dst_networks(list): Name(s) of the destination network(s)
+            service_list(list): Name(s) of service(s)
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return FirewallRule(self.client).update(name, rule_params, debug)
 
 # Export the error classes for backward compatibility
 __all__ = [
