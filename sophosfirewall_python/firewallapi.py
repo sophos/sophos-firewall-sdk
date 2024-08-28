@@ -113,6 +113,24 @@ class SophosFirewall:
         """
         return self.client.submit_template(filename, template_vars, template_dir, debug)
 
+    def submit_xml(
+        self,
+        template_data: str,
+        template_vars: dict = None,
+        set_operation: str = "add",
+        debug: bool = False,
+    ) -> dict:
+        """Submits XML payload as a string to the API. 
+        Args:
+            template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 syntax (ex. {{ some_var }})
+            template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
+            set_operation (str): Specify 'add' or 'update' set operation. Default is add. 
+
+        Returns:
+            dict
+        """
+        return self.client.submit_xml(template_data, template_vars, set_operation, debug)
+
     def remove(self, xml_tag: str, name: str, key: str = "Name", output_format: str = "dict"):
         """Remove an object from the firewall.
 

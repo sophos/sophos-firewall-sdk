@@ -10,7 +10,7 @@ import os
 import re
 import requests
 import xmltodict
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, Template
 
 
 class SophosFirewallAPIError(Exception):
@@ -170,6 +170,56 @@ class APIClient:
         template = environment.get_template(filename)
         template_vars["username"] = self.username
         template_vars["password"] = self.password
+        payload = template.render(**template_vars)
+        if debug:
+            print(f"REQUEST: {payload}")
+        resp = self._post(xmldata=payload)
+
+        resp_dict = xmltodict.parse(resp.content.decode())["Response"]
+        success_pattern = "2[0-9][0-9]"
+        for key in resp_dict:
+            if "Status" in resp_dict[key]:
+                if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
+                    raise SophosFirewallAPIError(resp_dict[key])
+        return xmltodict.parse(resp.content.decode())
+
+    def submit_xml(
+        self,
+        template_data: str,
+        template_vars: dict = None,
+        set_operation: str = "add",
+        debug: bool = False,
+    ) -> dict:
+        """Submits XML payload as a string to the API. 
+        Args:
+            template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})
+            template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
+            set_operation (str): Specify 'add' or 'update' set operation. Default is add. 
+
+        Returns:
+            dict
+        """
+        if not template_vars:
+            template_vars = {}
+
+        environment = Environment(
+            trim_blocks=True,
+            lstrip_blocks=True,
+            autoescape=True,
+        )
+
+        template_string = f"""
+            <Request>
+                <Login>
+                    <Username>{self.username}</Username>
+                    <Password>{self.password}</Password>
+                </Login>
+            <Set operation="{set_operation}">
+                {template_data}
+            </Set>
+            </Request>
+        """
+        template = environment.from_string(template_string)
         payload = template.render(**template_vars)
         if debug:
             print(f"REQUEST: {payload}")
