@@ -14,11 +14,12 @@ class User:
     def __init__(self, api_client):
         self.client = api_client
 
-    def get(self, name, operator="="):
+    def get(self, name=None, username=None, operator="="):
         """Get local users
 
         Args:
-            name (str, optional): Name of user. Retrieves all users if not specified.
+            name (str, optional): User display name. Retrieves all users if not specified.
+            username (str, optional): Username.  Retrieves all users if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
 
         Returns:
@@ -27,6 +28,10 @@ class User:
         if name:
             return self.client.get_tag_with_filter(
                 xml_tag="User", key="Name", value=name, operator=operator
+            )
+        if username:
+            return self.client.get_tag_with_filter(
+                xml_tag="User", key="Username", value=username, operator=operator
             )
         return self.client.get_tag(xml_tag="User")
 
