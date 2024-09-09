@@ -259,11 +259,12 @@ class SophosFirewall:
         """
         return AclRule(self.client).get(name, operator)
 
-    def get_user(self, name: str = None, operator: str = "="):
+    def get_user(self, name: str = None, username: str = None, operator: str = "="):
         """Get local users
 
         Args:
-            name (str, optional): Name of user. Retrieves all users if not specified.
+            name (str, optional): User display name. Retrieves all users if not specified.
+            username (str, optional): Username.  Retrieves all users if not specified.
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
 
         Returns:
