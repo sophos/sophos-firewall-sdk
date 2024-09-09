@@ -270,7 +270,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return User(self.client).get(name, operator)
+        return User(self.client).get(name, username, operator)
 
     def get_admin_profile(self, name: str = None, operator: str = "="):
         """Get admin profiles
