@@ -85,7 +85,7 @@ class User:
             dict: XML response converted to Python dictionary
         """
         # Get the existing user
-        resp = self.get(name=username)
+        resp = self.get(username=username)
         user_params = resp["Response"]["User"]
         user_params["Password"] = new_password
         user_params.pop("PasswordHash")
