@@ -30,7 +30,7 @@ from sophosfirewall_python.host import (
 )
 from sophosfirewall_python.service import Service, ServiceGroup
 from sophosfirewall_python.network import Interface, Vlan, Zone
-from sophosfirewall_python.admin import AclRule, Notification
+from sophosfirewall_python.admin import AclRule, Notification, AdminSettings
 from sophosfirewall_python.authen import User, AdminAuthen
 from sophosfirewall_python.profile import AdminProfile
 from sophosfirewall_python.ips import IPS
@@ -376,7 +376,7 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return self.client.get_tag(xml_tag="AdminSettings")
+        return AdminSettings(self.client).get()
 
     def get_dns_forwarders(self):
         """Get DNS forwarders.
@@ -937,6 +937,110 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         return FirewallRule(self.client).update(name, rule_params, debug)
+    
+    def update_hostname_settings(self, hostname: str = None, description: str = None, debug: bool = False):
+        """Update hostname admin settings. System > Administration > Admin and user settings.
+
+        Args:
+            hostname (str, optional): Hostname. Defaults to None.
+            description (str, optional): Hostname description. Defaults to None.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminSettings(self.client).update_hostname_settings(hostname, description, debug)
+    
+    def update_webadmin_settings(self, certificate: str = None,
+                                 https_port: str = None,
+                                 userportal_https_port: str = None,
+                                 vpnportal_https_port: str = None,
+                                 portal_redirect_mode: str = None,
+                                 portal_custom_hostname: str = None,
+                                 debug: bool = False):
+        """Update webadmin settings. System > Administration > Admin and user settings.
+
+        Args:
+            certificate (str, optional): SSL Certificate name. Defaults to None.
+            https_port (str, optional): HTTPS port for admin interface. Defaults to None.
+            userportal_https_port (str, optional): HTTPS port for User portal. Defaults to None.
+            vpnportal_https_port (str, optional): HTTPS port for VPN portal. Defaults to None.
+            portal_redirect_mode (str, optional): Portal redirect mode. Defaults to None.
+            portal_custom_hostname (str, optional): Portal custom hostname. Defaults to None.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminSettings(self.client).update_webadmin_settings(certificate,
+                                                                   https_port,
+                                                                   userportal_https_port,
+                                                                   vpnportal_https_port,
+                                                                   portal_redirect_mode,
+                                                                   portal_custom_hostname,
+                                                                   debug)
+    
+    def update_loginsecurity_settings(self, logout_session: str = None, 
+                                      block_login: str = None, 
+                                      unsuccessful_attempt: str = None, 
+                                      duration: str = None, 
+                                      minutes: str = None, 
+                                      debug: bool = False):
+            """Update login security settings. System > Administration > Admin and user settings.
+
+            Args:
+                logout_session (str, optional): Enable to logout Admin Session after configured timeout. Specify number of minutes to enable (1-120). Defaults to None.
+                block_login (str, optional): Enable to block Admin login after configured number of failed attempts within configured time span. Defaults to None.
+                unsuccessful_attempt (str, optional): Allowed number of failed Admin login attempts from the same IP address (1-5). Defaults to None.
+                duration (str, optional): Time span within which if Admin Login attempts exceed configured Unsuccessful Attempts, then Admin Login gets blocked. (1-120). Defaults to None.
+                minutes (str, optional): Time interval for which Admin Login is blocked (1-60). Defaults to None. 
+
+            Returns:
+                dict: XML response converted to Python dictionary
+            """
+            return AdminSettings(self.client).update_loginsecurity_settings(logout_session,
+                                                                            block_login,
+                                                                            unsuccessful_attempt,
+                                                                            duration,
+                                                                            minutes,
+                                                                            debug)
+
+    def update_passwordcomplexity_settings(self, complexity_check: str = None,
+                                           enforce_min_length: str = None,
+                                           include_alpha: str = None,
+                                           include_numeric: str = None,
+                                           include_special: str = None,
+                                           min_length: str = None,
+                                           debug: bool = False):
+        """Update hostname admin settings. System > Administration > Admin and user settings.
+
+        Args:
+            complexity_check (str, optional): Enable/disable password complexity check. Defaults to None.
+            enforce_min_length (str, optional): Enforce minimum required password length. Defaults to None.
+            include_alpha (str, optional): Enforce inclusion of alphanumeric characters. Defaults to None.
+            include_numeric (str, optional): Enforce inclusion numeric characters. Defaults to None.
+            include_special (str, optional): Enforce inclusion of special characters. Defaults to None. 
+            min_length (str, optional): Minimul required password length. Defaults to None. 
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminSettings(self.client).update_passwordcomplexity_settings(complexity_check,
+                                                                             enforce_min_length,
+                                                                             include_alpha,
+                                                                             include_numeric,
+                                                                             include_special,
+                                                                             min_length,
+                                                                             debug)
+    
+    def update_login_disclaimer(self, enabled: bool = False, debug: bool = False):
+        """Update login disclaimer. System > Administration > Admin and user settings.
+
+        Args:
+            enabled (bool, optional): Enable or disable Login Disclaimer. Defaults to True.
+        
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminSettings(self.client).update_login_disclaimer(enabled, debug)
 
 # Export the error classes for backward compatibility
 __all__ = [

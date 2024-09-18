@@ -190,7 +190,8 @@ class APIClient:
         set_operation: str = "add",
         debug: bool = False,
     ) -> dict:
-        """Submits XML payload as a string to the API. 
+        """Submits XML payload as a string to the API.
+        
         Args:
             template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})
             template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
