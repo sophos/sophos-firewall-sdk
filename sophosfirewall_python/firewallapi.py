@@ -702,6 +702,42 @@ class SophosFirewall:
         """
         return User(self.client).create(debug, **kwargs)
 
+    def create_zone(self, name: str, zone_type: str, zone_params: dict = None, debug: bool = False):
+        """Create a zone.
+
+        Args:
+            name (str): Zone name
+            zone_type (str): Zone type
+
+        Keyword Args:
+            name (str): Name of the Zone
+            zone_type (str): Type of the zone (LAN/DMZ)
+            description (str, optional): Description for the Zone
+            https (str, optional): Enable/Disable HTTPS administrative service
+            ssh (str, optional): Enable/Disable SSH administrative service
+            client_authen (str, optional): Enable/Disable client authentication service
+            captive_portal (str, optional): Enable/Disable captive portal
+            ad_sso (str, optional): Enable/Disable SSO with Active Directory
+            radius_sso (str, optional): Enable/Disable SSO with Radius
+            chromebook_sso (str, optional): Enable/Disable Chromebook SSO
+            dns (str, optional): Enable/Disable DNS
+            ping (str, optional): Enable/Disable ping
+            ipsec (str, optional): Enable/Disable ipsec
+            red (str, optional): Enable/Disable RED
+            sslvpn (str, optional): Enable/Disable SSL VPN
+            vpn_portal (str, optional): Enable/Disable VPN Portal
+            web_proxy (str, optional): Enable/Disable Web proxy
+            wireless_protection (str, optional): Enable/Disable wireless protection
+            user_portal (str, optional): Enable/Disable user portal
+            dynamic_routing (str, optional): Enable/Disable dynamic routing
+            smtp_relay (str, optional): Enable/Disable SMTP Relay
+            snmp (str, optional): Enable/Disable SNMP
+        
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return Zone(self.client).create(name=name, zone_type=zone_type, zone_params=zone_params, debug=debug)
+
     def update_user_password(
         self, username: str, new_password: str, debug: bool = False
     ):
@@ -1041,6 +1077,40 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         return AdminSettings(self.client).update_login_disclaimer(enabled, debug)
+
+    def update_zone(self, name: str, zone_params: dict = None, debug: bool = False):
+        """Update a zone.
+
+        Args:
+            name (str): Name of the Zone
+            zone_params (dict): Configuration parmeters for the zone, see Keyword Args for supported parameters.
+
+        Keyword Args:
+            description (str, optional): Description for the Zone
+            https (str, optional): Enable/Disable HTTPS administrative service
+            ssh (str, optional): Enable/Disable SSH administrative service
+            client_authen (str, optional): Enable/Disable client authentication service
+            captive_portal (str, optional): Enable/Disable captive portal
+            ad_sso (str, optional): Enable/Disable SSO with Active Directory
+            radius_sso (str, optional): Enable/Disable SSO with Radius
+            chromebook_sso (str, optional): Enable/Disable Chromebook SSO
+            dns (str, optional): Enable/Disable DNS
+            ping (str, optional): Enable/Disable ping
+            ipsec (str, optional): Enable/Disable ipsec
+            red (str, optional): Enable/Disable RED
+            sslvpn (str, optional): Enable/Disable SSL VPN
+            vpn_portal (str, optional): Enable/Disable VPN Portal
+            web_proxy (str, optional): Enable/Disable Web proxy
+            wireless_protection (str, optional): Enable/Disable wireless protection
+            user_portal (str, optional): Enable/Disable user portal
+            dynamic_routing (str, optional): Enable/Disable dynamic routing
+            smtp_relay (str, optional): Enable/Disable SMTP Relay
+            snmp (str, optional): Enable/Disable SNMP
+        
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return Zone(self.client).update(name, zone_params, debug)
 
 # Export the error classes for backward compatibility
 __all__ = [

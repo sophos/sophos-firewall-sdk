@@ -1,0 +1,84 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="update">
+        <Zone>
+            <Name>{{ name }}</Name>
+            {% if zone_type %}
+            <Type>{{ zone_type }}</Type>
+            {% endif %}
+            <Description>{{ description }}</Description>
+            <ApplianceAccess>
+                <AdminServices>
+                    {% if https %}
+                    <HTTPS>{{ https }}</HTTPS>
+                    {% endif %}
+                    {% if ssh %}
+                    <SSH>{{ ssh }}</SSH>
+                    {% endif %}
+                </AdminServices>
+                <AuthenticationServices>
+                    {% if client_authen %}
+                    <ClientAuthentication>{{ client_authen }}</ClientAuthentication>
+                    {% endif %}
+                    {% if captive_portal %}
+                    <CaptivePortal>{{ captive_portal }}</CaptivePortal>
+                    {% endif %}
+                    {% if ad_sso %}
+                    <ADSSO>{{ ad_sso }}</ADSSO>
+                    {% endif %}
+                    {% if radius_sso %}
+                    <RadiusSSO>{{ radius_sso }}</RadiusSSO>
+                    {% endif %}
+                    {% if chromebook_sso %}
+                    <ChromebookSSO>{{ chromebook_sso }}</ChromebookSSO>
+                    {% endif %}
+                </AuthenticationServices>
+                <NetworkServices>
+                    {% if dns %}
+                    <DNS>{{ dns }}</DNS>
+                    {% endif %}
+                    {% if ping %}
+                    <Ping>{{ ping }}</Ping>
+                    {% endif %}
+                </NetworkServices>
+                <VPNServices>
+                    {% if ipsec %}
+                    <IPsec>{{ ipsec }}</IPsec>
+                    {% endif %}
+                    {% if red %}
+                    <RED>{{ red }}</RED>
+                    {% endif %}
+                    {% if sslvpn %}
+                    <SSLVPN>{{ sslvpn }}</SSLVPN>
+                    {% endif %}
+                    {% if vpn_portal %}
+                    <VPNPortal>{{ vpn_portal }}</VPNPortal>
+                    {% endif %}
+                </VPNServices>
+                <OtherServices>
+                    {% if web_proxy %}
+                    <WebProxy>{{ web_proxy }}</WebProxy>
+                    {% endif %}
+                    {% if wireless_protection %}
+                    <WirelessProtection>{{ wireless_protection }}</WirelessProtection>
+                    {% endif %}
+                    {% if user_portal %}
+                    <UserPortal>{{ user_portal }}</UserPortal>
+                    {% endif %}
+                    {% if dynamic_routing %}
+                    <DynamicRouting>{{ dynamic_routing }}</DynamicRouting>
+                    {% endif %}
+                    {% if smtp_relay %}
+                    <SMTPRelay>{{ smtp_relay }}</SMTPRelay>
+                    {% endif %}
+                    {% if snmp %}
+                    <SNMP>{{ snmp }}</SNMP>
+                    {% endif %}
+                </OtherServices>
+            </ApplianceAccess>
+        </Zone>
+    </Set>
+</Request>
