@@ -1,0 +1,72 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="update"> 
+    <AdministrationProfile>
+		<Name>{{ name }}</Name>
+		<Dashboard>{{ dashboard }}</Dashboard>
+		<Wizard>{{ wizard }}</Wizard>
+		<System>
+			<Profile>{{ profile }}</Profile>
+			<Password>{{ system_password }}</Password>
+			<CentralManagement>{{ central_management }}</CentralManagement>
+			<Backup>{{ backup }}</Backup>
+			<Restore>{{ restore }}</Restore>
+			<Firmware>{{ firmware }}</Firmware>
+			<Licensing>{{ licensing }}</Licensing>
+			<Services>{{ services }}</Services>
+			<Updates>{{ updates }}</Updates>
+			<RebootShutdown>{{ reboot_shutdown }}</RebootShutdown>
+			<HA>{{ ha }}</HA>
+			<DownloadCertificates>{{ download_certificates }}</DownloadCertificates>
+			<OtherCertificateConfiguration>{{ other_certificate_configuration }}</OtherCertificateConfiguration>
+			<Diagnostics>{{ diagnostics }}</Diagnostics>
+			<OtherSystemConfiguration>{{ other_system_configuration }}</OtherSystemConfiguration>
+		</System>
+        <WirelessProtection>
+            <WirelessProtectionOverview>{{ wireless_protection_overview }}</WirelessProtectionOverview>
+            <WirelessProtectionSettings>{{ wireless_protection_settings }}</WirelessProtectionSettings>
+            <WirelessProtectionNetworkNetwork>{{ wireless_protection_network }}</WirelessProtectionNetworkNetwork>
+            <WirelessProtectionAccessPoint>{{ wireless_protection_access_point }}</WirelessProtectionAccessPoint>
+            <WirelessProtectionMesh>{{ wireless_protection_mesh }}</WirelessProtectionMesh>
+        </WirelessProtection>
+		<Objects>{{ objects }}</Objects>
+		<Network>{{ network }}</Network>
+		<Identity>
+			<Authentication>{{ authentication }}</Authentication>
+			<Groups>{{ groups }}</Groups>
+			<GuestUsersManagement>{{ guest_users_management }}</GuestUsersManagement>
+			<OtherGuestUserSettings>{{ other_guest_user_settings }}</OtherGuestUserSettings>
+			<Policy>{{ policy }}</Policy>
+			<TestExternalServerConnectivity>{{ test_external_server_connectivity }}</TestExternalServerConnectivity>
+			<DisconnectLiveUser>{{ disconnect_live_user }}</DisconnectLiveUser>
+		</Identity>
+		<Firewall>{{ firewall }}</Firewall>
+		<VPN>
+			<ConnectTunnel>{{ connect_tunnel }}</ConnectTunnel>
+			<OtherVPNConfigurations>{{ other_vpn_configurations }}</OtherVPNConfigurations>
+		</VPN>
+		<IPS>{{ ips }}</IPS>
+		<WebFilter>{{ web_filter }}</WebFilter>
+		<CloudApplicationDashboard>{{ cloud_application_dashboard }}</CloudApplicationDashboard>
+		<ZeroDayProtection>{{ zero_day_protection }}</ZeroDayProtection>
+		<ApplicationFilter>{{ application_filter }}</ApplicationFilter>
+		<WAF>
+			<Alerts>{{ alerts }}</Alerts>
+			<OtherWAFConfiguration>{{ other_waf_configuration }}</OtherWAFConfiguration>
+		</WAF>
+		<QoS>{{ qos }}</QoS>
+		<EmailProtection>{{ email_protection }}</EmailProtection>
+		<TrafficDiscovery>{{ traffic_discovery }}</TrafficDiscovery>
+		<LogsReports>
+			<Configuration>{{ configuration }}</Configuration>
+			<LogViewer>{{ log_viewer }}</LogViewer>
+			<ReportsAccess>{{ reports_access }}</ReportsAccess>
+			<Four-EyeAuthenticationSettings>{{ four_eye_authentication_settings }}</Four-EyeAuthenticationSettings>
+			<De-Anonymization>{{ de_anonymization }}</De-Anonymization>
+		</LogsReports>
+	</AdministrationProfile>
+   </Set>
+</Request>

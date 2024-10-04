@@ -1,0 +1,78 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add"> 
+    <AdministrationProfile>
+		<Name>{{ name }}</Name>
+		<Dashboard>{{ dashboard | default(default_permission) }}</Dashboard>
+		<Wizard>{{ wizard | default(default_permission) }}</Wizard>
+		<System>
+			<SetSystemProfile>{{ set_system_profile | default(default_permission) }}</SetSystemProfile>
+			<Profile>{{ profile | default(default_permission) }}</Profile>
+			<Password>{{ system_password | default(default_permission) }}</Password>
+			<CentralManagement>{{ central_management | default(default_permission) }}</CentralManagement>
+			<Backup>{{ backup | default(default_permission) }}</Backup>
+			<Restore>{{ restore | default(default_permission) }}</Restore>
+			<Firmware>{{ firmware | default(default_permission) }}</Firmware>
+			<Licensing>{{ licensing | default(default_permission) }}</Licensing>
+			<Services>{{ services | default(default_permission) }}</Services>
+			<Updates>{{ updates | default(default_permission) }}</Updates>
+			<RebootShutdown>{{ reboot_shutdown | default(default_permission) }}</RebootShutdown>
+			<HA>{{ ha | default(default_permission) }}</HA>
+			<DownloadCertificates>{{ download_certificates | default(default_permission) }}</DownloadCertificates>
+			<OtherCertificateConfiguration>{{ other_certificate_configuration | default(default_permission) }}</OtherCertificateConfiguration>
+			<Diagnostics>{{ diagnostics | default(default_permission) }}</Diagnostics>
+			<OtherSystemConfiguration>{{ other_system_configuration | default(default_permission) }}</OtherSystemConfiguration>
+		</System>
+        <WirelessProtection>
+            <SetWirelessProtection> {{ set_wireless_protection }}</SetWirelessProtection>
+            <WirelessProtectionOverview>{{ wireless_protection_overview | default(default_permission) }}</WirelessProtectionOverview>
+            <WirelessProtectionSettings>{{ wireless_protection_settings | default(default_permission) }}</WirelessProtectionSettings>
+            <WirelessProtectionNetworkNetwork>{{ wireless_protection_network | default(default_permission) }}</WirelessProtectionNetworkNetwork>
+            <WirelessProtectionAccessPoint>{{ wireless_protection_access_point | default(default_permission) }}</WirelessProtectionAccessPoint>
+            <WirelessProtectionMesh>{{ wireless_protection_mesh | default(default_permission) }}</WirelessProtectionMesh>
+        </WirelessProtection>
+		<Objects>{{ objects | default(default_permission) }}</Objects>
+		<Network>{{ network | default(default_permission) }}</Network>
+		<Identity>
+			<SetIdentityProfile>{{ set_identity_profile | default(default_permission) }}</SetIdentityProfile>
+			<Authentication>{{ authentication | default(default_permission) }}</Authentication>
+			<Groups>{{ groups | default(default_permission) }}</Groups>
+			<GuestUsersManagement>{{ guest_users_management | default(default_permission) }}</GuestUsersManagement>
+			<OtherGuestUserSettings>{{ other_guest_user_settings | default(default_permission) }}</OtherGuestUserSettings>
+			<Policy>{{ policy | default(default_permission) }}</Policy>
+			<TestExternalServerConnectivity>{{ test_external_server_connectivity | default(default_permission) }}</TestExternalServerConnectivity>
+			<DisconnectLiveUser>{{ disconnect_live_user | default(default_permission) }}</DisconnectLiveUser>
+		</Identity>
+		<Firewall>{{ firewall | default(default_permission) }}</Firewall>
+		<VPN>
+			<SetVPNProfile>{{ set_vpn_profile | default(default_permission) }}</SetVPNProfile>
+			<ConnectTunnel>{{ connect_tunnel | default(default_permission) }}</ConnectTunnel>
+			<OtherVPNConfigurations>{{ other_vpn_configurations | default(default_permission) }}</OtherVPNConfigurations>
+		</VPN>
+		<IPS>{{ ips | default(default_permission) }}</IPS>
+		<WebFilter>{{ web_filter | default(default_permission) }}</WebFilter>
+		<CloudApplicationDashboard>{{ cloud_application_dashboard | default(default_permission) }}</CloudApplicationDashboard>
+		<ZeroDayProtection>{{ zero_day_protection | default(default_permission) }}</ZeroDayProtection>
+		<ApplicationFilter>{{ application_filter | default(default_permission) }}</ApplicationFilter>
+		<WAF>
+			<SetWAFProfile>{{ set_waf_profile | default(default_permission) }}</SetWAFProfile>
+			<Alerts>{{ alerts | default(default_permission) }}</Alerts>
+			<OtherWAFConfiguration>{{ other_waf_configuration | default(default_permission) }}</OtherWAFConfiguration>
+		</WAF>
+		<QoS>{{ qos | default(default_permission) }}</QoS>
+        <EmailProtection>{{ email_protection | default(default_permission) }}</EmailProtection>
+		<TrafficDiscovery>{{ traffic_discovery | default(default_permission) }}</TrafficDiscovery>
+		<LogsReports>
+			<SetLogsReportsProfile>{{ set_logs_reports_profile | default(default_permission) }}</SetLogsReportsProfile>
+			<Configuration>{{ configuration | default(default_permission) }}</Configuration>
+			<LogViewer>{{ log_viewer | default(default_permission) }}</LogViewer>
+			<ReportsAccess>{{ reports_access | default(default_permission) }}</ReportsAccess>
+			<Four-EyeAuthenticationSettings>{{ four_eye_authentication_settings | default(default_permission) }}</Four-EyeAuthenticationSettings>
+			<De-Anonymization>{{ de_anonymization | default(default_permission) }}</De-Anonymization>
+		</LogsReports>
+	</AdministrationProfile>
+   </Set>
+</Request>

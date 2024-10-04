@@ -452,14 +452,88 @@ class SophosFirewall:
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
         return AclRule(self.client).create(name,
-                                           description, 
-                                           position, 
-                                           source_zone, 
-                                           source_list, 
-                                           dest_list, 
-                                           service_list, 
-                                           action, 
+                                           description,
+                                           position,
+                                           source_zone,
+                                           source_list,
+                                           dest_list,
+                                           service_list,
+                                           action,
                                            debug)
+
+    def create_admin_profile(self, name: str, default_permission: str=None, debug: bool=False, **kwargs):
+        """Create an administration profile.
+
+        Args:
+            name (str): Name of administration profile
+            default_permission (str, optional): Permissions to use for unspecified settings (None, Read-Only, Read-Write). Defaults to None.
+            debug (bool, optional): Turn on debugging. Defaults to False.
+
+        Keyword Args:
+            dashboard (str, optional): Dashboard permission (None, Read-Only, Read-Write). Defaults to None.
+            wizard (str, optional): Wizard permission (None, Read-Only, Read-Write). Defaults to None.
+            set_system_profile (str, optional): System Profile permission (None, Read-Only, Read-Write). Defaults to None.
+            profile (str, optional): Profile permission (None, Read-Only, Read-Write). Defaults to None.
+            system_password (str, optional): System Password permission (None, Read-Only, Read-Write). Defaults to None.
+            central_management (str, optional): Central management permission (None, Read-Only, Read-Write). Defaults to None.
+            backup (str, optional): Backup permission (None, Read-Only, Read-Write). Defaults to None.
+            restore (str, optional): Restore permission (None, Read-Only, Read-Write). Defaults to None.
+            firmware (str, optional): Firmware permission (None, Read-Only, Read-Write). Defaults to None.
+            licensing (str, optional): Licensing permission (None, Read-Only, Read-Write). Defaults to None.
+            services (str, optional): Services permission (None, Read-Only, Read-Write). Defaults to None.
+            updates (str, optional): Updates permission (None, Read-Only, Read-Write). Defaults to None.
+            reboot_shutdown (str, optional): Reboot/Shutdown permission (None, Read-Only, Read-Write). Defaults to None.
+            ha (str, optional): HA permission (None, Read-Only, Read-Write). Defaults to None.
+            download_certificates (str, optional): Download certificates permission (None, Read-Only, Read-Write). Defaults to None.
+            other_certificate_configuration (str, optional): Other certificate configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            diagnostics (str, optional): Diagnostics permission (None, Read-Only, Read-Write). Defaults to None.
+            other_system_configuration (str, optional): Other system configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            wireless_protection_overview (str, optional): Wireless protection overview permission (None, Read-Only, Read-Write). Defaults to None.
+            wireless_protection_settings (str, optional): Wireless protection settings permission (None, Read-Only, Read-Write). Defaults to None.
+            wireless_protection_network (str, optional): Wireless protection network permission (None, Read-Only, Read-Write). Defaults to None.
+            wireless_protection_access_point (str, optional): Wireless protection access point permission (None, Read-Only, Read-Write). Defaults to None.
+            wireless_protection_mesh (str, optional): Wireless protection mesh permission (None, Read-Only, Read-Write). Defaults to None.
+            objects (str, optional): Objects permission (None, Read-Only, Read-Write). Defaults to None.
+            network (str, optional): Network permission (None, Read-Only, Read-Write). Defaults to None.
+            set_identity_profile (str, optional): Set identity profile permission (None, Read-Only, Read-Write). Defaults to None.
+            authentication (str, optional): Authentication permission (None, Read-Only, Read-Write). Defaults to None.
+            groups (str, optional): Groups permission (None, Read-Only, Read-Write). Defaults to None.
+            guest_users_management (str, optional): Guest users management permission (None, Read-Only, Read-Write). Defaults to None.
+            other_guest_user_settings (str, optional): Other guest user settings permission (None, Read-Only, Read-Write). Defaults to None.
+            policy (str, optional): Policy permissions (None, Read-Only, Read-Write). Defaults to None.
+            test_external_server_connectivity (str, optional): Test external server connectivity permission (None, Read-Only, Read-Write). Defaults to None.
+            disconnect_live_user (str, optional): Disconnect live user permission (None, Read-Only, Read-Write). Defaults to None.
+            firewall (str, optional): Firewall permission (None, Read-Only, Read-Write). Defaults to None.
+            set_vpn_profile (str, optional): Set vpn profile permission (None, Read-Only, Read-Write). Defaults to None.
+            connect_tunnel (str, optional): Connect tunnel permission (None, Read-Only, Read-Write). Defaults to None.
+            other_vpn_configurations (str, optional): Other VPN configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            ips (str, optional): IPS permission (None, Read-Only, Read-Write). Defaults to None.
+            web_filter (str, optional): Web filter permission (None, Read-Only, Read-Write). Defaults to None.
+            cloud_application_dashboard (str, optional): Cloud application dashboard permission (None, Read-Only, Read-Write). Defaults to None.
+            zero_day_protection (str, optional): Zero day protection permission (None, Read-Only, Read-Write). Defaults to None.
+            application_filter (str, optional): Application filter permission (None, Read-Only, Read-Write). Defaults to None.
+            set_waf_profile (str, optional): Set WAF profile permission (None, Read-Only, Read-Write). Defaults to None.
+            alerts (str, optional): Alerts permission (None, Read-Only, Read-Write). Defaults to None.
+            other_waf_configuration (str, optional): Other WAF configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            qos (str, optional): QoS permission (None, Read-Only, Read-Write). Defaults to None.
+            set_anti_virus_profile (str, optional): Set AntiVirus profile permission (None, Read-Only, Read-Write). Defaults to None.
+            download_quarantine_mail (str, optional): Download quarantine mail permission (None, Read-Only, Read-Write). Defaults to None.
+            other_antivirus_configurations (str, optional): Other antivirus configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            set_anti_spam_profile (str, optional): Set antispam profile permission (None, Read-Only, Read-Write). Defaults to None.
+            download_release_quarantine_mail (str, optional): Download release quarantine mail permission (None, Read-Only, Read-Write). Defaults to None.
+            other_anti_spam_configurations (str, optional): Other anti spam configurations permission (None, Read-Only, Read-Write). Defaults to None.
+            traffic_discovery (str, optional): Traffic discovery permission (None, Read-Only, Read-Write). Defaults to None.
+            set_logs_reports_profile (str, optional): Set logs reports profile permission (None, Read-Only, Read-Write). Defaults to None.
+            configuration (str, optional): Log reports configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            log_viewer (str, optional): Log viewer permission (None, Read-Only, Read-Write). Defaults to None.
+            reports_access (str, optional): Reports access permission (None, Read-Only, Read-Write). Defaults to None.
+            four_eye_authentication_settings (str, optional): Four-eye authentication settings permission (None, Read-Only, Read-Write). Defaults to None.
+            de_anonymization (str, optional): Log De-anonymization permission (None, Read-Only, Read-Write). Defaults to None.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminProfile(self.client).create(name=name, default_permission=default_permission, debug=debug, **kwargs)
 
     def create_rule(self, rule_params: dict, debug: bool = False):
         """Create a firewall rule
@@ -769,6 +843,76 @@ class SophosFirewall:
         return User(self.client).update_admin_password(
             current_password, new_password, debug
         )
+
+    def update_admin_profile(self, name: str, debug: bool=False, **kwargs):
+        """Update an administration profile.
+
+        Args:
+            name (str): Name of administration profile
+            debug (bool, optional): Turn on debugging. Defaults to False.
+
+        Keyword Args:
+            dashboard (str, optional): Dashboard permission (None, Read-Only, Read-Write). Defaults to None.
+            wizard (str, optional): Wizard permission (None, Read-Only, Read-Write). Defaults to None.
+            set_system_profile (str, optional): System Profile permission (None, Read-Only, Read-Write). Defaults to None.
+            profile (str, optional): Profile permission (None, Read-Only, Read-Write). Defaults to None.
+            system_password (str, optional): System Password permission (None, Read-Only, Read-Write). Defaults to None.
+            central_management (str, optional): Central management permission (None, Read-Only, Read-Write). Defaults to None.
+            backup (str, optional): Backup permission (None, Read-Only, Read-Write). Defaults to None.
+            restore (str, optional): Restore permission (None, Read-Only, Read-Write). Defaults to None.
+            firmware (str, optional): Firmware permission (None, Read-Only, Read-Write). Defaults to None.
+            licensing (str, optional): Licensing permission (None, Read-Only, Read-Write). Defaults to None.
+            services (str, optional): Services permission (None, Read-Only, Read-Write). Defaults to None.
+            updates (str, optional): Updates permission (None, Read-Only, Read-Write). Defaults to None.
+            reboot_shutdown (str, optional): Reboot/Shutdown permission (None, Read-Only, Read-Write). Defaults to None.
+            ha (str, optional): HA permission (None, Read-Only, Read-Write). Defaults to None.
+            download_certificates (str, optional): Download certificates permission (None, Read-Only, Read-Write). Defaults to None.
+            other_certificate_configuration (str, optional): Other certificate configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            diagnostics (str, optional): Diagnostics permission (None, Read-Only, Read-Write). Defaults to None.
+            other_system_configuration: Other system configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            objects (str, optional): Objects permission (None, Read-Only, Read-Write). Defaults to None.
+            network (str, optional): Network permission (None, Read-Only, Read-Write). Defaults to None.
+            set_identity_profile (str, optional): Set identity profile permission (None, Read-Only, Read-Write). Defaults to None.
+            authentication (str, optional): Authentication permission (None, Read-Only, Read-Write). Defaults to None.
+            groups (str, optional): Groups permission (None, Read-Only, Read-Write). Defaults to None.
+            administrator_users (str, optional): Administrator users permission (None, Read-Only, Read-Write). Defaults to None.
+            guest_users_management (str, optional): Guest users management permission (None, Read-Only, Read-Write). Defaults to None.
+            other_guest_user_settings (str, optional): Other guest user settings permission (None, Read-Only, Read-Write). Defaults to None.
+            policy (str, optional): Policy permissions (None, Read-Only, Read-Write). Defaults to None.
+            test_external_server_connectivity (str, optional): Test external server connectivity permission (None, Read-Only, Read-Write). Defaults to None.
+            disconnect_live_user (str, optional): Disconnect live user permission (None, Read-Only, Read-Write). Defaults to None.
+            firewall (str, optional): Firewall permission (None, Read-Only, Read-Write). Defaults to None.
+            set_vpn_profile (str, optional): Set vpn profile permission (None, Read-Only, Read-Write). Defaults to None.
+            connect_tunnel (str, optional): Connect tunnel permission (None, Read-Only, Read-Write). Defaults to None.
+            other_vpn_configurations (str, optional): Other VPN configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            ips (str, optional): IPS permission (None, Read-Only, Read-Write). Defaults to None.
+            web_filter (str, optional): Web filter permission (None, Read-Only, Read-Write). Defaults to None.
+            cloud_application_dashboard (str, optional): Cloud application dashboard permission (None, Read-Only, Read-Write). Defaults to None.
+            zero_day_protection (str, optional): Zero day protection permission (None, Read-Only, Read-Write). Defaults to None.
+            application_filter (str, optional): Application filter permission (None, Read-Only, Read-Write). Defaults to None.
+            set_waf_profile (str, optional): Set WAF profile permission (None, Read-Only, Read-Write). Defaults to None.
+            alerts (str, optional): Alerts permission (None, Read-Only, Read-Write). Defaults to None.
+            other_waf_configuration (str, optional): Other WAF configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            qos (str, optional): QoS permission (None, Read-Only, Read-Write). Defaults to None.
+            email_protection (str, optional): Email protection permission (None, Read-Only, Read-Write). Defaults to None.
+            set_anti_virus_profile (str, optional): Set AntiVirus profile permission (None, Read-Only, Read-Write). Defaults to None.
+            download_quarantine_mail (str, optional): Download quarantine mail permission (None, Read-Only, Read-Write). Defaults to None.
+            other_antivirus_configurations (str, optional): Other antivirus configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            set_anti_spam_profile (str, optional): Set antispam profile permission (None, Read-Only, Read-Write). Defaults to None.
+            download_release_quarantine_mail (str, optional): Download release quarantine mail permission (None, Read-Only, Read-Write). Defaults to None.
+            other_anti_spam_configurations (str, optional): Other anti spam configurations permission (None, Read-Only, Read-Write). Defaults to None.
+            traffic_discovery (str, optional): Traffic discovery permission (None, Read-Only, Read-Write). Defaults to None.
+            set_logs_reports_profile (str, optional): Set logs reports profile permission (None, Read-Only, Read-Write). Defaults to None.
+            configuration (str, optional): Log reports configuration permission (None, Read-Only, Read-Write). Defaults to None.
+            log_viewer (str, optional): Log viewer permission (None, Read-Only, Read-Write). Defaults to None.
+            reports_access (str, optional): Reports access permission (None, Read-Only, Read-Write). Defaults to None.
+            four_eye_authentication_settings (str, optional): Four-eye authentication settings permission (None, Read-Only, Read-Write). Defaults to None.
+            de_anonymization (str, optional): Log De-anonymization permission (None, Read-Only, Read-Write). Defaults to None.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminProfile(self.client).update(name=name, debug=debug, **kwargs)
 
     def update_urlgroup(
         self, name: str, domain_list: list, action: str = "add", debug: bool = False
