@@ -335,6 +335,7 @@ class APIClient:
         xml_tag: str,
         update_params: dict,
         name: str = None,
+        lookup_key: str = "Name",
         output_format: str = "dict",
         debug: bool = False,
     ):
@@ -344,12 +345,13 @@ class APIClient:
             xml_tag (str): The XML tag indicating the type of object to be updated.
             update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
             name (str, optional): The name of the object to be updated, if applicable.
+            lookup_key (str, optional): The XML key name to look up the name of the object. Default is "Name".
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
             debug (bool): Displays the XML payload that was submitted
         """
         if name:
             resp = self.get_tag_with_filter(
-                xml_tag=xml_tag, key="Name", value=name, operator="="
+                xml_tag=xml_tag, key=lookup_key, value=name, operator="="
             )
         else:
             resp = self.get_tag(xml_tag=xml_tag)

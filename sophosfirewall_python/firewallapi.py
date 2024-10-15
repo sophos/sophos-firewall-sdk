@@ -147,6 +147,7 @@ class SophosFirewall:
         xml_tag: str,
         update_params: dict,
         name: str = None,
+        lookup_key: str = "Name",
         output_format: str = "dict",
         debug: bool = False,
     ):
@@ -156,10 +157,11 @@ class SophosFirewall:
             xml_tag (str): The XML tag indicating the type of object to be updated.
             update_params (dict): Keys/values to be updated. Keys must match an existing XML key.
             name (str, optional): The name of the object to be updated, if applicable.
+            lookup_key (str, optional): The XML key name to look up the name of the object. Default is "Name".
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
             debug (bool): Displays the XML payload that was submitted
         """
-        return self.client.update(xml_tag, update_params, name, output_format, debug)
+        return self.client.update(xml_tag, update_params, name, lookup_key, output_format, debug)
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
