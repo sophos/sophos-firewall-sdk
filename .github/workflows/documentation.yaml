@@ -12,6 +12,7 @@ jobs:
         run: |
           pip install sphinx sphinx-rtd-theme
           pip install xmltodict
+          pip install sophosfirewall-python
       - name: Sphinx build
         run: |
           sphinx-build docs _build
