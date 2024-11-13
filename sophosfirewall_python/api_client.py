@@ -216,7 +216,7 @@ class APIClient:
                     <Password>{self.password}</Password>
                 </Login>
             {{% if set_operation %}}
-            <Set operation="{set_operation}">
+            <Set operation="{{{{ set_operation }}}}">
             {{% endif %}}
                 {template_data}
             {{% if set_operation %}}
@@ -224,6 +224,7 @@ class APIClient:
             {{% endif %}}
             </Request>
         """
+        template_vars["set_operation"] = set_operation
         template = environment.from_string(template_string)
         payload = template.render(**template_vars)
         if debug:
