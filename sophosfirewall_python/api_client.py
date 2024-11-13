@@ -195,7 +195,7 @@ class APIClient:
         Args:
             template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})
             template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
-            set_operation (str): Specify 'add' or 'update' set operation. Default is add. 
+            set_operation (str): Specify 'add' or 'update' set operation. Default is add. Specify None to exclude the set operation XML block.
 
         Returns:
             dict
@@ -215,9 +215,13 @@ class APIClient:
                     <Username>{self.username}</Username>
                     <Password>{self.password}</Password>
                 </Login>
+            {{% if set_operation %}}
             <Set operation="{set_operation}">
+            {{% endif %}}
                 {template_data}
+            {{% if set_operation %}}
             </Set>
+            {{% endif %}}
             </Request>
         """
         template = environment.from_string(template_string)
