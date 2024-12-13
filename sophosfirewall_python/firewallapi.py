@@ -16,9 +16,10 @@ from sophosfirewall_python.api_client import (
     SophosFirewallInvalidArgument,
     SophosFirewallAPIError,
     SophosFirewallAuthFailure,
-    SophosFirewallOperatorError
+    SophosFirewallOperatorError,
 )
 from sophosfirewall_python.firewallrule import FirewallRule
+from sophosfirewall_python.firewallrulegroup import FirewallRuleGroup
 from sophosfirewall_python.host import (
     IPHost,
     IPHostGroup,
@@ -39,6 +40,7 @@ from sophosfirewall_python.backup import Backup
 from sophosfirewall_python.reports import Retention
 
 urllib3.disable_warnings()
+
 
 class SophosFirewall:
     """Class used for interacting with the Sophos Firewall XML API"""
@@ -73,7 +75,7 @@ class SophosFirewall:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         return self.client.get_tag(xml_tag, output_format)
-    
+
     def get_tag_with_filter(
         self,
         xml_tag: str,
@@ -91,7 +93,9 @@ class SophosFirewall:
             operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to "like".
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
-        return self.client.get_tag_with_filter(xml_tag, key, value, operator, output_format)
+        return self.client.get_tag_with_filter(
+            xml_tag, key, value, operator, output_format
+        )
 
     def submit_template(
         self,
@@ -120,18 +124,22 @@ class SophosFirewall:
         set_operation: str = "add",
         debug: bool = False,
     ) -> dict:
-        """Submits XML payload as a string to the API. 
+        """Submits XML payload as a string to the API.
         Args:
             template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 syntax (ex. {{ some_var }})
-            template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
-            set_operation (str): Specify 'add' or 'update' set operation. Default is add. 
+            template_vars (dict, optional): Dictionary of variables to inject into the XML string.
+            set_operation (str): Specify 'add' or 'update' set operation. Default is add.
 
         Returns:
             dict
         """
-        return self.client.submit_xml(template_data, template_vars, set_operation, debug)
+        return self.client.submit_xml(
+            template_data, template_vars, set_operation, debug
+        )
 
-    def remove(self, xml_tag: str, name: str, key: str = "Name", output_format: str = "dict"):
+    def remove(
+        self, xml_tag: str, name: str, key: str = "Name", output_format: str = "dict"
+    ):
         """Remove an object from the firewall.
 
         Args:
@@ -161,7 +169,9 @@ class SophosFirewall:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
             debug (bool): Displays the XML payload that was submitted
         """
-        return self.client.update(xml_tag, update_params, name, lookup_key, output_format, debug)
+        return self.client.update(
+            xml_tag, update_params, name, lookup_key, output_format, debug
+        )
 
     # METHODS FOR OBJECT RETRIEVAL (GET)
 
@@ -173,7 +183,7 @@ class SophosFirewall:
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
         return FirewallRule(self.client).get(name=name, operator=operator)
-    
+
     def get_rule(self, name: str = None, operator: str = "="):
         """Get firewall rule(s)
 
@@ -182,6 +192,15 @@ class SophosFirewall:
             operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
         """
         return FirewallRule(self.client).get(name=name, operator=operator)
+
+    def get_rulegroup(self, name: str = None, operator: str = "="):
+        """Get firewall rule group(s)
+
+        Args:
+            name (str, optional): Firewall Rule Group name.  Returns all rule groups if not specified.
+            operator (str, optional): Operator for search. Default is "=". Valid operators: =, !=, like.
+        """
+        return FirewallRuleGroup(self.client).get(name=name, operator=operator)
 
     def get_ip_host(
         self, name: str = None, ip_address: str = None, operator: str = "="
@@ -430,40 +449,46 @@ class SophosFirewall:
 
     # METHODS FOR OBJECT CREATION
 
-    def create_acl_rule(self,
-                         name: str,
-                         description: str = None,
-                         position: str = "Bottom",
-                         source_zone: str = "Any",
-                         source_list: list = None,
-                         dest_list: list = None,
-                         service_list: list = None,
-                         action: str = "Accept",
-                         debug: bool = False):
+    def create_acl_rule(
+        self,
+        name: str,
+        description: str = None,
+        position: str = "Bottom",
+        source_zone: str = "Any",
+        source_list: list = None,
+        dest_list: list = None,
+        service_list: list = None,
+        action: str = "Accept",
+        debug: bool = False,
+    ):
         """Create Local Service ACL Exception Rule (System > Administration > Device Access > Local service ACL exception)
 
         Args:
             name (str): Name of the ACL exception rule to create.
-            description (str): Rule description. 
-            position (str): Location to place the ACL (Top or Bottom). 
-            source_zone (str): Source Zone. Defaults to Any. 
+            description (str): Rule description.
+            position (str): Location to place the ACL (Top or Bottom).
+            source_zone (str): Source Zone. Defaults to Any.
             source_list (list, optional): List of source network or host groups. Defaults to None.
             dest_list (list, optional): List of destination hosts. Defaults to None.
             service_list (list, optional): List of services. Defaults to None.
             action (str, optional): Accept or Drop. Default is Accept.
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
-        return AclRule(self.client).create(name,
-                                           description,
-                                           position,
-                                           source_zone,
-                                           source_list,
-                                           dest_list,
-                                           service_list,
-                                           action,
-                                           debug)
+        return AclRule(self.client).create(
+            name,
+            description,
+            position,
+            source_zone,
+            source_list,
+            dest_list,
+            service_list,
+            action,
+            debug,
+        )
 
-    def create_admin_profile(self, name: str, default_permission: str=None, debug: bool=False, **kwargs):
+    def create_admin_profile(
+        self, name: str, default_permission: str = None, debug: bool = False, **kwargs
+    ):
         """Create an administration profile.
 
         Args:
@@ -535,7 +560,9 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return AdminProfile(self.client).create(name=name, default_permission=default_permission, debug=debug, **kwargs)
+        return AdminProfile(self.client).create(
+            name=name, default_permission=default_permission, debug=debug, **kwargs
+        )
 
     def create_rule(self, rule_params: dict, debug: bool = False):
         """Create a firewall rule
@@ -561,6 +588,33 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         return FirewallRule(self.client).create(rule_params, debug)
+
+    def create_rulegroup(
+        self,
+        name: str,
+        description: str,
+        policy_list: list,
+        source_zones: list,
+        dest_zones: list,
+        policy_type: str,
+        debug: bool = False,
+    ):
+        """Create a firewall rule group
+
+        Args:
+            name(str): Name of the firewall rule group
+            description(str): Description for the firewall rule group
+            policy_list(list): List of firewall rules to add to firewall group
+            source_zones(list): List of source zones
+            dest_zones(list): List of destination zones
+            policy_type(str): Policy type. Valid values are User/network rule, Network rule, User rule, WAF rule, Any
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return FirewallRuleGroup(self.client).create(
+            name, description, policy_list, source_zones, dest_zones, policy_type, debug
+        )
 
     def create_ip_host(
         self,
@@ -778,7 +832,9 @@ class SophosFirewall:
         """
         return User(self.client).create(debug, **kwargs)
 
-    def create_zone(self, name: str, zone_type: str, zone_params: dict = None, debug: bool = False):
+    def create_zone(
+        self, name: str, zone_type: str, zone_params: dict = None, debug: bool = False
+    ):
         """Create a zone.
 
         Args:
@@ -808,11 +864,13 @@ class SophosFirewall:
             dynamic_routing (str, optional): Enable/Disable dynamic routing
             smtp_relay (str, optional): Enable/Disable SMTP Relay
             snmp (str, optional): Enable/Disable SNMP
-        
+
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return Zone(self.client).create(name=name, zone_type=zone_type, zone_params=zone_params, debug=debug)
+        return Zone(self.client).create(
+            name=name, zone_type=zone_type, zone_params=zone_params, debug=debug
+        )
 
     def update_user_password(
         self, username: str, new_password: str, debug: bool = False
@@ -846,7 +904,7 @@ class SophosFirewall:
             current_password, new_password, debug
         )
 
-    def update_admin_profile(self, name: str, debug: bool=False, **kwargs):
+    def update_admin_profile(self, name: str, debug: bool = False, **kwargs):
         """Update an administration profile.
 
         Args:
@@ -1075,7 +1133,7 @@ class SophosFirewall:
         Args:
             name (str): Name of the ACL rule to update.
             description (str): Rule description.
-            source_zone (str): Name of the source zone. Defaults to None. 
+            source_zone (str): Name of the source zone. Defaults to None.
             source_list (list, optional): List of network or host groups. Defaults to [].
             dest_list (list, optional): List of destinations. Defaults to [].
             service_list (list, optional): List of services. Defaults to [].
@@ -1084,16 +1142,16 @@ class SophosFirewall:
             debug (bool, optional): Enable debug mode. Defaults to False.
         """
         params = {
-                    "name": name,
-                    "description": description,
-                    "source_zone": source_zone,
-                    "source_list": source_list,
-                    "dest_list": dest_list,
-                    "service_list": service_list,
-                    "action": action,
-                    "update_action": update_action,
-                    "debug": debug
-                  }
+            "name": name,
+            "description": description,
+            "source_zone": source_zone,
+            "source_list": source_list,
+            "dest_list": dest_list,
+            "service_list": service_list,
+            "action": action,
+            "update_action": update_action,
+            "debug": debug,
+        }
         return AclRule(self.client).update(**params)
 
     def update_rule(self, name: str, rule_params: dict, debug: bool = False):
@@ -1119,8 +1177,50 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         return FirewallRule(self.client).update(name, rule_params, debug)
-    
-    def update_hostname_settings(self, hostname: str = None, description: str = None, debug: bool = False):
+
+    def update_rulegroup(
+        self,
+        name: str,
+        description: str = None,
+        policy_list: list = None,
+        source_zones: list = None,
+        dest_zones: list = None,
+        policy_type: str = None,
+        policy_action: str = "add",
+        source_zone_action: str = "add",
+        dest_zone_action: str = "add",
+        debug: bool = False,
+    ):
+        """Create a firewall rule group
+
+        Args:
+            name(str): Name of the firewall rule group
+            description(str): Description for the firewall rule group
+            policy_list(list): List of firewall rules to add to firewall group
+            source_zones(list): List of source zones
+            dest_zones(list): List of destination zones
+            policy_type(str): Policy type. Valid values are User/network rule, Network rule, User rule, WAF rule, Any
+            source_zone_action(str): Specify add to add a new rule to the list. Specify remove to remove a rule from the list. Specify replace to replace the list. Default=add.
+            dest_zone_action(str): Specify add to add a new rule to the list. Specify remove to remove a rule from the list. Specify replace to replace the list. Default=add.
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+
+        return FirewallRuleGroup(self.client).update(
+            name,
+            description,
+            policy_list,
+            source_zones,
+            dest_zones,
+            policy_type,
+            source_zone_action,
+            dest_zone_action,
+            debug,
+        )
+
+    def update_hostname_settings(
+        self, hostname: str = None, description: str = None, debug: bool = False
+    ):
         """Update hostname admin settings. System > Administration > Admin and user settings.
 
         Args:
@@ -1130,15 +1230,20 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return AdminSettings(self.client).update_hostname_settings(hostname, description, debug)
-    
-    def update_webadmin_settings(self, certificate: str = None,
-                                 https_port: str = None,
-                                 userportal_https_port: str = None,
-                                 vpnportal_https_port: str = None,
-                                 portal_redirect_mode: str = None,
-                                 portal_custom_hostname: str = None,
-                                 debug: bool = False):
+        return AdminSettings(self.client).update_hostname_settings(
+            hostname, description, debug
+        )
+
+    def update_webadmin_settings(
+        self,
+        certificate: str = None,
+        https_port: str = None,
+        userportal_https_port: str = None,
+        vpnportal_https_port: str = None,
+        portal_redirect_mode: str = None,
+        portal_custom_hostname: str = None,
+        debug: bool = False,
+    ):
         """Update webadmin settings. System > Administration > Admin and user settings.
 
         Args:
@@ -1152,46 +1257,51 @@ class SophosFirewall:
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return AdminSettings(self.client).update_webadmin_settings(certificate,
-                                                                   https_port,
-                                                                   userportal_https_port,
-                                                                   vpnportal_https_port,
-                                                                   portal_redirect_mode,
-                                                                   portal_custom_hostname,
-                                                                   debug)
-    
-    def update_loginsecurity_settings(self, logout_session: str = None, 
-                                      block_login: str = None, 
-                                      unsuccessful_attempt: str = None, 
-                                      duration: str = None, 
-                                      minutes: str = None, 
-                                      debug: bool = False):
-            """Update login security settings. System > Administration > Admin and user settings.
+        return AdminSettings(self.client).update_webadmin_settings(
+            certificate,
+            https_port,
+            userportal_https_port,
+            vpnportal_https_port,
+            portal_redirect_mode,
+            portal_custom_hostname,
+            debug,
+        )
 
-            Args:
-                logout_session (str, optional): Enable to logout Admin Session after configured timeout. Specify number of minutes to enable (1-120). Defaults to None.
-                block_login (str, optional): Enable to block Admin login after configured number of failed attempts within configured time span. Defaults to None.
-                unsuccessful_attempt (str, optional): Allowed number of failed Admin login attempts from the same IP address (1-5). Defaults to None.
-                duration (str, optional): Time span within which if Admin Login attempts exceed configured Unsuccessful Attempts, then Admin Login gets blocked. (1-120). Defaults to None.
-                minutes (str, optional): Time interval for which Admin Login is blocked (1-60). Defaults to None. 
+    def update_loginsecurity_settings(
+        self,
+        logout_session: str = None,
+        block_login: str = None,
+        unsuccessful_attempt: str = None,
+        duration: str = None,
+        minutes: str = None,
+        debug: bool = False,
+    ):
+        """Update login security settings. System > Administration > Admin and user settings.
 
-            Returns:
-                dict: XML response converted to Python dictionary
-            """
-            return AdminSettings(self.client).update_loginsecurity_settings(logout_session,
-                                                                            block_login,
-                                                                            unsuccessful_attempt,
-                                                                            duration,
-                                                                            minutes,
-                                                                            debug)
+        Args:
+            logout_session (str, optional): Enable to logout Admin Session after configured timeout. Specify number of minutes to enable (1-120). Defaults to None.
+            block_login (str, optional): Enable to block Admin login after configured number of failed attempts within configured time span. Defaults to None.
+            unsuccessful_attempt (str, optional): Allowed number of failed Admin login attempts from the same IP address (1-5). Defaults to None.
+            duration (str, optional): Time span within which if Admin Login attempts exceed configured Unsuccessful Attempts, then Admin Login gets blocked. (1-120). Defaults to None.
+            minutes (str, optional): Time interval for which Admin Login is blocked (1-60). Defaults to None.
 
-    def update_passwordcomplexity_settings(self, complexity_check: str = None,
-                                           enforce_min_length: str = None,
-                                           include_alpha: str = None,
-                                           include_numeric: str = None,
-                                           include_special: str = None,
-                                           min_length: str = None,
-                                           debug: bool = False):
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return AdminSettings(self.client).update_loginsecurity_settings(
+            logout_session, block_login, unsuccessful_attempt, duration, minutes, debug
+        )
+
+    def update_passwordcomplexity_settings(
+        self,
+        complexity_check: str = None,
+        enforce_min_length: str = None,
+        include_alpha: str = None,
+        include_numeric: str = None,
+        include_special: str = None,
+        min_length: str = None,
+        debug: bool = False,
+    ):
         """Update hostname admin settings. System > Administration > Admin and user settings.
 
         Args:
@@ -1199,26 +1309,28 @@ class SophosFirewall:
             enforce_min_length (str, optional): Enforce minimum required password length. Defaults to None.
             include_alpha (str, optional): Enforce inclusion of alphanumeric characters. Defaults to None.
             include_numeric (str, optional): Enforce inclusion numeric characters. Defaults to None.
-            include_special (str, optional): Enforce inclusion of special characters. Defaults to None. 
-            min_length (str, optional): Minimul required password length. Defaults to None. 
+            include_special (str, optional): Enforce inclusion of special characters. Defaults to None.
+            min_length (str, optional): Minimul required password length. Defaults to None.
 
         Returns:
             dict: XML response converted to Python dictionary
         """
-        return AdminSettings(self.client).update_passwordcomplexity_settings(complexity_check,
-                                                                             enforce_min_length,
-                                                                             include_alpha,
-                                                                             include_numeric,
-                                                                             include_special,
-                                                                             min_length,
-                                                                             debug)
-    
+        return AdminSettings(self.client).update_passwordcomplexity_settings(
+            complexity_check,
+            enforce_min_length,
+            include_alpha,
+            include_numeric,
+            include_special,
+            min_length,
+            debug,
+        )
+
     def update_login_disclaimer(self, enabled: bool = False, debug: bool = False):
         """Update login disclaimer. System > Administration > Admin and user settings.
 
         Args:
             enabled (bool, optional): Enable or disable Login Disclaimer. Defaults to True.
-        
+
         Returns:
             dict: XML response converted to Python dictionary
         """
@@ -1252,11 +1364,12 @@ class SophosFirewall:
             dynamic_routing (str, optional): Enable/Disable dynamic routing
             smtp_relay (str, optional): Enable/Disable SMTP Relay
             snmp (str, optional): Enable/Disable SNMP
-        
+
         Returns:
             dict: XML response converted to Python dictionary
         """
         return Zone(self.client).update(name, zone_params, debug)
+
 
 # Export the error classes for backward compatibility
 __all__ = [

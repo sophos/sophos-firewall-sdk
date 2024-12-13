@@ -1,0 +1,32 @@
+<Request>
+   <Login>
+        <Username>{{username}}</Username>
+        <Password >{{password}}</Password>
+    </Login>
+    <Set operation="add">
+       <FirewallRuleGroup transactionid="">
+        <Name>{{ name }}</Name>
+        <Description>{{ description if description else '' }}</Description>
+        <SecurityPolicyList>
+            {% for policy in policy_list %}
+            <SecurityPolicy>{{ policy }}</SecurityPolicy>
+            {% endfor %}
+        </SecurityPolicyList> 
+        {% if source_zones %}
+        <SourceZones>
+            {% for zone in source_zones %}
+            <Zone>{{ zone }}</Zone>
+            {% endfor %}
+        </SourceZones>
+        {% endif %}
+        {% if dest_zones %}
+        <DestinationZones>
+            {% for zone in dest_zones %}
+            <Zone>{{ zone }}</Zone>
+            {% endfor %}
+        </DestinationZones>
+            {% endif %}
+        <Policytype>{{ policy_type }}</Policytype>
+      </FirewallRuleGroup>
+    </Set>
+</Request>
