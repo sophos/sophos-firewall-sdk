@@ -1186,7 +1186,6 @@ class SophosFirewall:
         source_zones: list = None,
         dest_zones: list = None,
         policy_type: str = None,
-        policy_action: str = "add",
         source_zone_action: str = "add",
         dest_zone_action: str = "add",
         debug: bool = False,
