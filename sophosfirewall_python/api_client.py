@@ -86,12 +86,13 @@ class APIClient:
                 str(xmltodict.parse(api_response.content.decode()))
             )
 
-    def _post(self, xmldata: str) -> requests.Response:
+    def _post(self, xmldata: str, timeout: int=30) -> requests.Response:
         """Post XML request to the firewall returning response as a dict object
 
         Args:
             xmldata (str): XML payload
             verify (bool):  SSL certificate verification. Default=True.
+            timeout(int): Request timeout
 
         Returns:
             requests.Response object
@@ -102,7 +103,7 @@ class APIClient:
             headers=headers,
             data={"reqxml": xmldata},
             verify=self.verify,
-            timeout=30,
+            timeout=timeout,
         )
 
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
@@ -144,6 +145,7 @@ class APIClient:
         filename: str,
         template_vars: dict,
         template_dir: str = None,
+        timeout: int = 30,
         debug: bool = False,
     ) -> dict:
         """Submits XML payload stored as a Jinja2 file
@@ -152,6 +154,7 @@ class APIClient:
             filename (str): Jinja2 template filename. Place in "templates" directory or configure template_dir.
             template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.
             template_dir (str): Directory to look for templates. Default is "./templates".
+            timeout(int): Request timeout in seconds. Defaults to 30 seconds.
             debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.
 
         Returns:
@@ -173,7 +176,7 @@ class APIClient:
         payload = template.render(**template_vars)
         if debug:
             print(f"REQUEST: {payload}")
-        resp = self._post(xmldata=payload)
+        resp = self._post(xmldata=payload, timeout=timeout)
 
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
@@ -188,6 +191,7 @@ class APIClient:
         template_data: str,
         template_vars: dict = None,
         set_operation: str = "add",
+        timeout: int = 30,
         debug: bool = False,
     ) -> dict:
         """Submits XML payload as a string to the API.
@@ -196,6 +200,7 @@ class APIClient:
             template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})
             template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
             set_operation (str): Specify 'add' or 'update' set operation. Default is add. Specify None to exclude the set operation XML block.
+            timeout(int): Request timeout in seconds. Defaults to 30 seconds.
 
         Returns:
             dict
@@ -229,7 +234,7 @@ class APIClient:
         payload = template.render(**template_vars)
         if debug:
             print(f"REQUEST: {payload}")
-        resp = self._post(xmldata=payload)
+        resp = self._post(xmldata=payload, timeout=timeout)
 
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
@@ -239,11 +244,12 @@ class APIClient:
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
 
-    def get_tag(self, xml_tag: str, output_format: str = "dict"):
+    def get_tag(self, xml_tag: str, timeout: int = 30, output_format: str = "dict"):
         """Execute a get for a specified XML tag.
 
         Args:
             xml_tag (str): XML tag for the request
+            timeout(int): Request timeout in seconds. Defaults to 30 seconds.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         payload = f"""
@@ -258,7 +264,7 @@ class APIClient:
             </Get>
         </Request>
         """
-        resp = self._post(xmldata=payload)
+        resp = self._post(xmldata=payload, timeout=timeout)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
             return resp.content.decode()
@@ -270,6 +276,7 @@ class APIClient:
         key: str,
         value: str,
         operator: str = "like",
+        timeout: int = 30,
         output_format: str = dict,
     ):
         """Execute a get for a specified XML tag with filter criteria.
@@ -279,6 +286,7 @@ class APIClient:
             key (str): Search key
             value (str): Search value
             operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to "like".
+            timeout(int): Request timeout in seconds. Defaults to 30 seconds.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         valid_operators = ["=", "!=", "like"]
@@ -301,19 +309,20 @@ class APIClient:
             </Get>
         </Request>
         """
-        resp = self._post(xmldata=payload)
+        resp = self._post(xmldata=payload, timeout=timeout)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
 
-    def remove(self, xml_tag: str, name: str, key: str = "Name", output_format: str = "dict"):
+    def remove(self, xml_tag: str, name: str, key: str = "Name", timeout: int = 30, output_format: str = "dict"):
         """Remove an object from the firewall.
 
         Args:
             xml_tag (str): The XML tag indicating the type of object to be removed.
             name (str): The name of the object to be removed.
             key (str): The primary XML key that is used to look up the object. Defaults to Name.
+            timeout(int): Request timeout in seconds. Defaults to 30 seconds.
             output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
         payload = f"""
@@ -329,7 +338,7 @@ class APIClient:
             </Remove>
         </Request>
         """
-        resp = self._post(xmldata=payload)
+        resp = self._post(xmldata=payload, timeout=timeout)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
             return resp.content.decode()
@@ -342,6 +351,7 @@ class APIClient:
         name: str = None,
         lookup_key: str = "Name",
         output_format: str = "dict",
+        timeout: int = 30,
         debug: bool = False,
     ):
         """Update an existing object on the firewall.
@@ -352,6 +362,7 @@ class APIClient:
             name (str, optional): The name of the object to be updated, if applicable.
             lookup_key (str, optional): The XML key name to look up the name of the object. Default is "Name".
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+            timeout (int): Request timeout in seconds. Defaults to 30 seconds.
             debug (bool): Displays the XML payload that was submitted
         """
         if name:
@@ -382,7 +393,7 @@ class APIClient:
         """
         if debug:
             print(payload)
-        resp = self._post(xmldata=payload)
+        resp = self._post(xmldata=payload, timeout=timeout)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
             return resp.content.decode()
