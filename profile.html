@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>profile module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="reports module" href="reports.html" />
+    <link rel="prev" title="network module" href="network.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">profile module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#profile.AdminProfile"><code class="docutils literal notranslate"><span class="pre">AdminProfile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#profile.AdminProfile.create"><code class="docutils literal notranslate"><span class="pre">AdminProfile.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#profile.AdminProfile.get"><code class="docutils literal notranslate"><span class="pre">AdminProfile.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#profile.AdminProfile.update"><code class="docutils literal notranslate"><span class="pre">AdminProfile.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">profile module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/profile.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-profile">
+<span id="profile-module"></span><h1>profile module<a class="headerlink" href="#module-profile" title="Link to this heading"></a></h1>
+<p>Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="profile.AdminProfile">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">profile.</span></span><span class="sig-name descname"><span class="pre">AdminProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profile.html#AdminProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#profile.AdminProfile" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Administration Profile(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="profile.AdminProfile.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_permission</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profile.html#AdminProfile.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#profile.AdminProfile.create" title="Link to this definition"></a></dt>
+<dd><p>Create an administration profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of administration profile</p></li>
+<li><p><strong>default_permission</strong> (<em>str</em><em>, </em><em>optional</em>) – Permissions to use for unspecified settings (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>dashboard</strong> (<em>str</em><em>, </em><em>optional</em>) – Dashboard permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wizard</strong> (<em>str</em><em>, </em><em>optional</em>) – Wizard permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_system_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – System Profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>system_password</strong> (<em>str</em><em>, </em><em>optional</em>) – System Password permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>central_management</strong> (<em>str</em><em>, </em><em>optional</em>) – Central management permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>backup</strong> (<em>str</em><em>, </em><em>optional</em>) – Backup permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>restore</strong> (<em>str</em><em>, </em><em>optional</em>) – Restore permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>firmware</strong> (<em>str</em><em>, </em><em>optional</em>) – Firmware permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>licensing</strong> (<em>str</em><em>, </em><em>optional</em>) – Licensing permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>services</strong> (<em>str</em><em>, </em><em>optional</em>) – Services permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>updates</strong> (<em>str</em><em>, </em><em>optional</em>) – Updates permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>reboot_shutdown</strong> (<em>str</em><em>, </em><em>optional</em>) – Reboot/Shutdown permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>ha</strong> (<em>str</em><em>, </em><em>optional</em>) – HA permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>download_certificates</strong> (<em>str</em><em>, </em><em>optional</em>) – Download certificates permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_certificate_configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Other certificate configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>diagnostics</strong> (<em>str</em><em>, </em><em>optional</em>) – Diagnostics permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_system_configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Other system configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_overview</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection overview permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_settings</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection settings permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_network</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection network permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_access_point</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection access point permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_mesh</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection mesh permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>objects</strong> (<em>str</em><em>, </em><em>optional</em>) – Objects permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>network</strong> (<em>str</em><em>, </em><em>optional</em>) – Network permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_identity_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set identity profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>authentication</strong> (<em>str</em><em>, </em><em>optional</em>) – Authentication permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>groups</strong> (<em>str</em><em>, </em><em>optional</em>) – Groups permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>guest_users_management</strong> (<em>str</em><em>, </em><em>optional</em>) – Guest users management permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_guest_user_settings</strong> (<em>str</em><em>, </em><em>optional</em>) – Other guest user settings permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>policy</strong> (<em>str</em><em>, </em><em>optional</em>) – Policy permissions (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>test_external_server_connectivity</strong> (<em>str</em><em>, </em><em>optional</em>) – Test external server connectivity permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>disconnect_live_user</strong> (<em>str</em><em>, </em><em>optional</em>) – Disconnect live user permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>firewall</strong> (<em>str</em><em>, </em><em>optional</em>) – Firewall permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_vpn_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set vpn profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>connect_tunnel</strong> (<em>str</em><em>, </em><em>optional</em>) – Connect tunnel permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_vpn_configurations</strong> (<em>str</em><em>, </em><em>optional</em>) – Other VPN configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>ips</strong> (<em>str</em><em>, </em><em>optional</em>) – IPS permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>web_filter</strong> (<em>str</em><em>, </em><em>optional</em>) – Web filter permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>cloud_application_dashboard</strong> (<em>str</em><em>, </em><em>optional</em>) – Cloud application dashboard permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>zero_day_protection</strong> (<em>str</em><em>, </em><em>optional</em>) – Zero day protection permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>application_filter</strong> (<em>str</em><em>, </em><em>optional</em>) – Application filter permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_waf_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set WAF profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>alerts</strong> (<em>str</em><em>, </em><em>optional</em>) – Alerts permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_waf_configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Other WAF configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>email_protection</strong> (<em>str</em><em>, </em><em>optional</em>) – Email protection permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>qos</strong> (<em>str</em><em>, </em><em>optional</em>) – QoS permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>traffic_discovery</strong> (<em>str</em><em>, </em><em>optional</em>) – Traffic discovery permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_logs_reports_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set logs reports profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Log reports configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>log_viewer</strong> (<em>str</em><em>, </em><em>optional</em>) – Log viewer permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>reports_access</strong> (<em>str</em><em>, </em><em>optional</em>) – Reports access permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>four_eye_authentication_settings</strong> (<em>str</em><em>, </em><em>optional</em>) – Four-eye authentication settings permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>de_anonymization</strong> (<em>str</em><em>, </em><em>optional</em>) – Log De-anonymization permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="profile.AdminProfile.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profile.html#AdminProfile.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#profile.AdminProfile.get" title="Link to this definition"></a></dt>
+<dd><p>Get admin profiles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of profile. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="profile.AdminProfile.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/profile.html#AdminProfile.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#profile.AdminProfile.update" title="Link to this definition"></a></dt>
+<dd><p>Update an administration profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of administration profile</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>dashboard</strong> (<em>str</em><em>, </em><em>optional</em>) – Dashboard permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wizard</strong> (<em>str</em><em>, </em><em>optional</em>) – Wizard permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_system_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – System Profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>system_password</strong> (<em>str</em><em>, </em><em>optional</em>) – System Password permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>central_management</strong> (<em>str</em><em>, </em><em>optional</em>) – Central management permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>backup</strong> (<em>str</em><em>, </em><em>optional</em>) – Backup permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>restore</strong> (<em>str</em><em>, </em><em>optional</em>) – Restore permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>firmware</strong> (<em>str</em><em>, </em><em>optional</em>) – Firmware permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>licensing</strong> (<em>str</em><em>, </em><em>optional</em>) – Licensing permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>services</strong> (<em>str</em><em>, </em><em>optional</em>) – Services permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>updates</strong> (<em>str</em><em>, </em><em>optional</em>) – Updates permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>reboot_shutdown</strong> (<em>str</em><em>, </em><em>optional</em>) – Reboot/Shutdown permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>ha</strong> (<em>str</em><em>, </em><em>optional</em>) – HA permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>download_certificates</strong> (<em>str</em><em>, </em><em>optional</em>) – Download certificates permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_certificate_configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Other certificate configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>diagnostics</strong> (<em>str</em><em>, </em><em>optional</em>) – Diagnostics permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_system_configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Other system configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_overview</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection overview permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_settings</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection settings permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_network</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection network permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_access_point</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection access point permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>wireless_protection_mesh</strong> (<em>str</em><em>, </em><em>optional</em>) – Wireless protection mesh permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>objects</strong> (<em>str</em><em>, </em><em>optional</em>) – Objects permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>network</strong> (<em>str</em><em>, </em><em>optional</em>) – Network permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_identity_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set identity profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>authentication</strong> (<em>str</em><em>, </em><em>optional</em>) – Authentication permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>groups</strong> (<em>str</em><em>, </em><em>optional</em>) – Groups permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>guest_users_management</strong> (<em>str</em><em>, </em><em>optional</em>) – Guest users management permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_guest_user_settings</strong> (<em>str</em><em>, </em><em>optional</em>) – Other guest user settings permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>policy</strong> (<em>str</em><em>, </em><em>optional</em>) – Policy permissions (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>test_external_server_connectivity</strong> (<em>str</em><em>, </em><em>optional</em>) – Test external server connectivity permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>disconnect_live_user</strong> (<em>str</em><em>, </em><em>optional</em>) – Disconnect live user permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>firewall</strong> (<em>str</em><em>, </em><em>optional</em>) – Firewall permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_vpn_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set vpn profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>connect_tunnel</strong> (<em>str</em><em>, </em><em>optional</em>) – Connect tunnel permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_vpn_configurations</strong> (<em>str</em><em>, </em><em>optional</em>) – Other VPN configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>ips</strong> (<em>str</em><em>, </em><em>optional</em>) – IPS permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>web_filter</strong> (<em>str</em><em>, </em><em>optional</em>) – Web filter permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>cloud_application_dashboard</strong> (<em>str</em><em>, </em><em>optional</em>) – Cloud application dashboard permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>zero_day_protection</strong> (<em>str</em><em>, </em><em>optional</em>) – Zero day protection permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>application_filter</strong> (<em>str</em><em>, </em><em>optional</em>) – Application filter permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_waf_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set WAF profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>alerts</strong> (<em>str</em><em>, </em><em>optional</em>) – Alerts permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>other_waf_configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Other WAF configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>im</strong> (<em>str</em><em>, </em><em>optional</em>) – IM permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>qos</strong> (<em>str</em><em>, </em><em>optional</em>) – QoS permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>email_protection</strong> (<em>str</em><em>, </em><em>optional</em>) – Email protection permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>traffic_discovery</strong> (<em>str</em><em>, </em><em>optional</em>) – Traffic discovery permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>set_logs_reports_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – Set logs reports profile permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>configuration</strong> (<em>str</em><em>, </em><em>optional</em>) – Log reports configuration permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>log_viewer</strong> (<em>str</em><em>, </em><em>optional</em>) – Log viewer permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>reports_access</strong> (<em>str</em><em>, </em><em>optional</em>) – Reports access permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>four_eye_authentication_settings</strong> (<em>str</em><em>, </em><em>optional</em>) – Four-eye authentication settings permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+<li><p><strong>de_anonymization</strong> (<em>str</em><em>, </em><em>optional</em>) – Log De-anonymization permission (None, Read-Only, Read-Write). Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="network.html" class="btn btn-neutral float-left" title="network module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reports.html" class="btn btn-neutral float-right" title="reports module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
