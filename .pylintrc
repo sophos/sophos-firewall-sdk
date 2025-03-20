@@ -431,6 +431,7 @@ disable=raw-checker-failed,
         use-symbolic-message-instead,
         line-too-long,
         too-many-arguments,
+        too-many-positional-arguments,
         too-many-public-methods,
         too-many-branches,
         too-many-lines
