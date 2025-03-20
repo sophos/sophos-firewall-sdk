@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>firewallrule &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">firewallrule</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for firewallrule</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2023 Sophos Ltd.  All rights reserved.</span>
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing</span>
+<span class="sd">permissions and limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sophosfirewall_python.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Utils</span>
+
+<div class="viewcode-block" id="FirewallRule">
+<a class="viewcode-back" href="../firewallrule.html#firewallrule.FirewallRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FirewallRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with firewall rule(s).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="FirewallRule.get">
+<a class="viewcode-back" href="../firewallrule.html#firewallrule.FirewallRule.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get firewall rule(s)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Firewall Rule name.  Returns all rules if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FirewallRule.create">
+<a class="viewcode-back" href="../firewallrule.html#firewallrule.FirewallRule.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_params</span><span class="p">,</span> <span class="n">debug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a firewall rule</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rule_params (dict): Configuration parmeters for the rule, see Keyword Args for supported parameters.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            rulename(str): Name of the firewall rule</span>
+<span class="sd">            status(str): Enable/Disable</span>
+<span class="sd">            position(str): Where the rule should be positioned (top/bottom/after/before)</span>
+<span class="sd">            after_rulename(str): Name of the rule to insert this rule after if position = after</span>
+<span class="sd">            before_rulename(str): Name of the rule to insert this rule before if position = before</span>
+<span class="sd">            action(str): Accept, Drop, Reject</span>
+<span class="sd">            description(str): Rule description</span>
+<span class="sd">            log(str): Enable, Disable</span>
+<span class="sd">            src_zones(list): Name(s) of the source zone(s)</span>
+<span class="sd">            dst_zones(list): Name(s) of the destination zone(s)</span>
+<span class="sd">            src_networks(list): Name(s) of the source network(s)</span>
+<span class="sd">            dst_networks(list): Name(s) of the destination network(s)</span>
+<span class="sd">            service_list(list): Name(s) of service(s)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createfwrule.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">rule_params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="FirewallRule.update">
+<a class="viewcode-back" href="../firewallrule.html#firewallrule.FirewallRule.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rule_params</span><span class="p">,</span> <span class="n">debug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a firewall rule.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name(str): Name of the firewall rule to be updated</span>
+<span class="sd">            rule_params (dict): Configuration parmeters for the rule, see Keyword Args for supported parameters.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            status(str): Enable/Disable</span>
+<span class="sd">            position(str): Where the rule should be positioned (top/bottom/after/before)</span>
+<span class="sd">            after_rulename(str, optional): Name of the rule to insert this rule after if position = after</span>
+<span class="sd">            before_rulename(str, optional): Name of the rule to insert this rule before if position = before</span>
+<span class="sd">            action(str): Accept, Drop, Reject</span>
+<span class="sd">            description(str): Rule description</span>
+<span class="sd">            log(str): Enable, Disable</span>
+<span class="sd">            src_zones(list): Name(s) of the source zone(s)</span>
+<span class="sd">            dst_zones(list): Name(s) of the destination zone(s)</span>
+<span class="sd">            src_networks(list): Name(s) of the source network(s)</span>
+<span class="sd">            dst_networks(list): Name(s) of the destination network(s)</span>
+<span class="sd">            service_list(list): Name(s) of service(s)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">updated_rule_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rulename</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Get the existing rule</span>
+        <span class="n">exist_rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;FirewallRule&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;Description&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after_rulename&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;after_rulename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after_rulename&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;before_rulename&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;before_rulename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;before_rulename&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;LogTraffic&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;src_zones&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;src_zones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;src_zones&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;SourceZones&quot;</span> <span class="ow">in</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">]:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;src_zones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;SourceZones&quot;</span><span class="p">][</span><span class="s2">&quot;Zone&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;src_zones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dst_zones&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;dst_zones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dst_zones&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;DestinationZones&quot;</span> <span class="ow">in</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">]:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;dst_zones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;DestinationZones&quot;</span><span class="p">][</span><span class="s2">&quot;Zone&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;dst_zones&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;src_networks&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;src_networks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;src_networks&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;SourceNetworks&quot;</span> <span class="ow">in</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">]:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;src_networks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;SourceNetworks&quot;</span><span class="p">][</span><span class="s2">&quot;Network&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;src_networks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dst_networks&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;dst_networks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dst_networks&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;DestinationNetworks&quot;</span> <span class="ow">in</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">]:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;dst_networks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;DestinationNetworks&quot;</span><span class="p">][</span><span class="s2">&quot;Network&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;dst_networks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;service_list&quot;</span><span class="p">):</span>
+            <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;service_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;service_list&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Services&quot;</span> <span class="ow">in</span> <span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">]:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;service_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">exist_rule</span><span class="p">[</span><span class="s2">&quot;NetworkPolicy&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">][</span><span class="s2">&quot;Service&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_rule_params</span><span class="p">[</span><span class="s2">&quot;service_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updatefwrule.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">updated_rule_params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
