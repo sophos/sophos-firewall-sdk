@@ -16,7 +16,7 @@ xmltodict = "^0.13.0"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.5"
-black = "^23.9.1"
+black = "^25.1.0"
 pylint = "^3.0.1"
 pytest = "^7.4.2"
 
