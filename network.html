@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>network module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="profile module" href="profile.html" />
+    <link rel="prev" title="ips module" href="ips.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">network module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#network.Interface"><code class="docutils literal notranslate"><span class="pre">Interface</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#network.Interface.get"><code class="docutils literal notranslate"><span class="pre">Interface.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#network.Vlan"><code class="docutils literal notranslate"><span class="pre">Vlan</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#network.Vlan.get"><code class="docutils literal notranslate"><span class="pre">Vlan.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#network.Zone"><code class="docutils literal notranslate"><span class="pre">Zone</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#network.Zone.check_exists"><code class="docutils literal notranslate"><span class="pre">Zone.check_exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#network.Zone.create"><code class="docutils literal notranslate"><span class="pre">Zone.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#network.Zone.get"><code class="docutils literal notranslate"><span class="pre">Zone.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#network.Zone.update"><code class="docutils literal notranslate"><span class="pre">Zone.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">network module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/network.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-network">
+<span id="network-module"></span><h1>network module<a class="headerlink" href="#module-network" title="Link to this heading"></a></h1>
+<p>Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="network.Interface">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">network.</span></span><span class="sig-name descname"><span class="pre">Interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Interface" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Interface(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="network.Interface.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Interface.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Interface.get" title="Link to this definition"></a></dt>
+<dd><p>Get Interface object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Interface name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="network.Vlan">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">network.</span></span><span class="sig-name descname"><span class="pre">Vlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Vlan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Vlan" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Vlan(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="network.Vlan.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Vlan.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Vlan.get" title="Link to this definition"></a></dt>
+<dd><p>Get VLAN object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – VLAN name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="network.Zone">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">network.</span></span><span class="sig-name descname"><span class="pre">Zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Zone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Zone" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Zone(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="network.Zone.check_exists">
+<span class="sig-name descname"><span class="pre">check_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Zone.check_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Zone.check_exists" title="Link to this definition"></a></dt>
+<dd><p>Search API response to get current value for key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>existing_dict</strong> (<em>dict</em>) – The response from getting the current settings</p></li>
+<li><p><strong>container</strong> (<em>str</em>) – The top-level container to begin searching</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key to search for, and if found return the value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns the value of the key or None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="network.Zone.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Zone.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Zone.create" title="Link to this definition"></a></dt>
+<dd><p>Create a zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Zone name</p></li>
+<li><p><strong>zone_type</strong> (<em>str</em>) – Zone type</p></li>
+<li><p><strong>zone_params</strong> (<em>dict</em>) – Configuration parmeters for the zone, see Keyword Args for supported parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the Zone</p></li>
+<li><p><strong>zone_type</strong> (<em>str</em>) – Type of the zone (LAN/DMZ)</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description for the Zone</p></li>
+<li><p><strong>https</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable HTTPS administrative service</p></li>
+<li><p><strong>ssh</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSH administrative service</p></li>
+<li><p><strong>client_authen</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable client authentication service</p></li>
+<li><p><strong>captive_portal</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable captive portal</p></li>
+<li><p><strong>ad_sso</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSO with Active Directory</p></li>
+<li><p><strong>radius_sso</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSO with Radius</p></li>
+<li><p><strong>chromebook_sso</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable Chromebook SSO</p></li>
+<li><p><strong>dns</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable DNS</p></li>
+<li><p><strong>ping</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable ping</p></li>
+<li><p><strong>ipsec</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable ipsec</p></li>
+<li><p><strong>red</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable RED</p></li>
+<li><p><strong>sslvpn</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSL VPN</p></li>
+<li><p><strong>vpn_portal</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable VPN Portal</p></li>
+<li><p><strong>web_proxy</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable Web proxy</p></li>
+<li><p><strong>wireless_protection</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable wireless protection</p></li>
+<li><p><strong>user_portal</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable user portal</p></li>
+<li><p><strong>dynamic_routing</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable dynamic routing</p></li>
+<li><p><strong>smtp_relay</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SMTP Relay</p></li>
+<li><p><strong>snmp</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SNMP</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="network.Zone.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Zone.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Zone.get" title="Link to this definition"></a></dt>
+<dd><p>Get zone(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of zone to query. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="network.Zone.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/network.html#Zone.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#network.Zone.update" title="Link to this definition"></a></dt>
+<dd><p>Update a zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the Zone</p></li>
+<li><p><strong>zone_params</strong> (<em>dict</em>) – Configuration parmeters for the zone, see Keyword Args for supported parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Description for the Zone</p></li>
+<li><p><strong>https</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable HTTPS administrative service</p></li>
+<li><p><strong>ssh</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSH administrative service</p></li>
+<li><p><strong>client_authen</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable client authentication service</p></li>
+<li><p><strong>captive_portal</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable captive portal</p></li>
+<li><p><strong>ad_sso</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSO with Active Directory</p></li>
+<li><p><strong>radius_sso</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSO with Radius</p></li>
+<li><p><strong>chromebook_sso</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable Chromebook SSO</p></li>
+<li><p><strong>dns</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable DNS</p></li>
+<li><p><strong>ping</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable ping</p></li>
+<li><p><strong>ipsec</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable ipsec</p></li>
+<li><p><strong>red</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable RED</p></li>
+<li><p><strong>sslvpn</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SSL VPN</p></li>
+<li><p><strong>vpn_portal</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable VPN Portal</p></li>
+<li><p><strong>web_proxy</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable Web proxy</p></li>
+<li><p><strong>wireless_protection</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable wireless protection</p></li>
+<li><p><strong>user_portal</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable user portal</p></li>
+<li><p><strong>dynamic_routing</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable dynamic routing</p></li>
+<li><p><strong>smtp_relay</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SMTP Relay</p></li>
+<li><p><strong>snmp</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/Disable SNMP</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ips.html" class="btn btn-neutral float-left" title="ips module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="profile.html" class="btn btn-neutral float-right" title="profile module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
