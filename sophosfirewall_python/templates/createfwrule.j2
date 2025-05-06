@@ -27,14 +27,14 @@
             <LogTraffic>{{ log }}</LogTraffic>
             {% endif %}
             <SkipLocalDestined>Disable</SkipLocalDestined>
-            {% if src_zones %}
+            {% if src_zones and not 'Any' in src_zones %}
             <SourceZones>
                 {% for zone in src_zones %}
                 <Zone>{{ zone }}</Zone>
                 {% endfor %}
             </SourceZones>
             {% endif %}
-            {% if dst_zones %}
+            {% if dst_zones and not 'Any' in dst_zones %}
             <DestinationZones>
                 {% for zone in dst_zones %}
                 <Zone>{{ zone }}</Zone>
@@ -42,21 +42,27 @@
             </DestinationZones>
             {% endif %}
             <Schedule>All The Time</Schedule>
+            {% if src_networks and not 'Any' in src_networks %}
             <SourceNetworks>
                 {% for network in src_networks %}
                 <Network>{{ network }}</Network>
                 {% endfor %}
             </SourceNetworks>
+            {% endif %}
+            {% if dst_networks and not 'Any' in dst_networks %}
             <DestinationNetworks>
                 {% for network in dst_networks %}
                 <Network>{{ network }}</Network>
                 {% endfor %}
             </DestinationNetworks>
+            {% endif %}
+            {% if service_list and not 'Any' in service_list %}
             <Services>
                 {% for service in service_list %}
                 <Service>{{ service }}</Service>
                 {% endfor %}
             </Services>
+            {% endif %}
         </NetworkPolicy>
       </FirewallRule>
     </Set>
