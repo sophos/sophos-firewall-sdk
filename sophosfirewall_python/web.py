@@ -232,7 +232,6 @@ class WebFilterPolicy:
                     "CCLRuleEnabled": rule.get("ccl_rule_enabled", "0"),
                     "UserList": {"User": rule.get("user_list", [])}
                 })        
-        print(f"rule_list: {rule_list}")
 
         if rule_list:
             if updated_policy_data.get("RuleList"):
@@ -240,8 +239,6 @@ class WebFilterPolicy:
 
             if not updated_policy_data.get("RuleList"):
                 updated_policy_data["RuleList"] = {"Rule": rule_list}
-
-        print(f"Updated policy data: {updated_policy_data}")
 
         return self.api_client.submit_template(
             filename="updatewebfilterpolicy.j2",
