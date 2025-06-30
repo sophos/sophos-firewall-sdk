@@ -17,3 +17,4 @@ sophosfirewall_python
    reports
    service
    system
+   web
