@@ -1,0 +1,102 @@
+<Request>
+    <Login>
+        <Username>{{username}}</Username>
+        <Password>{{password}}</Password>
+    </Login>
+    <Set operation="update">
+    <WebFilterPolicy>
+        <Name>{{ Name }}</Name> {# Assuming keys in template_vars match API casing #}
+        <Description>{{ Description | default('', true) }}</Description>
+        <DefaultAction>{{ DefaultAction | default('', true) }}</DefaultAction>
+        <EnableReporting>{{ EnableReporting | default('', true) }}</EnableReporting>
+        <DownloadFileSizeRestriction>{{ DownloadFileSizeRestriction | default('', true) }}</DownloadFileSizeRestriction>
+        <DownloadFileSizeRestrictionEnabled>{{ DownloadFileSizeRestrictionEnabled | default('', true) }}</DownloadFileSizeRestrictionEnabled>
+        <GoogAppDomainListEnabled>{{ GoogAppDomainListEnabled | default('', true) }}</GoogAppDomainListEnabled>
+        <GoogAppDomainList>{{ GoogAppDomainList | default('', true) }}</GoogAppDomainList>
+        <YoutubeFilterEnabled>{{ YoutubeFilterEnabled | default('', true) }}</YoutubeFilterEnabled>
+        <YoutubeFilterIsStrict>{{ YoutubeFilterIsStrict | default('', true) }}</YoutubeFilterIsStrict>
+        <EnforceSafeSearch>{{ EnforceSafeSearch | default('', true) }}</EnforceSafeSearch>
+        <EnforceImageLicensing>{{ EnforceImageLicensing | default('', true) }}</EnforceImageLicensing>
+        <XFFEnabled>{{ XFFEnabled | default('', true) }}</XFFEnabled>
+        <Office365Enabled>{{ Office365Enabled | default('', true) }}</Office365Enabled>
+        <Office365TenantsList>{{ Office365TenantsList | default('', true) }}</Office365TenantsList>
+        <Office365DirectoryId>{{ Office365DirectoryId | default('', true) }}</Office365DirectoryId>
+        <QuotaLimit>{{ QuotaLimit | default('', true) }}</QuotaLimit>
+        {# RuleList is handled by Python logic preparing the full list #}
+        {% if RuleList %}
+        <RuleList>
+            {% for rule in RuleList.Rule %}
+                {% if rule.CategoryList %}
+                <Rule>
+                    <CategoryList>
+                        {% if rule.CategoryList.Category is mapping %}
+                        <Category>
+                            <ID>{{ rule.CategoryList.Category.ID }}</ID>
+                            <type>{{ rule.CategoryList.Category.type }}</type>
+                        </Category>
+                        {% else %}
+                        {% for category in rule.CategoryList.Category %}
+                        <Category>
+                            <ID>{{ category.ID }}</ID>
+                            <type>{{ category.type }}</type>
+                        </Category>
+                        {% endfor %}
+                        {% endif %}
+                    </CategoryList>
+                    <HTTPAction>{{ rule.HTTPAction }}</HTTPAction>
+                    <HTTPSAction>{{ rule.HTTPSAction }}</HTTPSAction>
+                    <FollowHTTPAction>{{ rule.FollowHTTPAction }}</FollowHTTPAction>
+                    <ExceptionList>
+                        <FileTypeCategory/>
+                    </ExceptionList>
+                    <Schedule>{{ rule.Schedule }}</Schedule>
+                    <PolicyRuleEnabled>{{ rule.PolicyRuleEnabled }}</PolicyRuleEnabled>
+                    <CCLRuleEnabled>{{ rule.CCLRuleEnabled }}</CCLRuleEnabled>
+                    {% if rule.UserList %}
+                    <UserList>
+                        {% if rule.UserList.User is string %}
+                        <User>{{ rule.UserList.User }}</User>
+                        {% else %}
+                        {% for user in rule.UserList.User %}
+                        <User>{{ user }}</User>
+                        {% endfor %}
+                        {% endif %}
+                    </UserList>
+                    {% endif %}
+                </Rule>
+                {% elif rule.CategoryList is defined and not rule.CategoryList %}
+                <Rule>
+                    <CategoryList>
+                        <Category>
+                            <ID>All web traffic</ID>
+                            <type>WebCategory</type>
+                        </Category>
+                    </CategoryList>
+                    <HTTPAction>{{ rule.HTTPAction }}</HTTPAction>
+                    <HTTPSAction>{{ rule.HTTPSAction }}</HTTPSAction>
+                    <FollowHTTPAction>{{ rule.FollowHTTPAction }}</FollowHTTPAction>
+                    <ExceptionList>
+                        <FileTypeCategory/>
+                    </ExceptionList>
+                    <Schedule>{{ rule.Schedule }}</Schedule>
+                    <PolicyRuleEnabled>{{ rule.PolicyRuleEnabled }}</PolicyRuleEnabled>
+                    <CCLRuleEnabled>{{ rule.CCLRuleEnabled }}</CCLRuleEnabled>
+                    {% if rule.UserList %}
+                    <UserList>
+                        {% if rule.UserList.User is string %}
+                        <User>{{ rule.UserList.User }}</User>
+                        {% else %}
+                        {% for user in rule.UserList.User %}
+                        <User>{{ user }}</User>
+                        {% endfor %}
+                        {% endif %}
+                    </UserList>
+                    {% endif %}
+                </Rule>
+                {% endif %}
+            {% endfor %}
+        </RuleList>
+        {% endif %}
+    </WebFilterPolicy>
+  </Set>
+</Request>
