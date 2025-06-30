@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>host module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ips module" href="ips.html" />
+    <link rel="prev" title="firewallrule module" href="firewallrule.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">host module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#host.FQDNHost"><code class="docutils literal notranslate"><span class="pre">FQDNHost</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.FQDNHost.create"><code class="docutils literal notranslate"><span class="pre">FQDNHost.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.FQDNHost.get"><code class="docutils literal notranslate"><span class="pre">FQDNHost.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.FQDNHost.update"><code class="docutils literal notranslate"><span class="pre">FQDNHost.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host.FQDNHostGroup"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.FQDNHostGroup.create"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.FQDNHostGroup.get"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.FQDNHostGroup.update"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host.IPHost"><code class="docutils literal notranslate"><span class="pre">IPHost</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPHost.create"><code class="docutils literal notranslate"><span class="pre">IPHost.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPHost.get"><code class="docutils literal notranslate"><span class="pre">IPHost.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host.IPHostGroup"><code class="docutils literal notranslate"><span class="pre">IPHostGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPHostGroup.create"><code class="docutils literal notranslate"><span class="pre">IPHostGroup.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPHostGroup.get"><code class="docutils literal notranslate"><span class="pre">IPHostGroup.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPHostGroup.update"><code class="docutils literal notranslate"><span class="pre">IPHostGroup.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host.IPNetwork"><code class="docutils literal notranslate"><span class="pre">IPNetwork</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPNetwork.create"><code class="docutils literal notranslate"><span class="pre">IPNetwork.create()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host.IPRange"><code class="docutils literal notranslate"><span class="pre">IPRange</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.IPRange.create"><code class="docutils literal notranslate"><span class="pre">IPRange.create()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host.URLGroup"><code class="docutils literal notranslate"><span class="pre">URLGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#host.URLGroup.create"><code class="docutils literal notranslate"><span class="pre">URLGroup.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.URLGroup.get"><code class="docutils literal notranslate"><span class="pre">URLGroup.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host.URLGroup.update"><code class="docutils literal notranslate"><span class="pre">URLGroup.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">host module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/host.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-host">
+<span id="host-module"></span><h1>host module<a class="headerlink" href="#module-host" title="Link to this heading"></a></h1>
+<p>Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="host.FQDNHost">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">FQDNHost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHost" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with FQDN Hosts.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.FQDNHost.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fqdn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fqdn_group_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHost.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHost.create" title="Link to this definition"></a></dt>
+<dd><p>Create FQDN Host object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object.</p></li>
+<li><p><strong>fqdn</strong> (<em>str</em>) – FQDN string.</p></li>
+<li><p><strong>fqdn_group_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List containing FQDN Host Group(s) to associate the FQDN Host.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Description.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.FQDNHost.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHost.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHost.get" title="Link to this definition"></a></dt>
+<dd><p>Get FQDN Host object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – FQDN Host name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.FQDNHost.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fqdn_host_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHost.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHost.update" title="Link to this definition"></a></dt>
+<dd><p>Add or remove a FQDN Host from an FQDN Host Group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – FQDN Host Group name.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – FQDN Host Group description.</p></li>
+<li><p><strong>fqdn_host_list</strong> (<em>str</em>) – List of FQDN Hosts to be added to or removed from the FQDN Host list.</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Options are ‘add’, ‘remove’ or ‘replace’. Specify None to disable updating FQDN Host List. Defaults to ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="host.FQDNHostGroup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">FQDNHostGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHostGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHostGroup" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with FQDN HostGroup(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.FQDNHostGroup.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fqdn_host_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHostGroup.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHostGroup.create" title="Link to this definition"></a></dt>
+<dd><p>Create FQDN HostGroup object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object.</p></li>
+<li><p><strong>fqdn_host_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List containing FQDN Host(s) to associate the FQDN Host Group.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Description.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.FQDNHostGroup.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHostGroup.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHostGroup.get" title="Link to this definition"></a></dt>
+<dd><p>Get FQDN HostGroup object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – FQDN HostGroup name. Returns all objects if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.FQDNHostGroup.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fqdn_host_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#FQDNHostGroup.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.FQDNHostGroup.update" title="Link to this definition"></a></dt>
+<dd><p>Add or remove a FQDN Host from an FQDN Host Group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – FQDN Host Group name.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – FQDN Host Group description.</p></li>
+<li><p><strong>fqdn_host_list</strong> (<em>str</em>) – List of FQDN Hosts to be added to or removed from the FQDN Host list.</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Options are ‘add’, ‘remove’ or ‘replace’. Specify None to disable updating FQDN Host List. Defaults to ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="host.IPHost">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">IPHost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHost" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with IP Host(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPHost.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHost.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHost.create" title="Link to this definition"></a></dt>
+<dd><p>Create IP Host.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>ip_address</strong> (<em>str</em>) – Host IP address or network in case of host_type=Network.</p></li>
+<li><p><strong>mask</strong> (<em>str</em>) – Subnet mask in dotted decimal format (ex. 255.255.255.0). Only used with type: Network.</p></li>
+<li><p><strong>start_ip</strong> (<em>str</em>) – Starting IP address in case of host_type=IPRange.</p></li>
+<li><p><strong>end_ip</strong> (<em>str</em>) – Ending IP address in case of host_type=IPRange.</p></li>
+<li><p><strong>host_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of Host. Valid options: IP, Network, IPRange.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPHost.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHost.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHost.get" title="Link to this definition"></a></dt>
+<dd><p>Get IP Host object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – IP object name. Returns all objects if not specified.</p></li>
+<li><p><strong>ip_address</strong> (<em>str</em><em>, </em><em>optional</em>) – Query by IP Address.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="host.IPHostGroup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">IPHostGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHostGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHostGroup" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with IP Host Group(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPHostGroup.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHostGroup.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHostGroup.create" title="Link to this definition"></a></dt>
+<dd><p>Create an IP Host Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – IP Host Group name</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Host Group description</p></li>
+<li><p><strong>host_list</strong> (<em>list</em>) – List of existing IP hosts to add to the group</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPHostGroup.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHostGroup.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHostGroup.get" title="Link to this definition"></a></dt>
+<dd><p>Get IP Host object(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – IP object name. Returns all objects if not specified.</p></li>
+<li><p><strong>ip_address</strong> (<em>str</em><em>, </em><em>optional</em>) – Query by IP Address.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPHostGroup.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPHostGroup.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPHostGroup.update" title="Link to this definition"></a></dt>
+<dd><p>Add or remove an IP Host from an IP HostGroup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – IP Host Group name.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – IP Host Group description.</p></li>
+<li><p><strong>host_list</strong> (<em>str</em>) – List of IP Hosts to be added to or removed from the Host List.</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Options are ‘add’, ‘remove’ or ‘replace’. Specify None to disable updating Host List. Defaults to ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="host.IPNetwork">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">IPNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPNetwork" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Host of type Network.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPNetwork.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPNetwork.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPNetwork.create" title="Link to this definition"></a></dt>
+<dd><p>Create IP Host of type Network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>ip_network</strong> (<em>str</em>) – IP network address</p></li>
+<li><p><strong>mask</strong> (<em>str</em>) – Subnet mask in dotted decimal format (ex. 255.255.255.0)</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="host.IPRange">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">IPRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPRange" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Host of type IPRange.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.IPRange.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#IPRange.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.IPRange.create" title="Link to this definition"></a></dt>
+<dd><p>Create IP Host of type IPRange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the object</p></li>
+<li><p><strong>start_ip</strong> (<em>str</em>) – Starting IP address</p></li>
+<li><p><strong>end_ip</strong> (<em>str</em>) – Ending IP address</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Turn on debugging. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="host.URLGroup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">host.</span></span><span class="sig-name descname"><span class="pre">URLGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#URLGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.URLGroup" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with URL Group(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="host.URLGroup.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#URLGroup.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.URLGroup.create" title="Link to this definition"></a></dt>
+<dd><p>Create a web URL Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – URL Group name.</p></li>
+<li><p><strong>domain_list</strong> (<em>list</em>) – List of domains to added/removed/replaced.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.URLGroup.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#URLGroup.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.URLGroup.get" title="Link to this definition"></a></dt>
+<dd><p>Get URLGroup(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Get URLGroup by name. Defaults to None.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="host.URLGroup.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/host.html#URLGroup.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#host.URLGroup.update" title="Link to this definition"></a></dt>
+<dd><p>Add or remove a specified domain to/from a web URL Group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – URL Group name.</p></li>
+<li><p><strong>domain_list</strong> (<em>list</em>) – List of domains to added/removed/replaced.</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Options are ‘add’, ‘remove’ or ‘replace’. Defaults to ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="firewallrule.html" class="btn btn-neutral float-left" title="firewallrule module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ips.html" class="btn btn-neutral float-right" title="ips module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

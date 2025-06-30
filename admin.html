@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>admin module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="authen module" href="authen.html" />
+    <link rel="prev" title="api_client module" href="api_client.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">admin module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#admin.AclRule"><code class="docutils literal notranslate"><span class="pre">AclRule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AclRule.create"><code class="docutils literal notranslate"><span class="pre">AclRule.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AclRule.get"><code class="docutils literal notranslate"><span class="pre">AclRule.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AclRule.update"><code class="docutils literal notranslate"><span class="pre">AclRule.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#admin.AdminSettings"><code class="docutils literal notranslate"><span class="pre">AdminSettings</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AdminSettings.get"><code class="docutils literal notranslate"><span class="pre">AdminSettings.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AdminSettings.update_hostname_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_hostname_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AdminSettings.update_login_disclaimer"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_login_disclaimer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AdminSettings.update_loginsecurity_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_loginsecurity_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AdminSettings.update_passwordcomplexity_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_passwordcomplexity_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#admin.AdminSettings.update_webadmin_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_webadmin_settings()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#admin.Notification"><code class="docutils literal notranslate"><span class="pre">Notification</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#admin.Notification.get"><code class="docutils literal notranslate"><span class="pre">Notification.get()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">admin module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/admin.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-admin">
+<span id="admin-module"></span><h1>admin module<a class="headerlink" href="#module-admin" title="Link to this heading"></a></h1>
+<p>Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="admin.AclRule">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">admin.</span></span><span class="sig-name descname"><span class="pre">AclRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AclRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AclRule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Local Service ACL Exception Rules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AclRule.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_zone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AclRule.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AclRule.create" title="Link to this definition"></a></dt>
+<dd><p>Create Local Service ACL Exception Rule (System &gt; Administration &gt; Device Access &gt; Local service ACL exception)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the ACL exception rule to update.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Rule description.</p></li>
+<li><p><strong>position</strong> (<em>str</em>) – Location to place the ACL (Top or Bottom).</p></li>
+<li><p><strong>source_zone</strong> (<em>str</em>) – Source Zone. Defaults to Any.</p></li>
+<li><p><strong>source_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of source network or host groups. Defaults to None.</p></li>
+<li><p><strong>dest_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of destination hosts. Defaults to None.</p></li>
+<li><p><strong>service_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of services. Defaults to None.</p></li>
+<li><p><strong>action</strong> (<em>str</em><em>, </em><em>optional</em>) – Accept or Drop. Default is Accept.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AclRule.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AclRule.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AclRule.get" title="Link to this definition"></a></dt>
+<dd><p>Get Local ACL Exception rules</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of rule to retrieve. Returns all if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AclRule.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_zone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AclRule.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AclRule.update" title="Link to this definition"></a></dt>
+<dd><p>Update Local Service ACL Exception Rule (System &gt; Administration &gt; Device Access &gt; Local service ACL exception)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the ACL rule to update.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Rule description.</p></li>
+<li><p><strong>source_zone</strong> (<em>str</em>) – Name of the source zone. Defaults to None.</p></li>
+<li><p><strong>source_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of network or host groups. Defaults to [].</p></li>
+<li><p><strong>dest_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of destinations. Defaults to [].</p></li>
+<li><p><strong>service_list</strong> (<em>list</em><em>, </em><em>optional</em>) – List of services. Defaults to [].</p></li>
+<li><p><strong>action</strong> (<em>str</em><em>, </em><em>optional</em>) – Accept or Drop.</p></li>
+<li><p><strong>update_action</strong> (<em>str</em><em>, </em><em>optional</em>) – Indicate whether to ‘add’ or ‘remove’ from source, dest, or service lists, or to ‘replace’ the lists. Default is ‘add’.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="admin.AdminSettings">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">admin.</span></span><span class="sig-name descname"><span class="pre">AdminSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Admin and user settings (System &gt; Administration).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AdminSettings.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings.get" title="Link to this definition"></a></dt>
+<dd><p>Get Admin and user settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AdminSettings.update_hostname_settings">
+<span class="sig-name descname"><span class="pre">update_hostname_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings.update_hostname_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings.update_hostname_settings" title="Link to this definition"></a></dt>
+<dd><p>Update hostname admin settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hostname</strong> (<em>str</em><em>, </em><em>optional</em>) – Hostname. Defaults to None.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Hostname description. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AdminSettings.update_login_disclaimer">
+<span class="sig-name descname"><span class="pre">update_login_disclaimer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings.update_login_disclaimer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings.update_login_disclaimer" title="Link to this definition"></a></dt>
+<dd><p>Update login disclaimer. System &gt; Administration &gt; Admin and user settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enabled</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable or disable Login Disclaimer. Defaults to True.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AdminSettings.update_loginsecurity_settings">
+<span class="sig-name descname"><span class="pre">update_loginsecurity_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logout_session</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_login</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unsuccessful_attempt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings.update_loginsecurity_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings.update_loginsecurity_settings" title="Link to this definition"></a></dt>
+<dd><p>Update login security admin settings. System &gt; Administration &gt; Admin and user settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logout_session</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/disable logout session. Specify number of minutes to enable. Defaults to None.</p></li>
+<li><p><strong>block_login</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/disable block login. Defaults to None.</p></li>
+<li><p><strong>unsuccessful_attempt</strong> (<em>str</em><em>, </em><em>optional</em>) – Set number of unsuccessful attempts. Defaults to None.</p></li>
+<li><p><strong>duration</strong> (<em>str</em><em>, </em><em>optional</em>) – Set block login duration. Defaults to None.</p></li>
+<li><p><strong>minutes</strong> (<em>str</em><em>, </em><em>optional</em>) – Set number of minutes for block login. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AdminSettings.update_passwordcomplexity_settings">
+<span class="sig-name descname"><span class="pre">update_passwordcomplexity_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complexity_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_numeric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_special</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings.update_passwordcomplexity_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings.update_passwordcomplexity_settings" title="Link to this definition"></a></dt>
+<dd><p>Update password complexity settings. System &gt; Administration &gt; Admin and user settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>complexity_check</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable/disable password complexity check. Defaults to None.</p></li>
+<li><p><strong>enforce_min_length</strong> (<em>str</em><em>, </em><em>optional</em>) – Enforce minimum required password length. Defaults to None.</p></li>
+<li><p><strong>include_alpha</strong> (<em>str</em><em>, </em><em>optional</em>) – Enforce inclusion of alphanumeric characters. Defaults to None.</p></li>
+<li><p><strong>include_numeric</strong> (<em>str</em><em>, </em><em>optional</em>) – Enforce inclusion numeric characters. Defaults to None.</p></li>
+<li><p><strong>include_special</strong> (<em>str</em><em>, </em><em>optional</em>) – Enforce inclusion of special characters. Defaults to None.</p></li>
+<li><p><strong>min_length</strong> (<em>str</em><em>, </em><em>optional</em>) – Minimul required password length. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.AdminSettings.update_webadmin_settings">
+<span class="sig-name descname"><span class="pre">update_webadmin_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">certificate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">https_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">userportal_https_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vpnportal_https_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portal_redirect_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">portal_custom_hostname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#AdminSettings.update_webadmin_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.AdminSettings.update_webadmin_settings" title="Link to this definition"></a></dt>
+<dd><p>Update webadmin settings. System &gt; Administration &gt; Admin and user settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>certificate</strong> (<em>str</em><em>, </em><em>optional</em>) – SSL Certificate name. Defaults to None.</p></li>
+<li><p><strong>https_port</strong> (<em>str</em><em>, </em><em>optional</em>) – HTTPS port for admin interface. Defaults to None.</p></li>
+<li><p><strong>userportal_https_port</strong> (<em>str</em><em>, </em><em>optional</em>) – HTTPS port for User portal. Defaults to None.</p></li>
+<li><p><strong>vpnportal_https_port</strong> (<em>str</em><em>, </em><em>optional</em>) – HTTPS port for VPN portal. Defaults to None.</p></li>
+<li><p><strong>portal_redirect_mode</strong> (<em>str</em><em>, </em><em>optional</em>) – Portal redirect mode. Defaults to None.</p></li>
+<li><p><strong>portal_custom_hostname</strong> (<em>str</em><em>, </em><em>optional</em>) – Portal custom hostname. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="admin.Notification">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">admin.</span></span><span class="sig-name descname"><span class="pre">Notification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#Notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.Notification" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with Notification settings.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="admin.Notification.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/admin.html#Notification.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#admin.Notification.get" title="Link to this definition"></a></dt>
+<dd><p>Get notification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of notification. Returns all if not specified.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_client.html" class="btn btn-neutral float-left" title="api_client module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="authen.html" class="btn btn-neutral float-right" title="authen module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

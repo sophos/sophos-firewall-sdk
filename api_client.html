@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>api_client module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="admin module" href="admin.html" />
+    <link rel="prev" title="firewallapi module" href="firewallapi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">api_client module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api_client.APIClient"><code class="docutils literal notranslate"><span class="pre">APIClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.get_tag"><code class="docutils literal notranslate"><span class="pre">APIClient.get_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.get_tag_with_filter"><code class="docutils literal notranslate"><span class="pre">APIClient.get_tag_with_filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.login"><code class="docutils literal notranslate"><span class="pre">APIClient.login()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.remove"><code class="docutils literal notranslate"><span class="pre">APIClient.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.submit_template"><code class="docutils literal notranslate"><span class="pre">APIClient.submit_template()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.submit_xml"><code class="docutils literal notranslate"><span class="pre">APIClient.submit_xml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.update"><code class="docutils literal notranslate"><span class="pre">APIClient.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api_client.APIClient.validate_arg"><code class="docutils literal notranslate"><span class="pre">APIClient.validate_arg()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#api_client.SophosFirewallAPIError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAPIError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api_client.SophosFirewallAuthFailure"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAuthFailure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api_client.SophosFirewallInvalidArgument"><code class="docutils literal notranslate"><span class="pre">SophosFirewallInvalidArgument</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api_client.SophosFirewallOperatorError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallOperatorError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api_client.SophosFirewallZeroRecords"><code class="docutils literal notranslate"><span class="pre">SophosFirewallZeroRecords</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">api_client module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_client.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-api_client">
+<span id="api-client-module"></span><h1>api_client module<a class="headerlink" href="#module-api_client" title="Link to this heading"></a></h1>
+<p>Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="api_client.APIClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api_client.</span></span><span class="sig-name descname"><span class="pre">APIClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for making the requests to the firewall XML API.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.get_tag">
+<span class="sig-name descname"><span class="pre">get_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient.get_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.get_tag" title="Link to this definition"></a></dt>
+<dd><p>Execute a get for a specified XML tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – XML tag for the request</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Request timeout in seconds. Defaults to 30 seconds.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.get_tag_with_filter">
+<span class="sig-name descname"><span class="pre">get_tag_with_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'like'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient.get_tag_with_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.get_tag_with_filter" title="Link to this definition"></a></dt>
+<dd><p>Execute a get for a specified XML tag with filter criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – XML tag for the request.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – Search key</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – Search value</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search (“=”,”!=”,”like”). Defaults to “like”.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Request timeout in seconds. Defaults to 30 seconds.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.login">
+<span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_format</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient.login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.login" title="Link to this definition"></a></dt>
+<dd><p>Test login credentials.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove an object from the firewall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – The XML tag indicating the type of object to be removed.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the object to be removed.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The primary XML key that is used to look up the object. Defaults to Name.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Request timeout in seconds. Defaults to 30 seconds.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.submit_template">
+<span class="sig-name descname"><span class="pre">submit_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/api_client.html#APIClient.submit_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.submit_template" title="Link to this definition"></a></dt>
+<dd><p>Submits XML payload stored as a Jinja2 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Jinja2 template filename. Place in “templates” directory or configure template_dir.</p></li>
+<li><p><strong>template_vars</strong> (<em>dict</em>) – Dictionary of variables to inject into the template. Username and password are passed in by default.</p></li>
+<li><p><strong>template_dir</strong> (<em>str</em>) – Directory to look for templates. Default is “./templates”.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Request timeout in seconds. Defaults to 30 seconds.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable debug mode to display XML payload. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.submit_xml">
+<span class="sig-name descname"><span class="pre">submit_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'add'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/api_client.html#APIClient.submit_xml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.submit_xml" title="Link to this definition"></a></dt>
+<dd><p>Submits XML payload as a string to the API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template_data</strong> (<em>str</em>) – A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})</p></li>
+<li><p><strong>template_vars</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of variables to inject into the XML string.</p></li>
+<li><p><strong>set_operation</strong> (<em>str</em>) – Specify ‘add’ or ‘update’ set operation. Default is add. Specify None to exclude the set operation XML block.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Request timeout in seconds. Defaults to 30 seconds.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xml_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.update" title="Link to this definition"></a></dt>
+<dd><p>Update an existing object on the firewall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xml_tag</strong> (<em>str</em>) – The XML tag indicating the type of object to be updated.</p></li>
+<li><p><strong>update_params</strong> (<em>dict</em>) – Keys/values to be updated. Keys must match an existing XML key.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the object to be updated, if applicable.</p></li>
+<li><p><strong>lookup_key</strong> (<em>str</em><em>, </em><em>optional</em>) – The XML key name to look up the name of the object. Default is “Name”.</p></li>
+<li><p><strong>output_format</strong> (<em>str</em>) – Output format. Valid options are “dict” or “xml”. Defaults to dict.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Request timeout in seconds. Defaults to 30 seconds.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Displays the XML payload that was submitted</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api_client.APIClient.validate_arg">
+<span class="sig-name descname"><span class="pre">validate_arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_choices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api_client.html#APIClient.validate_arg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.APIClient.validate_arg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="api_client.SophosFirewallAPIError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api_client.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallAPIError</span></span><a class="reference internal" href="_modules/api_client.html#SophosFirewallAPIError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.SophosFirewallAPIError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when an API operation fails</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="api_client.SophosFirewallAuthFailure">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api_client.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallAuthFailure</span></span><a class="reference internal" href="_modules/api_client.html#SophosFirewallAuthFailure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.SophosFirewallAuthFailure" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when authentication to firewall fails</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="api_client.SophosFirewallInvalidArgument">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api_client.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallInvalidArgument</span></span><a class="reference internal" href="_modules/api_client.html#SophosFirewallInvalidArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.SophosFirewallInvalidArgument" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when an invalid argument is specified</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="api_client.SophosFirewallOperatorError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api_client.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallOperatorError</span></span><a class="reference internal" href="_modules/api_client.html#SophosFirewallOperatorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.SophosFirewallOperatorError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when an invalid operator is specified</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="api_client.SophosFirewallZeroRecords">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api_client.</span></span><span class="sig-name descname"><span class="pre">SophosFirewallZeroRecords</span></span><a class="reference internal" href="_modules/api_client.html#SophosFirewallZeroRecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api_client.SophosFirewallZeroRecords" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error raised when a get request returns zero records</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="firewallapi.html" class="btn btn-neutral float-left" title="firewallapi module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="admin.html" class="btn btn-neutral float-right" title="admin module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

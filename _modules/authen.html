@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>authen &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">authen</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for authen</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2023 Sophos Ltd.  All rights reserved.</span>
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing</span>
+<span class="sd">permissions and limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="User">
+<a class="viewcode-back" href="../authen.html#authen.User">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with User(s).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="User.get">
+<a class="viewcode-back" href="../authen.html#authen.User.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get local users</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): User display name. Retrieves all users if not specified.</span>
+<span class="sd">            username (str, optional): Username.  Retrieves all users if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">username</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Username&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;User&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="User.create">
+<a class="viewcode-back" href="../authen.html#authen.User.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a User</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            debug: (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            user (str): Username</span>
+<span class="sd">            name (str): User Display Name</span>
+<span class="sd">            description (str): User description</span>
+<span class="sd">            user_password (str): User password</span>
+<span class="sd">            user_type (str): User Type (Administrator/User)</span>
+<span class="sd">            profile (str): Profile name</span>
+<span class="sd">            group (str): Group name</span>
+<span class="sd">            email (str): User email address</span>
+<span class="sd">            access_time_policy (str, optional): Access time policy</span>
+<span class="sd">            sslvpn_policy (str, optional): SSL VPN policy</span>
+<span class="sd">            clientless_policy (str, optional): Clientless policy</span>
+<span class="sd">            l2tp (str, optional): L2TP Enable/Disable</span>
+<span class="sd">            pptp (str, optional): PPTP Enable/Disable</span>
+<span class="sd">            cisco (str, optional): CISCO Enable/Disable</span>
+<span class="sd">            quarantine_digest (str, optional): Quarantine Digest Enable/Disable</span>
+<span class="sd">            mac_binding (str, optional): MAC binding Enable/Disable</span>
+<span class="sd">            login_restriction (str, optional): Login restriction. Default = UserGroupNode.</span>
+<span class="sd">            isencryptcert (str, optional): Enable/Disable. Default = Disable.</span>
+<span class="sd">            simultaneous_logins (str, optional): Enable/Disable simultaneous login.</span>
+<span class="sd">            surfingquota_policy (str, optional): Surfing quota policy. Default = Unlimited.</span>
+<span class="sd">            applianceaccess_schedule (str, optional): Schedule for appliance access.  Default = All The Time.</span>
+<span class="sd">            login_restriction (str, optional): Login restriction for appliance. Default = AnyNode.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createuser.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="User.update_user_password">
+<a class="viewcode-back" href="../authen.html#authen.User.update_user_password">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_user_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">new_password</span><span class="p">,</span> <span class="n">debug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update user password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            username (str): Username</span>
+<span class="sd">            new_password (str): New password. Must meet complexity requirements.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the existing user</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">user_params</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;User&quot;</span><span class="p">]</span>
+        <span class="n">user_params</span><span class="p">[</span><span class="s2">&quot;Password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_password</span>
+        <span class="n">user_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;PasswordHash&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Update the user</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateuserpassword.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">user_params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="User.update_admin_password">
+<a class="viewcode-back" href="../authen.html#authen.User.update_admin_password">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_admin_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_password</span><span class="p">,</span> <span class="n">new_password</span><span class="p">,</span> <span class="n">debug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the admin password.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            current_password (str): Current admin password.</span>
+<span class="sd">            new_password (str): New admin password. Must meet complexity requirements.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;current_password&quot;</span><span class="p">:</span> <span class="n">current_password</span><span class="p">,</span> <span class="s2">&quot;new_password&quot;</span><span class="p">:</span> <span class="n">new_password</span><span class="p">}</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateadminpassword.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AdminAuthen">
+<a class="viewcode-back" href="../authen.html#authen.AdminAuthen">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdminAuthen</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with Admin Authentication Settings.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="AdminAuthen.get">
+<a class="viewcode-back" href="../authen.html#authen.AdminAuthen.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get admin authentication settings</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdminAuthentication&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

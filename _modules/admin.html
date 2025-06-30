@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>admin &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">admin</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for admin</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2023 Sophos Ltd.  All rights reserved.</span>
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing</span>
+<span class="sd">permissions and limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sophosfirewall_python.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xmltodict</span><span class="w"> </span><span class="kn">import</span> <span class="n">unparse</span>
+
+<div class="viewcode-block" id="AclRule">
+<a class="viewcode-back" href="../admin.html#admin.AclRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AclRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with Local Service ACL Exception Rules.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="AclRule.get">
+<a class="viewcode-back" href="../admin.html#admin.AclRule.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Local ACL Exception rules</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of rule to retrieve. Returns all if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;RuleName&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="n">operator</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AclRule.create">
+<a class="viewcode-back" href="../admin.html#admin.AclRule.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">source_zone</span><span class="p">,</span> <span class="n">source_list</span><span class="p">,</span> <span class="n">dest_list</span><span class="p">,</span> <span class="n">service_list</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">debug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create Local Service ACL Exception Rule (System &gt; Administration &gt; Device Access &gt; Local service ACL exception)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the ACL exception rule to update.</span>
+<span class="sd">            description (str): Rule description.</span>
+<span class="sd">            position (str): Location to place the ACL (Top or Bottom). </span>
+<span class="sd">            source_zone (str): Source Zone. Defaults to Any. </span>
+<span class="sd">            source_list (list, optional): List of source network or host groups. Defaults to None.</span>
+<span class="sd">            dest_list (list, optional): List of destination hosts. Defaults to None.</span>
+<span class="sd">            service_list (list, optional): List of services. Defaults to None.</span>
+<span class="sd">            action (str, optional): Accept or Drop. Default is Accept.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;source_zone&quot;</span><span class="p">:</span> <span class="n">source_zone</span><span class="p">,</span>
+            <span class="s2">&quot;source_list&quot;</span><span class="p">:</span> <span class="n">source_list</span><span class="p">,</span>
+            <span class="s2">&quot;dest_list&quot;</span><span class="p">:</span> <span class="n">dest_list</span><span class="p">,</span>
+            <span class="s2">&quot;service_list&quot;</span><span class="p">:</span> <span class="n">service_list</span><span class="p">,</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span>
+        <span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;createserviceacl.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">resp</span></div>
+
+
+<div class="viewcode-block" id="AclRule.update">
+<a class="viewcode-back" href="../admin.html#admin.AclRule.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">source_zone</span><span class="p">,</span> <span class="n">source_list</span><span class="p">,</span> <span class="n">dest_list</span><span class="p">,</span> <span class="n">service_list</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">update_action</span><span class="p">,</span> <span class="n">debug</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update Local Service ACL Exception Rule (System &gt; Administration &gt; Device Access &gt; Local service ACL exception)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the ACL rule to update.</span>
+<span class="sd">            description (str): Rule description.</span>
+<span class="sd">            source_zone (str): Name of the source zone. Defaults to None. </span>
+<span class="sd">            source_list (list, optional): List of network or host groups. Defaults to [].</span>
+<span class="sd">            dest_list (list, optional): List of destinations. Defaults to [].</span>
+<span class="sd">            service_list (list, optional): List of services. Defaults to [].</span>
+<span class="sd">            action (str, optional): Accept or Drop.</span>
+<span class="sd">            update_action (str, optional): Indicate whether to &#39;add&#39; or &#39;remove&#39; from source, dest, or service lists, or to &#39;replace&#39; the lists. Default is &#39;add&#39;.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">update_action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">validate_arg</span><span class="p">(</span>
+                <span class="n">arg_name</span><span class="o">=</span><span class="s2">&quot;update_action&quot;</span><span class="p">,</span> <span class="n">arg_value</span><span class="o">=</span><span class="n">update_action</span><span class="p">,</span> <span class="n">valid_choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;remove&quot;</span><span class="p">,</span> <span class="s2">&quot;replace&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">validate_arg</span><span class="p">(</span>
+                <span class="n">arg_name</span><span class="o">=</span><span class="s2">&quot;action&quot;</span><span class="p">,</span> <span class="n">arg_value</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">valid_choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accept&quot;</span><span class="p">,</span> <span class="s2">&quot;drop&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">source_zone</span><span class="p">:</span>
+            <span class="n">source_zone</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;SourceZone&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">description</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Description&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Host&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Hosts&quot;</span><span class="p">]:</span>
+            <span class="n">exist_sources</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Hosts&quot;</span><span class="p">][</span><span class="s2">&quot;Host&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exist_sources</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;DstHost&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Hosts&quot;</span><span class="p">]:</span>    
+            <span class="n">exist_dests</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Hosts&quot;</span><span class="p">][</span><span class="s2">&quot;DstHost&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exist_dests</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;Service&quot;</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">]:</span>
+            <span class="n">exist_services</span> <span class="o">=</span> <span class="n">Utils</span><span class="o">.</span><span class="n">ensure_list</span><span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;LocalServiceACL&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">][</span><span class="s2">&quot;Service&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exist_services</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">source_list</span><span class="p">:</span>
+            <span class="n">source_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dest_list</span><span class="p">:</span>
+            <span class="n">dest_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">service_list</span><span class="p">:</span>
+            <span class="n">service_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">update_action</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;source_zone&quot;</span><span class="p">:</span> <span class="n">source_zone</span><span class="p">,</span>
+                <span class="s2">&quot;source_list&quot;</span><span class="p">:</span> <span class="n">exist_sources</span> <span class="o">+</span> <span class="n">source_list</span><span class="p">,</span>
+                <span class="s2">&quot;dest_list&quot;</span><span class="p">:</span> <span class="n">exist_dests</span> <span class="o">+</span> <span class="n">dest_list</span><span class="p">,</span>
+                <span class="s2">&quot;service_list&quot;</span><span class="p">:</span> <span class="n">exist_services</span> <span class="o">+</span> <span class="n">service_list</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">update_action</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;source_zone&quot;</span><span class="p">:</span> <span class="n">source_zone</span><span class="p">,</span>
+                <span class="s2">&quot;source_list&quot;</span><span class="p">:</span> <span class="n">source_list</span> <span class="k">if</span> <span class="n">source_list</span> <span class="k">else</span> <span class="n">exist_sources</span><span class="p">,</span>
+                <span class="s2">&quot;dest_list&quot;</span><span class="p">:</span> <span class="n">dest_list</span> <span class="k">if</span> <span class="n">dest_list</span> <span class="k">else</span> <span class="n">exist_dests</span><span class="p">,</span>
+                <span class="s2">&quot;service_list&quot;</span><span class="p">:</span> <span class="n">service_list</span> <span class="k">if</span> <span class="n">service_list</span> <span class="k">else</span> <span class="n">exist_services</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">update_action</span> <span class="o">==</span> <span class="s2">&quot;remove&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">source_list</span><span class="p">:</span>
+                <span class="n">exist_sources</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">dest_list</span><span class="p">:</span>
+                <span class="n">exist_dests</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">service_list</span><span class="p">:</span>
+                <span class="n">exist_services</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;source_zone&quot;</span><span class="p">:</span> <span class="n">source_zone</span><span class="p">,</span>
+                <span class="s2">&quot;source_list&quot;</span><span class="p">:</span> <span class="n">exist_sources</span><span class="p">,</span>
+                <span class="s2">&quot;dest_list&quot;</span><span class="p">:</span> <span class="n">exist_dests</span><span class="p">,</span>
+                <span class="s2">&quot;service_list&quot;</span><span class="p">:</span> <span class="n">exist_services</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span>
+            <span class="p">}</span>
+
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="s2">&quot;updateserviceacl.j2&quot;</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">resp</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Notification">
+<a class="viewcode-back" href="../admin.html#admin.Notification">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Notification</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with Notification settings.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="Notification.get">
+<a class="viewcode-back" href="../admin.html#admin.Notification.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get notification.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of notification. Returns all if not specified.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Notification&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;Notification&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="AdminSettings">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdminSettings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with Admin and user settings (System &gt; Administration).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="AdminSettings.get">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Admin and user settings</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AdminSettings.update_hostname_settings">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings.update_hostname_settings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_hostname_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update hostname admin settings. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hostname (str, optional): Hostname. Defaults to None.</span>
+<span class="sd">            description (str, optional): Hostname description. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">][</span><span class="s2">&quot;HostnameSettings&quot;</span><span class="p">]</span>
+
+        <span class="n">template_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;AdminSettings&gt;</span>
+<span class="s2">          &lt;HostnameSettings&gt;</span>
+<span class="s2">            &lt;HostName&gt;{{ hostname }}&lt;/HostName&gt;</span>
+<span class="s2">            &lt;HostNameDesc&gt;{{ description }}&lt;/HostNameDesc&gt;</span>
+<span class="s2">          &lt;/HostnameSettings&gt;</span>
+<span class="s2">        &lt;/AdminSettings&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">hostname</span> <span class="k">if</span> <span class="n">hostname</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;HostName&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span> <span class="k">if</span> <span class="n">description</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;HostNameDesc&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_xml</span><span class="p">(</span><span class="n">template_data</span><span class="o">=</span><span class="n">template_data</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">set_operation</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+
+                
+<div class="viewcode-block" id="AdminSettings.update_webadmin_settings">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings.update_webadmin_settings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_webadmin_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">certificate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">https_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">userportal_https_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">vpnportal_https_port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">portal_redirect_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">portal_custom_hostname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update webadmin settings. System &gt; Administration &gt; Admin and user settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            certificate (str, optional): SSL Certificate name. Defaults to None.</span>
+<span class="sd">            https_port (str, optional): HTTPS port for admin interface. Defaults to None.</span>
+<span class="sd">            userportal_https_port (str, optional): HTTPS port for User portal. Defaults to None.</span>
+<span class="sd">            vpnportal_https_port (str, optional): HTTPS port for VPN portal. Defaults to None.</span>
+<span class="sd">            portal_redirect_mode (str, optional): Portal redirect mode. Defaults to None.</span>
+<span class="sd">            portal_custom_hostname (str, optional): Portal custom hostname. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">][</span><span class="s2">&quot;WebAdminSettings&quot;</span><span class="p">]</span>
+
+        <span class="n">template_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;AdminSettings&gt;</span>
+<span class="s2">          &lt;WebAdminSettings&gt;</span>
+<span class="s2">            &lt;Certificate&gt;{{ certificate }}&lt;/Certificate&gt;</span>
+<span class="s2">            &lt;HTTPSport&gt;{{ https_port }}&lt;/HTTPSport&gt;</span>
+<span class="s2">            &lt;UserPortalHTTPSPort&gt;{{ userportal_https_port }}&lt;/UserPortalHTTPSPort&gt;</span>
+<span class="s2">            &lt;VPNPortalHTTPSPort&gt;{{ vpnportal_https_port }}&lt;/VPNPortalHTTPSPort&gt;</span>
+<span class="s2">            &lt;PortalRedirectMode&gt;{{ portal_redirect_mode }}&lt;/PortalRedirectMode&gt;</span>
+<span class="s2">            &lt;PortalCustomHostname&gt;{{ port_custom_hostname }}&lt;/PortalCustomHostname&gt;</span>
+<span class="s2">          &lt;/WebAdminSettings&gt;</span>
+<span class="s2">        &lt;/AdminSettings&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;certificate&quot;</span><span class="p">:</span> <span class="n">certificate</span> <span class="k">if</span> <span class="n">certificate</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;Certificate&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;https_port&quot;</span><span class="p">:</span> <span class="n">https_port</span> <span class="k">if</span> <span class="n">https_port</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;HTTPSport&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;userportal_https_port&quot;</span><span class="p">:</span> <span class="n">userportal_https_port</span> <span class="k">if</span> <span class="n">userportal_https_port</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;UserPortalHTTPSPort&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;vpnportal_https_port&quot;</span><span class="p">:</span> <span class="n">vpnportal_https_port</span> <span class="k">if</span> <span class="n">vpnportal_https_port</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;VPNPortalHTTPSPort&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;portal_redirect_mode&quot;</span><span class="p">:</span> <span class="n">portal_redirect_mode</span> <span class="k">if</span> <span class="n">portal_redirect_mode</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PortalRedirectMode&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;portal_custom_hostname&quot;</span><span class="p">:</span> <span class="n">portal_custom_hostname</span> <span class="k">if</span> <span class="n">portal_custom_hostname</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PortalCustomHostname&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_xml</span><span class="p">(</span><span class="n">template_data</span><span class="o">=</span><span class="n">template_data</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">set_operation</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AdminSettings.update_loginsecurity_settings">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings.update_loginsecurity_settings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_loginsecurity_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logout_session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">block_login</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unsuccessful_attempt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update login security admin settings. System &gt; Administration &gt; Admin and user settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            logout_session (str, optional): Enable/disable logout session. Specify number of minutes to enable. Defaults to None.</span>
+<span class="sd">            block_login (str, optional): Enable/disable block login. Defaults to None.</span>
+<span class="sd">            unsuccessful_attempt (str, optional): Set number of unsuccessful attempts. Defaults to None.</span>
+<span class="sd">            duration (str, optional): Set block login duration. Defaults to None.</span>
+<span class="sd">            minutes (str, optional): Set number of minutes for block login. Defaults to None. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">][</span><span class="s2">&quot;LoginSecurity&quot;</span><span class="p">]</span>
+
+        <span class="n">template_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;AdminSettings&gt;</span>
+<span class="s2">          &lt;LoginSecurity&gt;</span>
+<span class="s2">            &lt;LogoutSession&gt;{{ logout_session }}&lt;/LogoutSession&gt;</span>
+<span class="s2">            &lt;BlockLogin&gt;{{ block_login }}&lt;/BlockLogin&gt;</span>
+<span class="s2">            {</span><span class="si">% i</span><span class="s2">f block_login == &#39;Enable&#39; %}</span>
+<span class="s2">            &lt;BlockLoginSettings&gt;</span>
+<span class="s2">              &lt;UnsucccessfulAttempt&gt;{{ unsuccessful_attempt }}&lt;/UnsucccessfulAttempt&gt;</span>
+<span class="s2">              &lt;Duration&gt;{{ duration }}&lt;/Duration&gt;</span>
+<span class="s2">              &lt;ForMinutes&gt;{{ minutes }}&lt;/ForMinutes&gt;</span>
+<span class="s2">            &lt;/BlockLoginSettings&gt;</span>
+<span class="s2">            {</span><span class="si">% e</span><span class="s2">ndif %}</span>
+<span class="s2">          &lt;/LoginSecurity&gt;</span>
+<span class="s2">        &lt;/AdminSettings&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">unsuccessful_attempt</span> <span class="ow">and</span> <span class="s2">&quot;BlockLoginSettings&quot;</span> <span class="ow">in</span> <span class="n">exist_settings</span><span class="p">:</span>
+            <span class="n">unsuccessful_attempt</span> <span class="o">=</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;BlockLoginSettings&quot;</span><span class="p">][</span><span class="s2">&quot;UnsucccessfulAttempt&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">duration</span> <span class="ow">and</span> <span class="s2">&quot;BlockLoginSettings&quot;</span> <span class="ow">in</span> <span class="n">exist_settings</span><span class="p">:</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;BlockLoginSettings&quot;</span><span class="p">][</span><span class="s2">&quot;Duration&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">minutes</span> <span class="ow">and</span> <span class="s2">&quot;BlockLoginSettings&quot;</span> <span class="ow">in</span> <span class="n">exist_settings</span><span class="p">:</span>
+            <span class="n">minutes</span> <span class="o">=</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;BlockLoginSettings&quot;</span><span class="p">][</span><span class="s2">&quot;ForMinutes&quot;</span><span class="p">]</span>
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;logout_session&quot;</span><span class="p">:</span> <span class="n">logout_session</span> <span class="k">if</span> <span class="n">logout_session</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;LogoutSession&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;block_login&quot;</span><span class="p">:</span> <span class="n">block_login</span> <span class="k">if</span> <span class="n">block_login</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;BlockLogin&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;unsuccessful_attempt&quot;</span><span class="p">:</span> <span class="n">unsuccessful_attempt</span> <span class="k">if</span> <span class="n">unsuccessful_attempt</span> <span class="k">else</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="n">duration</span> <span class="k">if</span> <span class="n">duration</span> <span class="k">else</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;minutes&quot;</span><span class="p">:</span> <span class="n">minutes</span> <span class="k">if</span> <span class="n">minutes</span> <span class="k">else</span> <span class="s2">&quot;60&quot;</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_xml</span><span class="p">(</span><span class="n">template_data</span><span class="o">=</span><span class="n">template_data</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">set_operation</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AdminSettings.update_passwordcomplexity_settings">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings.update_passwordcomplexity_settings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_passwordcomplexity_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">complexity_check</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enforce_min_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_numeric</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_special</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update password complexity settings. System &gt; Administration &gt; Admin and user settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            complexity_check (str, optional): Enable/disable password complexity check. Defaults to None.</span>
+<span class="sd">            enforce_min_length (str, optional): Enforce minimum required password length. Defaults to None.</span>
+<span class="sd">            include_alpha (str, optional): Enforce inclusion of alphanumeric characters. Defaults to None.</span>
+<span class="sd">            include_numeric (str, optional): Enforce inclusion numeric characters. Defaults to None.</span>
+<span class="sd">            include_special (str, optional): Enforce inclusion of special characters. Defaults to None. </span>
+<span class="sd">            min_length (str, optional): Minimul required password length. Defaults to None. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;AdminSettings&quot;</span><span class="p">][</span><span class="s2">&quot;PasswordComplexitySettings&quot;</span><span class="p">]</span>
+
+        <span class="n">template_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;AdminSettings&gt;</span>
+<span class="s2">          &lt;PasswordComplexitySettings&gt;</span>
+<span class="s2">            &lt;PasswordComplexityCheck&gt;{{ complexity_check }}&lt;/PasswordComplexityCheck&gt;</span>
+<span class="s2">            &lt;PasswordComplexity&gt;</span>
+<span class="s2">              &lt;MinimumPasswordLength&gt;{{ enforce_min_length }}&lt;/MinimumPasswordLength&gt;</span>
+<span class="s2">              &lt;IncludeAlphabeticCharacters&gt;{{ include_alpha }}&lt;/IncludeAlphabeticCharacters&gt;</span>
+<span class="s2">              &lt;IncludeNumericCharacter&gt;{{ include_special }}&lt;/IncludeNumericCharacter&gt;</span>
+<span class="s2">              &lt;IncludeSpecialCharacter&gt;{{ include_special }}&lt;/IncludeSpecialCharacter&gt;</span>
+<span class="s2">              &lt;MinimumPasswordLengthValue&gt;{{ min_length }}&lt;/MinimumPasswordLengthValue&gt;</span>
+<span class="s2">            &lt;/PasswordComplexity&gt;</span>
+<span class="s2">          &lt;/PasswordComplexitySettings&gt;</span>
+<span class="s2">        &lt;/AdminSettings&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;complexity_check&quot;</span><span class="p">:</span> <span class="n">complexity_check</span> <span class="k">if</span> <span class="n">complexity_check</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PasswordComplexityCheck&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;enforce_min_length&quot;</span><span class="p">:</span> <span class="n">enforce_min_length</span> <span class="k">if</span> <span class="n">enforce_min_length</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PasswordComplexity&quot;</span><span class="p">][</span><span class="s2">&quot;MinimumPasswordLength&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;include_alpha&quot;</span><span class="p">:</span> <span class="n">include_alpha</span> <span class="k">if</span> <span class="n">include_alpha</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PasswordComplexity&quot;</span><span class="p">][</span><span class="s2">&quot;IncludeAlphabeticCharacters&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;include_numeric&quot;</span><span class="p">:</span> <span class="n">include_numeric</span> <span class="k">if</span> <span class="n">include_numeric</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PasswordComplexity&quot;</span><span class="p">][</span><span class="s2">&quot;IncludeNumericCharacter&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;include_special&quot;</span><span class="p">:</span> <span class="n">include_special</span> <span class="k">if</span> <span class="n">include_special</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PasswordComplexity&quot;</span><span class="p">][</span><span class="s2">&quot;IncludeSpecialCharacter&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;min_length&quot;</span><span class="p">:</span> <span class="n">min_length</span> <span class="k">if</span> <span class="n">min_length</span> <span class="k">else</span> <span class="n">exist_settings</span><span class="p">[</span><span class="s2">&quot;PasswordComplexity&quot;</span><span class="p">][</span><span class="s2">&quot;MinimumPasswordLengthValue&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_xml</span><span class="p">(</span><span class="n">template_data</span><span class="o">=</span><span class="n">template_data</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">set_operation</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AdminSettings.update_login_disclaimer">
+<a class="viewcode-back" href="../admin.html#admin.AdminSettings.update_login_disclaimer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_login_disclaimer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update login disclaimer. System &gt; Administration &gt; Admin and user settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            enabled (bool, optional): Enable or disable Login Disclaimer. Defaults to True.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">enabled</span><span class="p">:</span>
+            <span class="n">setting</span> <span class="o">=</span> <span class="s2">&quot;Enable&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">setting</span> <span class="o">=</span> <span class="s2">&quot;Disable&quot;</span>
+
+        <span class="n">template_data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            &lt;AdminSettings&gt;</span>
+<span class="s2">              &lt;LoginDisclaimer&gt;{{ setting }}&lt;/LoginDisclaimer&gt;</span>
+<span class="s2">            &lt;/AdminSettings&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;setting&quot;</span><span class="p">:</span> <span class="n">setting</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_xml</span><span class="p">(</span><span class="n">template_data</span><span class="o">=</span><span class="n">template_data</span><span class="p">,</span> <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">set_operation</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

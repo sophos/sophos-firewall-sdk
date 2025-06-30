@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>firewallrule module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="host module" href="host.html" />
+    <link rel="prev" title="backup module" href="backup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">firewallrule module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#firewallrule.FirewallRule"><code class="docutils literal notranslate"><span class="pre">FirewallRule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#firewallrule.FirewallRule.create"><code class="docutils literal notranslate"><span class="pre">FirewallRule.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallrule.FirewallRule.get"><code class="docutils literal notranslate"><span class="pre">FirewallRule.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#firewallrule.FirewallRule.update"><code class="docutils literal notranslate"><span class="pre">FirewallRule.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">firewallrule module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/firewallrule.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="firewallrule-module">
+<h1>firewallrule module<a class="headerlink" href="#firewallrule-module" title="Link to this heading"></a></h1>
+<p id="module-firewallrule">Copyright 2023 Sophos Ltd.  All rights reserved.
+Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="firewallrule.FirewallRule">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">firewallrule.</span></span><span class="sig-name descname"><span class="pre">FirewallRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallrule.html#FirewallRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallrule.FirewallRule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for working with firewall rule(s).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallrule.FirewallRule.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallrule.html#FirewallRule.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallrule.FirewallRule.create" title="Link to this definition"></a></dt>
+<dd><p>Create a firewall rule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rule_params</strong> (<em>dict</em>) – Configuration parmeters for the rule, see Keyword Args for supported parameters.</p>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>rulename</strong> (<em>str</em>) – Name of the firewall rule</p></li>
+<li><p><strong>status</strong> (<em>str</em>) – Enable/Disable</p></li>
+<li><p><strong>position</strong> (<em>str</em>) – Where the rule should be positioned (top/bottom/after/before)</p></li>
+<li><p><strong>after_rulename</strong> (<em>str</em>) – Name of the rule to insert this rule after if position = after</p></li>
+<li><p><strong>before_rulename</strong> (<em>str</em>) – Name of the rule to insert this rule before if position = before</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Accept, Drop, Reject</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Rule description</p></li>
+<li><p><strong>log</strong> (<em>str</em>) – Enable, Disable</p></li>
+<li><p><strong>src_zones</strong> (<em>list</em>) – Name(s) of the source zone(s)</p></li>
+<li><p><strong>dst_zones</strong> (<em>list</em>) – Name(s) of the destination zone(s)</p></li>
+<li><p><strong>src_networks</strong> (<em>list</em>) – Name(s) of the source network(s)</p></li>
+<li><p><strong>dst_networks</strong> (<em>list</em>) – Name(s) of the destination network(s)</p></li>
+<li><p><strong>service_list</strong> (<em>list</em>) – Name(s) of service(s)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallrule.FirewallRule.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'='</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallrule.html#FirewallRule.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallrule.FirewallRule.get" title="Link to this definition"></a></dt>
+<dd><p>Get firewall rule(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Firewall Rule name.  Returns all rules if not specified.</p></li>
+<li><p><strong>operator</strong> (<em>str</em><em>, </em><em>optional</em>) – Operator for search. Default is “=”. Valid operators: =, !=, like.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="firewallrule.FirewallRule.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/firewallrule.html#FirewallRule.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#firewallrule.FirewallRule.update" title="Link to this definition"></a></dt>
+<dd><p>Update a firewall rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the firewall rule to be updated</p></li>
+<li><p><strong>rule_params</strong> (<em>dict</em>) – Configuration parmeters for the rule, see Keyword Args for supported parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>status</strong> (<em>str</em>) – Enable/Disable</p></li>
+<li><p><strong>position</strong> (<em>str</em>) – Where the rule should be positioned (top/bottom/after/before)</p></li>
+<li><p><strong>after_rulename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the rule to insert this rule after if position = after</p></li>
+<li><p><strong>before_rulename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the rule to insert this rule before if position = before</p></li>
+<li><p><strong>action</strong> (<em>str</em>) – Accept, Drop, Reject</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Rule description</p></li>
+<li><p><strong>log</strong> (<em>str</em>) – Enable, Disable</p></li>
+<li><p><strong>src_zones</strong> (<em>list</em>) – Name(s) of the source zone(s)</p></li>
+<li><p><strong>dst_zones</strong> (<em>list</em>) – Name(s) of the destination zone(s)</p></li>
+<li><p><strong>src_networks</strong> (<em>list</em>) – Name(s) of the source network(s)</p></li>
+<li><p><strong>dst_networks</strong> (<em>list</em>) – Name(s) of the destination network(s)</p></li>
+<li><p><strong>service_list</strong> (<em>list</em>) – Name(s) of service(s)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>XML response converted to Python dictionary</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="backup.html" class="btn btn-neutral float-left" title="backup module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="host.html" class="btn btn-neutral float-right" title="host module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>api_client &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">api_client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for api_client</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2023 Sophos Ltd.  All rights reserved.</span>
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing</span>
+<span class="sd">permissions and limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xmltodict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span><span class="p">,</span> <span class="n">Template</span>
+
+
+<div class="viewcode-block" id="SophosFirewallAPIError">
+<a class="viewcode-back" href="../api_client.html#api_client.SophosFirewallAPIError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophosFirewallAPIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when an API operation fails&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallAuthFailure">
+<a class="viewcode-back" href="../api_client.html#api_client.SophosFirewallAuthFailure">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophosFirewallAuthFailure</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when authentication to firewall fails&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallZeroRecords">
+<a class="viewcode-back" href="../api_client.html#api_client.SophosFirewallZeroRecords">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophosFirewallZeroRecords</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when a get request returns zero records&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallOperatorError">
+<a class="viewcode-back" href="../api_client.html#api_client.SophosFirewallOperatorError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophosFirewallOperatorError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when an invalid operator is specified&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SophosFirewallInvalidArgument">
+<a class="viewcode-back" href="../api_client.html#api_client.SophosFirewallInvalidArgument">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophosFirewallInvalidArgument</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised when an invalid argument is specified&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="APIClient">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">APIClient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for making the requests to the firewall XML API.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">verify</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">/webconsole/APIController&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="n">verify</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dict_to_lower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the keys of a dictionary to lower-case</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_dict (dict): Dictionary to be converted</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Dictionary with all keys converted to lower case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">target_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_error_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_response</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for errors in the API response and raise exception if present</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_response (Requests.response): The response object returned from the requests module</span>
+<span class="sd">            xml_tag (str): The XML tag being operated on</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SophosFirewallZeroRecords: Error raised when there are no records matching the request parameters</span>
+<span class="sd">            SophosFirewallAPIError: Error raised when there is a problem with the request parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s2">&quot;Response&quot;</span><span class="p">]</span>
+        <span class="n">lower_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict_to_lower</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xml_tag</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">lower_response</span><span class="p">:</span>
+            <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">lower_response</span><span class="p">[</span><span class="n">xml_tag</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Number of records Zero.&quot;</span>
+                    <span class="ow">or</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;No. of records Zero.&quot;</span>
+                <span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">SophosFirewallZeroRecords</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="s2">&quot;@code&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">resp_dict</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;@code&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resp_dict</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">][</span><span class="s1">&#39;#text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">api_response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmldata</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post XML request to the firewall returning response as a dict object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xmldata (str): XML payload</span>
+<span class="sd">            verify (bool):  SSL certificate verification. Default=True.</span>
+<span class="sd">            timeout(int): Request timeout</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/xml&quot;</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;reqxml&quot;</span><span class="p">:</span> <span class="n">xmldata</span><span class="p">},</span>
+            <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s2">&quot;Response&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;534&quot;</span><span class="p">:</span>
+                <span class="c1"># IP not allowed in API Access List</span>
+                <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;#text&quot;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;532&quot;</span><span class="p">:</span>
+                <span class="c1"># API access not enabled</span>
+                <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;#text&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Login&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resp_dict</span><span class="p">[</span><span class="s2">&quot;Login&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Authentication Failure&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SophosFirewallAuthFailure</span><span class="p">(</span><span class="s2">&quot;Login failed!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resp</span>
+
+<div class="viewcode-block" id="APIClient.login">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.login">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_format</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test login credentials.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.submit_template">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.submit_template">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit_template</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">template_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Submits XML payload stored as a Jinja2 file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): Jinja2 template filename. Place in &quot;templates&quot; directory or configure template_dir.</span>
+<span class="sd">            template_vars (dict): Dictionary of variables to inject into the template. Username and password are passed in by default.</span>
+<span class="sd">            template_dir (str): Directory to look for templates. Default is &quot;./templates&quot;.</span>
+<span class="sd">            timeout(int): Request timeout in seconds. Defaults to 30 seconds.</span>
+<span class="sd">            debug (bool, optional): Enable debug mode to display XML payload. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_dir</span><span class="p">:</span>
+            <span class="n">template_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;templates&quot;</span>
+            <span class="p">)</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span>
+            <span class="n">trim_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">lstrip_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">template_dir</span><span class="p">),</span>
+            <span class="n">autoescape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;REQUEST: </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+        <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s2">&quot;Response&quot;</span><span class="p">]</span>
+        <span class="n">success_pattern</span> <span class="o">=</span> <span class="s2">&quot;2[0-9][0-9]&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">success_pattern</span><span class="p">,</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.submit_xml">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.submit_xml">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit_xml</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">template_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">set_operation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Submits XML payload as a string to the API.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})</span>
+<span class="sd">            template_vars (dict, optional): Dictionary of variables to inject into the XML string. </span>
+<span class="sd">            set_operation (str): Specify &#39;add&#39; or &#39;update&#39; set operation. Default is add. Specify None to exclude the set operation XML block.</span>
+<span class="sd">            timeout(int): Request timeout in seconds. Defaults to 30 seconds.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_vars</span><span class="p">:</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span>
+            <span class="n">trim_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">lstrip_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">autoescape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">template_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            &lt;Request&gt;</span>
+<span class="s2">                &lt;Login&gt;</span>
+<span class="s2">                    &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                    &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">                &lt;/Login&gt;</span>
+<span class="s2">            </span><span class="se">{{</span><span class="s2">% if set_operation %</span><span class="se">}}</span>
+<span class="s2">            &lt;Set operation=&quot;</span><span class="se">{{{{</span><span class="s2"> set_operation </span><span class="se">}}}}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">            </span><span class="se">{{</span><span class="s2">% endif %</span><span class="se">}}</span>
+<span class="s2">                </span><span class="si">{</span><span class="n">template_data</span><span class="si">}</span>
+<span class="s2">            </span><span class="se">{{</span><span class="s2">% if set_operation %</span><span class="se">}}</span>
+<span class="s2">            &lt;/Set&gt;</span>
+<span class="s2">            </span><span class="se">{{</span><span class="s2">% endif %</span><span class="se">}}</span>
+<span class="s2">            &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;set_operation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">set_operation</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">template_string</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;REQUEST: </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+        <span class="n">resp_dict</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s2">&quot;Response&quot;</span><span class="p">]</span>
+        <span class="n">success_pattern</span> <span class="o">=</span> <span class="s2">&quot;2[0-9][0-9]&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">success_pattern</span><span class="p">,</span> <span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;Status&quot;</span><span class="p">][</span><span class="s2">&quot;@code&quot;</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="n">resp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.get_tag">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.get_tag">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a get for a specified XML tag.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): XML tag for the request</span>
+<span class="sd">            timeout(int): Request timeout in seconds. Defaults to 30 seconds.</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Get&gt;</span>
+<span class="s2">                &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">                &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">            &lt;/Get&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.get_tag_with_filter">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.get_tag_with_filter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tag_with_filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;like&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a get for a specified XML tag with filter criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): XML tag for the request.</span>
+<span class="sd">            key (str): Search key</span>
+<span class="sd">            value (str): Search value</span>
+<span class="sd">            operator (str, optional): Operator for search (“=”,”!=”,”like”). Defaults to &quot;like&quot;.</span>
+<span class="sd">            timeout(int): Request timeout in seconds. Defaults to 30 seconds.</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">valid_operators</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="s2">&quot;like&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">operator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_operators</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallOperatorError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid operator &#39;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&#39;!  Supported operators: [ </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_operators</span><span class="p">)</span><span class="si">}</span><span class="s2"> ]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Get&gt;</span>
+<span class="s2">                &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">                    &lt;Filter&gt;</span>
+<span class="s2">                        &lt;key name=&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot; criteria=&quot;</span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&quot;&gt;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&lt;/key&gt;</span>
+<span class="s2">                    &lt;/Filter&gt;</span>
+<span class="s2">                &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">            &lt;/Get&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.remove">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.remove">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an object from the firewall.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): The XML tag indicating the type of object to be removed.</span>
+<span class="sd">            name (str): The name of the object to be removed.</span>
+<span class="sd">            key (str): The primary XML key that is used to look up the object. Defaults to Name.</span>
+<span class="sd">            timeout(int): Request timeout in seconds. Defaults to 30 seconds.</span>
+<span class="sd">            output_format (str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Remove&gt;</span>
+<span class="s2">              &lt;</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">                &lt;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&lt;/</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">              &lt;/</span><span class="si">{</span><span class="n">xml_tag</span><span class="si">}</span><span class="s2">&gt;</span>
+<span class="s2">            &lt;/Remove&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.update">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">xml_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">update_params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lookup_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+        <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an existing object on the firewall.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xml_tag (str): The XML tag indicating the type of object to be updated.</span>
+<span class="sd">            update_params (dict): Keys/values to be updated. Keys must match an existing XML key.</span>
+<span class="sd">            name (str, optional): The name of the object to be updated, if applicable.</span>
+<span class="sd">            lookup_key (str, optional): The XML key name to look up the name of the object. Default is &quot;Name&quot;.</span>
+<span class="sd">            output_format(str): Output format. Valid options are &quot;dict&quot; or &quot;xml&quot;. Defaults to dict.</span>
+<span class="sd">            timeout (int): Request timeout in seconds. Defaults to 30 seconds.</span>
+<span class="sd">            debug (bool): Displays the XML payload that was submitted</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="n">xml_tag</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">lookup_key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="n">xml_tag</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">update_params</span><span class="p">:</span>
+            <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="n">xml_tag</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="n">update_body</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">update_body</span><span class="p">[</span><span class="n">xml_tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">resp</span><span class="p">[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="n">xml_tag</span><span class="p">]</span>
+        <span class="n">xml_update_body</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">unparse</span><span class="p">(</span><span class="n">update_body</span><span class="p">,</span> <span class="n">pretty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span>
+            <span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#39;</span>
+        <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;Request&gt;</span>
+<span class="s2">            &lt;Login&gt;</span>
+<span class="s2">                &lt;Username&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&lt;/Username&gt;</span>
+<span class="s2">                &lt;Password&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&lt;/Password&gt;</span>
+<span class="s2">            &lt;/Login&gt;</span>
+<span class="s2">            &lt;Set operation=&quot;update&quot;&gt; </span>
+<span class="s2">                </span><span class="si">{</span><span class="n">xml_update_body</span><span class="si">}</span>
+<span class="s2">            &lt;/Set&gt;</span>
+<span class="s2">        &lt;/Request&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">xmldata</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_check</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">xml_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="APIClient.validate_arg">
+<a class="viewcode-back" href="../api_client.html#api_client.APIClient.validate_arg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">arg_value</span><span class="p">,</span> <span class="n">valid_choices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">arg_value</span> <span class="ow">in</span> <span class="n">valid_choices</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SophosFirewallInvalidArgument</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid choice for </span><span class="si">{</span><span class="n">arg_name</span><span class="si">}</span><span class="s2"> argument, valid choices are </span><span class="si">{</span><span class="n">valid_choices</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

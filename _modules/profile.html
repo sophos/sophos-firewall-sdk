@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>profile &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">profile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for profile</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2023 Sophos Ltd.  All rights reserved.</span>
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing</span>
+<span class="sd">permissions and limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="AdminProfile">
+<a class="viewcode-back" href="../profile.html#profile.AdminProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdminProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for working with Administration Profile(s).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">api_client</span>
+
+<div class="viewcode-block" id="AdminProfile.get">
+<a class="viewcode-back" href="../profile.html#profile.AdminProfile.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get admin profiles</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of profile. Returns all if not specified.</span>
+<span class="sd">            operator (str, optional): Operator for search. Default is &quot;=&quot;. Valid operators: =, !=, like.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span>
+                <span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">operator</span><span class="o">=</span><span class="n">operator</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="n">xml_tag</span><span class="o">=</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="AdminProfile.create">
+<a class="viewcode-back" href="../profile.html#profile.AdminProfile.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default_permission</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an administration profile.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of administration profile</span>
+<span class="sd">            default_permission (str, optional): Permissions to use for unspecified settings (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            dashboard (str, optional): Dashboard permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wizard (str, optional): Wizard permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_system_profile (str, optional): System Profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            profile (str, optional): Profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            system_password (str, optional): System Password permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            central_management (str, optional): Central management permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            backup (str, optional): Backup permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            restore (str, optional): Restore permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            firmware (str, optional): Firmware permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            licensing (str, optional): Licensing permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            services (str, optional): Services permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            updates (str, optional): Updates permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            reboot_shutdown (str, optional): Reboot/Shutdown permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            ha (str, optional): HA permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            download_certificates (str, optional): Download certificates permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_certificate_configuration (str, optional): Other certificate configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            diagnostics (str, optional): Diagnostics permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_system_configuration (str, optional): Other system configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_overview (str, optional): Wireless protection overview permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_settings (str, optional): Wireless protection settings permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_network (str, optional): Wireless protection network permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_access_point (str, optional): Wireless protection access point permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_mesh (str, optional): Wireless protection mesh permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            objects (str, optional): Objects permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            network (str, optional): Network permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_identity_profile (str, optional): Set identity profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            authentication (str, optional): Authentication permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            groups (str, optional): Groups permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            guest_users_management (str, optional): Guest users management permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_guest_user_settings (str, optional): Other guest user settings permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            policy (str, optional): Policy permissions (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            test_external_server_connectivity (str, optional): Test external server connectivity permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            disconnect_live_user (str, optional): Disconnect live user permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            firewall (str, optional): Firewall permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_vpn_profile (str, optional): Set vpn profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            connect_tunnel (str, optional): Connect tunnel permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_vpn_configurations (str, optional): Other VPN configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            ips (str, optional): IPS permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            web_filter (str, optional): Web filter permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            cloud_application_dashboard (str, optional): Cloud application dashboard permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            zero_day_protection (str, optional): Zero day protection permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            application_filter (str, optional): Application filter permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_waf_profile (str, optional): Set WAF profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            alerts (str, optional): Alerts permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_waf_configuration (str, optional): Other WAF configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            email_protection (str, optional): Email protection permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            qos (str, optional): QoS permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            traffic_discovery (str, optional): Traffic discovery permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_logs_reports_profile (str, optional): Set logs reports profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            configuration (str, optional): Log reports configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            log_viewer (str, optional): Log viewer permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            reports_access (str, optional): Reports access permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            four_eye_authentication_settings (str, optional): Four-eye authentication settings permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            de_anonymization (str, optional): Log De-anonymization permission (None, Read-Only, Read-Write). Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;default_permission&quot;</span><span class="p">:</span> <span class="n">default_permission</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;createadminprofile.j2&quot;</span><span class="p">,</span>
+                                           <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span>
+                                           <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AdminProfile.update">
+<a class="viewcode-back" href="../profile.html#profile.AdminProfile.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an administration profile.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of administration profile</span>
+<span class="sd">            debug (bool, optional): Turn on debugging. Defaults to False.</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            dashboard (str, optional): Dashboard permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wizard (str, optional): Wizard permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_system_profile (str, optional): System Profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            profile (str, optional): Profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            system_password (str, optional): System Password permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            central_management (str, optional): Central management permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            backup (str, optional): Backup permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            restore (str, optional): Restore permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            firmware (str, optional): Firmware permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            licensing (str, optional): Licensing permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            services (str, optional): Services permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            updates (str, optional): Updates permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            reboot_shutdown (str, optional): Reboot/Shutdown permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            ha (str, optional): HA permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            download_certificates (str, optional): Download certificates permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_certificate_configuration (str, optional): Other certificate configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            diagnostics (str, optional): Diagnostics permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_system_configuration (str, optional): Other system configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_overview (str, optional): Wireless protection overview permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_settings (str, optional): Wireless protection settings permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_network (str, optional): Wireless protection network permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_access_point (str, optional): Wireless protection access point permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            wireless_protection_mesh (str, optional): Wireless protection mesh permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            objects (str, optional): Objects permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            network (str, optional): Network permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_identity_profile (str, optional): Set identity profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            authentication (str, optional): Authentication permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            groups (str, optional): Groups permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            guest_users_management (str, optional): Guest users management permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_guest_user_settings (str, optional): Other guest user settings permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            policy (str, optional): Policy permissions (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            test_external_server_connectivity (str, optional): Test external server connectivity permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            disconnect_live_user (str, optional): Disconnect live user permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            firewall (str, optional): Firewall permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_vpn_profile (str, optional): Set vpn profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            connect_tunnel (str, optional): Connect tunnel permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_vpn_configurations (str, optional): Other VPN configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            ips (str, optional): IPS permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            web_filter (str, optional): Web filter permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            cloud_application_dashboard (str, optional): Cloud application dashboard permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            zero_day_protection (str, optional): Zero day protection permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            application_filter (str, optional): Application filter permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_waf_profile (str, optional): Set WAF profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            alerts (str, optional): Alerts permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            other_waf_configuration (str, optional): Other WAF configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            im (str, optional): IM permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            qos (str, optional): QoS permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            email_protection (str, optional): Email protection permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            traffic_discovery (str, optional): Traffic discovery permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            set_logs_reports_profile (str, optional): Set logs reports profile permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            configuration (str, optional): Log reports configuration permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            log_viewer (str, optional): Log viewer permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            reports_access (str, optional): Reports access permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            four_eye_authentication_settings (str, optional): Four-eye authentication settings permission (None, Read-Only, Read-Write). Defaults to None.</span>
+<span class="sd">            de_anonymization (str, optional): Log De-anonymization permission (None, Read-Only, Read-Write). Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: XML response converted to Python dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)[</span><span class="s2">&quot;Response&quot;</span><span class="p">][</span><span class="s2">&quot;AdministrationProfile&quot;</span><span class="p">]</span>
+        
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;dashboard&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dashboard&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Dashboard&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;wizard&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wizard&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Wizard&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;set_system_profile&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;set_system_profile&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profile&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Profile&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;system_password&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;system_password&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Password&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;central_management&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;central_management&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;CentralManagement&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;backup&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;backup&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Backup&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;restore&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;restore&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Restore&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;firmware&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;firmware&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Firmware&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;licensing&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;licensing&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Licensing&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;services&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Services&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;updates&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;updates&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Updates&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;reboot_shutdown&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reboot_shutdown&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;RebootShutdown&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;ha&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ha&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;HA&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;download_certificates&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;download_certificates&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;DownloadCertificates&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;other_certificate_configuration&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_certificate_configuration&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;OtherCertificateConfiguration&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;diagnostics&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;diagnostics&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;Diagnostics&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;other_system_configuration&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_system_configuration&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;System&quot;</span><span class="p">][</span><span class="s2">&quot;OtherSystemConfiguration&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;wireless_protection_overview&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireless_protection_overview&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WirelessProtection&quot;</span><span class="p">][</span><span class="s2">&quot;WirelessProtectionOverview&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;wireless_protection_settings&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireless_protection_settings&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WirelessProtection&quot;</span><span class="p">][</span><span class="s2">&quot;WirelessProtectionSettings&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;wireless_protection_network&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireless_protection_network&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WirelessProtection&quot;</span><span class="p">][</span><span class="s2">&quot;WirelessProtectionNetworkNetwork&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;wireless_protection_access_point&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireless_protection_access_point&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WirelessProtection&quot;</span><span class="p">][</span><span class="s2">&quot;WirelessProtectionAccessPoint&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;wireless_protection_mesh&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wireless_protection_mesh&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WirelessProtection&quot;</span><span class="p">][</span><span class="s2">&quot;WirelessProtectionMesh&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;objects&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;objects&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Objects&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;network&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;network&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Network&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;set_identity_profile&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;set_identity_profile&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;authentication&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;authentication&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;Authentication&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;groups&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;Groups&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;guest_users_management&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guest_users_management&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;GuestUsersManagement&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;other_guest_user_settings&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_guest_user_settings&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;OtherGuestUserSettings&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;policy&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;Policy&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;test_external_server_connectivity&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;test_external_server_connectivity&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;TestExternalServerConnectivity&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;disconnect_live_user&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;disconnect_live_user&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">][</span><span class="s2">&quot;DisconnectLiveUser&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;firewall&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;network&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;Firewall&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;set_vpn_profile&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;set_vpn_profile&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;connect_tunnel&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;connect_tunnel&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;VPN&quot;</span><span class="p">][</span><span class="s2">&quot;ConnectTunnel&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;other_vpn_configurations&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_vpn_configurations&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;VPN&quot;</span><span class="p">][</span><span class="s2">&quot;OtherVPNConfigurations&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;ips&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ips&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;IPS&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;web_filter&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;web_filter&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WebFilter&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;cloud_application_dashboard&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cloud_application_dashboard&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;CloudApplicationDashboard&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;zero_day_protection&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;zero_day_protection&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;ZeroDayProtection&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;application_filter&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;application_filter&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;ApplicationFilter&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;set_waf_profile&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;set_waf_profile&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;alerts&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;alerts&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WAF&quot;</span><span class="p">][</span><span class="s2">&quot;Alerts&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;other_waf_configuration&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_waf_configuration&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;WAF&quot;</span><span class="p">][</span><span class="s2">&quot;OtherWAFConfiguration&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;im&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;im&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;IM&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;qos&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;qos&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;QoS&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;email_protection&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;email_protection&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;EmailProtection&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;traffic_discovery&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;traffic_discovery&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;TrafficDiscovery&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;set_logs_reports_profile&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;set_logs_reports_profile&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;configuration&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;LogsReports&quot;</span><span class="p">][</span><span class="s2">&quot;Configuration&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;log_viewer&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log_viewer&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;LogsReports&quot;</span><span class="p">][</span><span class="s2">&quot;LogViewer&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;reports_access&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reports_access&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;LogsReports&quot;</span><span class="p">][</span><span class="s2">&quot;ReportsAccess&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;four_eye_authentication_settings&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;four_eye_authentication_settings&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;LogsReports&quot;</span><span class="p">][</span><span class="s2">&quot;Four-EyeAuthenticationSettings&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;de_anonymization&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;de_anonymization&quot;</span><span class="p">,</span> <span class="n">exist_profile</span><span class="p">[</span><span class="s2">&quot;LogsReports&quot;</span><span class="p">][</span><span class="s2">&quot;De-Anonymization&quot;</span><span class="p">]),</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;updateadminprofile.j2&quot;</span><span class="p">,</span>
+                                           <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span>
+                                           <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

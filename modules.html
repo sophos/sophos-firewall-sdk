@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sophosfirewall_python &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="firewallapi module" href="firewallapi.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">sophosfirewall_python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">sophosfirewall_python</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sophosfirewall-python">
+<h1>sophosfirewall_python<a class="headerlink" href="#sophosfirewall-python" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_client.html">api_client module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html#api_client.APIClient"><code class="docutils literal notranslate"><span class="pre">APIClient</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.get_tag"><code class="docutils literal notranslate"><span class="pre">APIClient.get_tag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.get_tag_with_filter"><code class="docutils literal notranslate"><span class="pre">APIClient.get_tag_with_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.login"><code class="docutils literal notranslate"><span class="pre">APIClient.login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.remove"><code class="docutils literal notranslate"><span class="pre">APIClient.remove()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.submit_template"><code class="docutils literal notranslate"><span class="pre">APIClient.submit_template()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.submit_xml"><code class="docutils literal notranslate"><span class="pre">APIClient.submit_xml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.update"><code class="docutils literal notranslate"><span class="pre">APIClient.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_client.html#api_client.APIClient.validate_arg"><code class="docutils literal notranslate"><span class="pre">APIClient.validate_arg()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html#api_client.SophosFirewallAPIError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAPIError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html#api_client.SophosFirewallAuthFailure"><code class="docutils literal notranslate"><span class="pre">SophosFirewallAuthFailure</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html#api_client.SophosFirewallInvalidArgument"><code class="docutils literal notranslate"><span class="pre">SophosFirewallInvalidArgument</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html#api_client.SophosFirewallOperatorError"><code class="docutils literal notranslate"><span class="pre">SophosFirewallOperatorError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html#api_client.SophosFirewallZeroRecords"><code class="docutils literal notranslate"><span class="pre">SophosFirewallZeroRecords</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">admin module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#admin.AclRule"><code class="docutils literal notranslate"><span class="pre">AclRule</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AclRule.create"><code class="docutils literal notranslate"><span class="pre">AclRule.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AclRule.get"><code class="docutils literal notranslate"><span class="pre">AclRule.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AclRule.update"><code class="docutils literal notranslate"><span class="pre">AclRule.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#admin.AdminSettings"><code class="docutils literal notranslate"><span class="pre">AdminSettings</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AdminSettings.get"><code class="docutils literal notranslate"><span class="pre">AdminSettings.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AdminSettings.update_hostname_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_hostname_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AdminSettings.update_login_disclaimer"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_login_disclaimer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AdminSettings.update_loginsecurity_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_loginsecurity_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AdminSettings.update_passwordcomplexity_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_passwordcomplexity_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.AdminSettings.update_webadmin_settings"><code class="docutils literal notranslate"><span class="pre">AdminSettings.update_webadmin_settings()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#admin.Notification"><code class="docutils literal notranslate"><span class="pre">Notification</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#admin.Notification.get"><code class="docutils literal notranslate"><span class="pre">Notification.get()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authen.html">authen module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="authen.html#authen.AdminAuthen"><code class="docutils literal notranslate"><span class="pre">AdminAuthen</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="authen.html#authen.AdminAuthen.get"><code class="docutils literal notranslate"><span class="pre">AdminAuthen.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html#authen.User"><code class="docutils literal notranslate"><span class="pre">User</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="authen.html#authen.User.create"><code class="docutils literal notranslate"><span class="pre">User.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="authen.html#authen.User.get"><code class="docutils literal notranslate"><span class="pre">User.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="authen.html#authen.User.update_admin_password"><code class="docutils literal notranslate"><span class="pre">User.update_admin_password()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="authen.html#authen.User.update_user_password"><code class="docutils literal notranslate"><span class="pre">User.update_user_password()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="backup.html">backup module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backup.html#backup.Backup"><code class="docutils literal notranslate"><span class="pre">Backup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="backup.html#backup.Backup.get"><code class="docutils literal notranslate"><span class="pre">Backup.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="backup.html#backup.Backup.update"><code class="docutils literal notranslate"><span class="pre">Backup.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="firewallrule.html">firewallrule module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html#firewallrule.FirewallRule"><code class="docutils literal notranslate"><span class="pre">FirewallRule</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="firewallrule.html#firewallrule.FirewallRule.create"><code class="docutils literal notranslate"><span class="pre">FirewallRule.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallrule.html#firewallrule.FirewallRule.get"><code class="docutils literal notranslate"><span class="pre">FirewallRule.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="firewallrule.html#firewallrule.FirewallRule.update"><code class="docutils literal notranslate"><span class="pre">FirewallRule.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="host.html">host module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.FQDNHost"><code class="docutils literal notranslate"><span class="pre">FQDNHost</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.FQDNHost.create"><code class="docutils literal notranslate"><span class="pre">FQDNHost.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.FQDNHost.get"><code class="docutils literal notranslate"><span class="pre">FQDNHost.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.FQDNHost.update"><code class="docutils literal notranslate"><span class="pre">FQDNHost.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.FQDNHostGroup"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.FQDNHostGroup.create"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.FQDNHostGroup.get"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.FQDNHostGroup.update"><code class="docutils literal notranslate"><span class="pre">FQDNHostGroup.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.IPHost"><code class="docutils literal notranslate"><span class="pre">IPHost</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPHost.create"><code class="docutils literal notranslate"><span class="pre">IPHost.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPHost.get"><code class="docutils literal notranslate"><span class="pre">IPHost.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.IPHostGroup"><code class="docutils literal notranslate"><span class="pre">IPHostGroup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPHostGroup.create"><code class="docutils literal notranslate"><span class="pre">IPHostGroup.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPHostGroup.get"><code class="docutils literal notranslate"><span class="pre">IPHostGroup.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPHostGroup.update"><code class="docutils literal notranslate"><span class="pre">IPHostGroup.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.IPNetwork"><code class="docutils literal notranslate"><span class="pre">IPNetwork</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPNetwork.create"><code class="docutils literal notranslate"><span class="pre">IPNetwork.create()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.IPRange"><code class="docutils literal notranslate"><span class="pre">IPRange</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.IPRange.create"><code class="docutils literal notranslate"><span class="pre">IPRange.create()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#host.URLGroup"><code class="docutils literal notranslate"><span class="pre">URLGroup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.URLGroup.create"><code class="docutils literal notranslate"><span class="pre">URLGroup.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.URLGroup.get"><code class="docutils literal notranslate"><span class="pre">URLGroup.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html#host.URLGroup.update"><code class="docutils literal notranslate"><span class="pre">URLGroup.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ips.html">ips module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ips.html#ips.IPS"><code class="docutils literal notranslate"><span class="pre">IPS</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ips.html#ips.IPS.get"><code class="docutils literal notranslate"><span class="pre">IPS.get()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">network module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#network.Interface"><code class="docutils literal notranslate"><span class="pre">Interface</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="network.html#network.Interface.get"><code class="docutils literal notranslate"><span class="pre">Interface.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#network.Vlan"><code class="docutils literal notranslate"><span class="pre">Vlan</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="network.html#network.Vlan.get"><code class="docutils literal notranslate"><span class="pre">Vlan.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#network.Zone"><code class="docutils literal notranslate"><span class="pre">Zone</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="network.html#network.Zone.check_exists"><code class="docutils literal notranslate"><span class="pre">Zone.check_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html#network.Zone.create"><code class="docutils literal notranslate"><span class="pre">Zone.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html#network.Zone.get"><code class="docutils literal notranslate"><span class="pre">Zone.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html#network.Zone.update"><code class="docutils literal notranslate"><span class="pre">Zone.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="profile.html">profile module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="profile.html#profile.AdminProfile"><code class="docutils literal notranslate"><span class="pre">AdminProfile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="profile.html#profile.AdminProfile.create"><code class="docutils literal notranslate"><span class="pre">AdminProfile.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html#profile.AdminProfile.get"><code class="docutils literal notranslate"><span class="pre">AdminProfile.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html#profile.AdminProfile.update"><code class="docutils literal notranslate"><span class="pre">AdminProfile.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reports.html">reports module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#reports.Retention"><code class="docutils literal notranslate"><span class="pre">Retention</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#reports.Retention.get"><code class="docutils literal notranslate"><span class="pre">Retention.get()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="service.html">service module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="service.html#service.Service"><code class="docutils literal notranslate"><span class="pre">Service</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="service.html#service.Service.create"><code class="docutils literal notranslate"><span class="pre">Service.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="service.html#service.Service.get"><code class="docutils literal notranslate"><span class="pre">Service.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="service.html#service.Service.update"><code class="docutils literal notranslate"><span class="pre">Service.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="service.html#service.ServiceGroup"><code class="docutils literal notranslate"><span class="pre">ServiceGroup</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="service.html#service.ServiceGroup.create"><code class="docutils literal notranslate"><span class="pre">ServiceGroup.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="service.html#service.ServiceGroup.get"><code class="docutils literal notranslate"><span class="pre">ServiceGroup.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="service.html#service.ServiceGroup.update"><code class="docutils literal notranslate"><span class="pre">ServiceGroup.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="system.html">system module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system.html#system.NotificationList"><code class="docutils literal notranslate"><span class="pre">NotificationList</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="system.html#system.NotificationList.get"><code class="docutils literal notranslate"><span class="pre">NotificationList.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="system.html#system.Syslog"><code class="docutils literal notranslate"><span class="pre">Syslog</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="system.html#system.Syslog.get"><code class="docutils literal notranslate"><span class="pre">Syslog.get()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="firewallapi.html" class="btn btn-neutral float-right" title="firewallapi module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
