@@ -38,6 +38,7 @@ from sophosfirewall_python.ips import IPS
 from sophosfirewall_python.system import Syslog, NotificationList
 from sophosfirewall_python.backup import Backup
 from sophosfirewall_python.reports import Retention
+from sophosfirewall_python.web import WebFilterPolicy, UserActivity
 
 urllib3.disable_warnings()
 
@@ -454,6 +455,22 @@ class SophosFirewall:
             dict: XML response converted to Python dictionary
         """
         return Service(self.client).get(name, operator, dst_proto, dst_port)
+
+    def get_webfilterpolicy(self, name: str = None):
+        """Get Web Filter Policy object(s)
+
+        Args:
+            name (str, optional): Web Filter Policy name. Returns all objects if not specified.
+        """
+        return WebFilterPolicy(self.client).get(name)
+
+    def get_useractivity(self, name: str = None):
+        """Get User Activity object(s)
+
+        Args:
+            name (str, optional): User Activity name. Returns all objects if not specified.
+        """
+        return UserActivity(self.client).get(name)
 
     # METHODS FOR OBJECT CREATION
 
@@ -878,6 +895,87 @@ class SophosFirewall:
         """
         return Zone(self.client).create(
             name=name, zone_type=zone_type, zone_params=zone_params, debug=debug
+        )
+    
+    def create_webfilterpolicy(self, name, default_action, download_file_size_restriction='0',
+                                 enable_reporting="Enable", download_file_size_restriction_enabled='0',
+                                 goog_app_domain_list=None, goog_app_domain_list_enabled='0',
+                                 youtube_filter_is_strict='0', youtube_filter_enabled='0',
+                                 enforce_safe_search='0', enforce_image_licensing='0',
+                                 xff_enabled='0', office_365_tenants_list=None,
+                                 office_365_directory_id=None, office_365_enabled='0',
+                                 quota_limit=60, description=None, rules=None, debug: bool = False):
+        """Create a Web Filter Policy
+
+        Args:
+            name (str): Specify a name for the Web Filter Policy. Max 50 chars.
+            default_action (str): Default action of the policy ('Allow' or 'Deny').
+            download_file_size_restriction (int): Specify maximum allowed file download size in MB (0-1536).
+            enable_reporting (str, optional): Select to enable reporting of policy. Defaults to "Enable". (API Default: Enable)
+            download_file_size_restriction_enabled (str, optional): Enable ('1') or disable ('0') checking for maximum allowed file download size. Defaults to None.
+            goog_app_domain_list (str, optional): Comma-separated list of domains allowed to access Google services. Max 256 chars. Defaults to None.
+            goog_app_domain_list_enabled (str, optional): Enable ('1') or disable ('0') specifying domains for Google services. Defaults to None.
+            youtube_filter_is_strict (str, optional): Adjust the policy used for YouTube Restricted Mode ('1' for strict, '0' for moderate). Defaults to None.
+            youtube_filter_enabled (str, optional): Enable ('1') or disable ('0') YouTube Restricted Mode. Defaults to None.
+            enforce_safe_search (str, optional): Enable ('1') or disable ('0') blocking of pornography and explicit content in search results. Defaults to None.
+            enforce_image_licensing (str, optional): Enable ('1') or disable ('0') limiting search results to Creative Commons licensed images. Defaults to None.
+            xff_enabled (str, optional): Enable ('1') or disable ('0') X-Forwarded-For header. Defaults to None.
+            office_365_tenants_list (str, optional): Comma-separated list of domain names and domain IDs allowed to access Microsoft 365. Max 4096 chars. Defaults to None.
+            office_365_directory_id (str, optional): Domain ID allowed to access the Microsoft 365 service. Max 50 chars. Defaults to None.
+            office_365_enabled (str, optional): Turn on ('1') or off ('0') specifying domains/IDs for Microsoft 365. Defaults to None.
+            quota_limit (int, optional): Maximum allowed time (1-1440 minutes) for browsing restricted web content under quota policy action. Defaults to 60. (API Default: 60)
+            description (str, optional): Specify Policy description. Max 255 chars. Defaults to None.
+            rules (list of dict, optional): Specify the rules contained in this policy. Defaults to None. See rule list structure below:
+                - categories (list of dict): List of rule categories containing:
+                    - id (str): Category Name
+                    - type (str): Category type. Valid types are 'WebCategory', 'FileType', 'URLGroup', or 'UserActivity'.
+                - http_action (str, optional): HTTP action (Allow/Deny). Defaults to Deny.
+                - https_action (str, optional): HTTPS action (Allow/Deny). Defaults to Deny.
+                - follow_http_action (str, optional): '1' to enable, '0' to disable. Defaults to 1.
+                - schedule (str, optional): Schedule name. Defaults to 'All The Time'
+                - policy_rule_enabled (str, optional): '1' to enable, '0' to disable. Defaults to 1.
+                - ccl_rule_enabled (str, optional): '1' to enable, '0' to disable. Defaults to 0.
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return WebFilterPolicy(self.client).create(
+            name=name,
+            default_action=default_action,
+            enable_reporting=enable_reporting,
+            download_file_size_restriction=download_file_size_restriction,
+            download_file_size_restriction_enabled=download_file_size_restriction_enabled,
+            goog_app_domain_list=goog_app_domain_list,
+            goog_app_domain_list_enabled=goog_app_domain_list_enabled,
+            youtube_filter_is_strict=youtube_filter_is_strict,
+            youtube_filter_enabled=youtube_filter_enabled,
+            enforce_safe_search=enforce_safe_search,
+            enforce_image_licensing=enforce_image_licensing,
+            xff_enabled=xff_enabled,
+            office_365_tenants_list=office_365_tenants_list,
+            office_365_directory_id=office_365_directory_id,
+            office_365_enabled=office_365_enabled,
+            quota_limit=quota_limit,
+            description=description,
+            rules=rules,
+            debug=debug
+        )
+    
+    def create_useractivity(
+        self,name: str, description: str = None, category_list: list[dict] = None, debug: bool = False):
+        """Create a User Activity object
+
+        Args:
+            name (str): Specify a name for the User Activity. Max 50 chars.
+            description (str, optional): Specify a description for the User Activity. Defaults to None.
+            category_list (list of dict, optional): List of categories to apply to this User Activity. Defaults to None.
+                - id (str): Category Name
+                - type (str): Category type. Supports 'web category', 'file type', or 'url group'.
+
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return UserActivity(self.client).create(
+            name=name, description=description, category_list=category_list, debug=debug
         )
 
     def update_user_password(
@@ -1377,6 +1475,71 @@ class SophosFirewall:
         """
         return Zone(self.client).update(name, zone_params, debug)
 
+    def update_webfilterpolicy(self, name, default_action=None, download_file_size_restriction='0',
+                                 enable_reporting="Enable", download_file_size_restriction_enabled='0',
+                                 goog_app_domain_list=None, goog_app_domain_list_enabled='0',
+                                 youtube_filter_is_strict='0', youtube_filter_enabled='0',
+                                 enforce_safe_search='0', enforce_image_licensing='0',
+                                 xff_enabled='0', office_365_tenants_list=None,
+                                 office_365_directory_id=None, office_365_enabled='0',
+                                 quota_limit=60, description=None, rules=None, rule_action="add", debug: bool = False):
+        """Update a Web Filter Policy
+
+        Args:
+            name (str): Specify a name for the Web Filter Policy. Max 50 chars. (Mandatory for identification)
+            default_action (str, optional): Default action of the policy ('Allow' or 'Deny').
+            enable_reporting (str, optional): Select to enable reporting of policy.
+            download_file_size_restriction (int, optional): Specify maximum allowed file download size in MB (0-1536).
+            download_file_size_restriction_enabled (str, optional): Enable ('1') or disable ('0') checking for maximum allowed file download size.
+            goog_app_domain_list (str, optional): Comma-separated list of domains allowed to access Google services. Max 256 chars.
+            goog_app_domain_list_enabled (str, optional): Enable ('1') or disable ('0') specifying domains for Google services.
+            youtube_filter_is_strict (str, optional): Adjust the policy used for YouTube Restricted Mode ('1' for strict, '0' for moderate).
+            youtube_filter_enabled (str, optional): Enable ('1') or disable ('0') YouTube Restricted Mode.
+            enforce_safe_search (str, optional): Enable ('1') or disable ('0') blocking of pornography and explicit content in search results.
+            enforce_image_licensing (str, optional): Enable ('1') or disable ('0') limiting search results to Creative Commons licensed images.
+            xff_enabled (str, optional): Enable ('1') or disable ('0') X-Forwarded-For header.
+            office_365_tenants_list (str, optional): Comma-separated list of domain names and domain IDs allowed to access Microsoft 365. Max 4096 chars.
+            office_365_directory_id (str, optional): Domain ID allowed to access the Microsoft 365 service. Max 50 chars.
+            office_365_enabled (str, optional): Turn on ('1') or off ('0') specifying domains/IDs for Microsoft 365.
+            quota_limit (int, optional): Maximum allowed time (1-1440 minutes) for browsing restricted web content under quota policy action.
+            description (str, optional): Specify Policy description. Max 255 chars.
+            rules (list of dict, optional): Specify the rules contained in this policy. Defaults to None. See rule list structure below:
+                - categories (list of dict): List of rule categories containing:
+                    - id (str): Category Name
+                    - type (str): Category type. Valid types are 'WebCategory', 'FileType', 'URLGroup', or 'UserActivity'.
+                - http_action (str, optional): HTTP action (Allow/Deny). Defaults to Deny.
+                - https_action (str, optional): HTTPS action (Allow/Deny). Defaults to Deny.
+                - follow_http_action (str, optional): '1' to enable, '0' to disable. Defaults to 1.
+                - schedule (str, optional): Schedule name. Defaults to 'All The Time'
+                - policy_rule_enabled (str, optional): '1' to enable, '0' to disable. Defaults to 1.
+                - ccl_rule_enabled (str, optional): '1' to enable, '0' to disable. Defaults to 0.
+            rule_action (str, optional): Action for rules ('add' or 'replace'). To remove rules, use 'replace' with the new complete list. Defaults to "add".
+            
+        Returns:
+            dict: XML response converted to Python dictionary
+        """
+        return WebFilterPolicy(self.client).update(
+            name=name,
+            default_action=default_action,
+            enable_reporting=enable_reporting,
+            download_file_size_restriction=download_file_size_restriction,
+            download_file_size_restriction_enabled=download_file_size_restriction_enabled,
+            goog_app_domain_list=goog_app_domain_list,
+            goog_app_domain_list_enabled=goog_app_domain_list_enabled,
+            youtube_filter_is_strict=youtube_filter_is_strict,
+            youtube_filter_enabled=youtube_filter_enabled,
+            enforce_safe_search=enforce_safe_search,
+            enforce_image_licensing=enforce_image_licensing,
+            xff_enabled=xff_enabled,
+            office_365_tenants_list=office_365_tenants_list,
+            office_365_directory_id=office_365_directory_id,
+            office_365_enabled=office_365_enabled,
+            quota_limit=quota_limit,
+            description=description,
+            rules=rules,
+            rule_action=rule_action,
+            debug=debug
+        )
 
 # Export the error classes for backward compatibility
 __all__ = [

@@ -1,0 +1,61 @@
+<Request>
+    <Login>
+        <Username>{{username}}</Username>
+        <Password>{{password}}</Password>
+    </Login>
+    <Set operation="add">
+    <WebFilterPolicy>
+        <Name>{{ name }}</Name>
+        <Description>{{ description | default('', true) }}</Description>
+        <DefaultAction>{{ default_action }}</DefaultAction>
+        <EnableReporting>{{ enable_reporting }}</EnableReporting>
+        <DownloadFileSizeRestriction>{{ download_file_size_restriction | default('', true) }}</DownloadFileSizeRestriction>
+        <DownloadFileSizeRestrictionEnabled>{{ download_file_size_restriction_enabled | default('', true) }}</DownloadFileSizeRestrictionEnabled>
+        <GoogAppDomainListEnabled>{{ goog_app_domain_list_enabled | default('', true) }}</GoogAppDomainListEnabled>
+        <GoogAppDomainList>{{ goog_app_domain_list | default('', true) }}</GoogAppDomainList>
+        <YoutubeFilterEnabled>{{ youtube_filter_enabled | default('', true) }}</YoutubeFilterEnabled>
+        <YoutubeFilterIsStrict>{{ youtube_filter_is_strict | default('', true) }}</YoutubeFilterIsStrict>
+        <EnforceSafeSearch>{{ enforce_safe_search | default('', true) }}</EnforceSafeSearch>
+        <EnforceImageLicensing>{{ enforce_image_licensing | default('', true) }}</EnforceImageLicensing>
+        <XFFEnabled>{{ xff_enabled | default('', true) }}</XFFEnabled>
+        <Office365Enabled>{{ office_365_enabled | default('', true) }}</Office365Enabled>
+        <Office365TenantsList>{{ office_365_tenants_list | default('', true) }}</Office365TenantsList>
+        <Office365DirectoryId>{{ office_365_directory_id | default('', true) }}</Office365DirectoryId>
+        <QuotaLimit>{{ quota_limit }}</QuotaLimit>
+        {% if rules %}
+        <RuleList>
+            {% for rule in rules %}
+            <Rule>
+                <CategoryList>
+                    {% for category in rule.categories %}
+                    <Category>
+                        <ID>{{ category.id }}</ID>
+                        <type>{{ category.type }}</type>
+                    </Category>
+                    {% endfor %}
+                </CategoryList>
+                <HTTPAction>{{ rule.http_action | default('Deny', true) }}</HTTPAction>
+                <HTTPSAction>{{ rule.https_action | default ('Deny', true) }}</HTTPSAction>
+                <FollowHTTPAction>{{ rule.follow_http_action | default('1', true) }}</FollowHTTPAction>
+                <ExceptionList>
+                    <FileTypeCategory/>
+                </ExceptionList>
+                <Schedule>{{ rule.schedule | default('All The Time') }}</Schedule>
+                <PolicyRuleEnabled>{{ rule.policy_rule_enabled | default("1", true) }}</PolicyRuleEnabled>
+                <CCLRuleEnabled>{{ rule.ccl_rule_enabled | default("0", true) }}</CCLRuleEnabled>
+                {% if rule.user_list %}
+                <UserList>
+                    {% for user in rule.user_list %}
+                    <User>{{ user }}</User>
+                    {% endfor %}
+                </UserList>
+                {% endif %}
+            </Rule>
+            {% endfor %}
+        </RuleList>
+        {% else %}
+        <RuleList></RuleList>
+        {% endif %}
+    </WebFilterPolicy>
+  </Set>
+</Request>
