@@ -288,8 +288,10 @@ class UserActivity:
             name (str): Specify a name for the User Activity. Max 50 chars.
             description (str, optional): Specify a description for the User Activity. Defaults to None.
             category_list (list of dict, optional): List of categories to apply to this User Activity. Defaults to None. Category dict format below:
-                - id (str): Category Name
-                - type (str): Category type. Supports 'web category', 'file type', or 'url group'.
+                
+                Each category dict should contain:
+                    - id (str): Category Name
+                    - type (str): Category type. Supports 'web category', 'file type', or 'url group'.
         """
 
         if category_list:
