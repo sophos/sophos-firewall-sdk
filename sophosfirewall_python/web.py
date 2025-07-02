@@ -272,6 +272,9 @@ class UserActivity:
         """
         Retrieves User Activities.
         If name is provided, filters by name. Otherwise, retrieves all policies.
+
+        Args:
+            name (str, optional): Name of the User Activity to filter by. Defaults to None
         """
         if name:
             return self.api_client.get_tag_with_filter(self.xml_tag, "Name", name, operator="=")
@@ -284,7 +287,7 @@ class UserActivity:
         Args:
             name (str): Specify a name for the User Activity. Max 50 chars.
             description (str, optional): Specify a description for the User Activity. Defaults to None.
-            category_list (list of dict, optional): List of categories to apply to this User Activity. Defaults to None.
+            category_list (list of dict, optional): List of categories to apply to this User Activity. Defaults to None. Category dict format below:
                 - id (str): Category Name
                 - type (str): Category type. Supports 'web category', 'file type', or 'url group'.
         """
