@@ -47,6 +47,28 @@ class FirewallRule:
             src_networks(list): Name(s) of the source network(s)
             dst_networks(list): Name(s) of the destination network(s)
             service_list(list): Name(s) of service(s)
+            web_filter(str): Name of the web filter policy to apply
+            web_category_traffic_shaping(str): Name of the web category traffic shaping policy to apply
+            block_quic(str): Enable/Disable QUIC blocking
+            scan_virus(str): Enable/Disable virus scanning
+            proxy_mode(str): Enable/Disable proxy mode
+            decrypt_https(str): Enable/Disable HTTPS decryption
+            source_security_heartbeat(str): Enable/Disable source security heartbeat
+            minimum_source_hb_permitted(str): Minimum source heartbeat permitted
+            dest_security_heartbeat(str): Enable/Disable destination security heartbeat
+            minimum_dest_hb_permitted(str): Minimum destination heartbeat permitted
+            application_control(str): Enable/Disable application control
+            application_base_qos_policy(str): Name of the application base QoS policy to apply
+            intrusion_prevention(str): Enable/Disable intrusion prevention
+            qos_policy(str): Name of the QoS traffic shaping policy to apply
+            dscp_marking(str): DSCP marking value
+            scan_smtp(str): Enable/Disable SMTP scanning
+            scan_smtps(str): Enable/Disable SMTPS scanning
+            scan_imap(str): Enable/Disable IMAP scanning
+            scan_imaps(str): Enable/Disable IMAPS scanning
+            scan_pop3(str): Enable/Disable POP3 scanning
+            scan_pop3s(str): Enable/Disable POP3S scanning
+
         Returns:
             dict: XML response converted to Python dictionary
         """
@@ -75,6 +97,27 @@ class FirewallRule:
             src_networks(list): Name(s) of the source network(s)
             dst_networks(list): Name(s) of the destination network(s)
             service_list(list): Name(s) of service(s)
+            web_filter(str): Name of the web filter policy to apply
+            web_category_traffic_shaping(str): Name of the web category traffic shaping policy to apply
+            block_quic(str): Enable/Disable QUIC blocking
+            scan_virus(str): Enable/Disable virus scanning
+            proxy_mode(str): Enable/Disable proxy mode
+            decrypt_https(str): Enable/Disable HTTPS decryption
+            source_security_heartbeat(str): Enable/Disable source security heartbeat
+            minimum_source_hb_permitted(str): Minimum source heartbeat permitted
+            dest_security_heartbeat(str): Enable/Disable destination security heartbeat
+            minimum_dest_hb_permitted(str): Minimum destination heartbeat permitted
+            application_control(str): Enable/Disable application control
+            application_base_qos_policy(str): Name of the application base QoS policy to apply
+            intrusion_prevention(str): Enable/Disable intrusion prevention
+            qos_policy(str): Name of the QoS traffic shaping policy to apply
+            dscp_marking(str): DSCP marking value
+            scan_smtp(str): Enable/Disable SMTP scanning
+            scan_smtps(str): Enable/Disable SMTPS scanning
+            scan_imap(str): Enable/Disable IMAP scanning
+            scan_imaps(str): Enable/Disable IMAPS scanning
+            scan_pop3(str): Enable/Disable POP3 scanning
+            scan_pop3s(str): Enable/Disable POP3S scanning
         Returns:
             dict: XML response converted to Python dictionary
         """
@@ -153,4 +196,32 @@ class FirewallRule:
         resp = self.client.submit_template(
             "updatefwrule.j2", template_vars=updated_rule_params, debug=debug
         )
+
+        params = [
+            "web_filter",
+            "web_category_traffic_shaping",
+            "block_quic",
+            "scan_virus",
+            "proxy_mode",
+            "decrypt_https",
+            "source_security_heartbeat",
+            "minimum_source_hb_permitted",
+            "dest_security_heartbeat",
+            "minimum_dest_hb_permitted",
+            "application_control",
+            "application_base_qos_policy",
+            "intrusion_prevention",
+            "qos_policy",
+            "dscp_marking",
+            "scan_smtp",
+            "scan_smtps",
+            "scan_imap",
+            "scan_imaps",
+            "scan_pop3",
+            "scan_pop3s"
+        ]
+        for param in params:
+            if param in rule_params:
+                updated_rule_params[param] = rule_params[param]
+
         return resp

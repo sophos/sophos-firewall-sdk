@@ -609,6 +609,27 @@ class SophosFirewall:
             src_networks(list): Name(s) of the source network(s)
             dst_networks(list): Name(s) of the destination network(s)
             service_list(list): Name(s) of service(s)
+            web_filter(str): Name of the web filter policy to apply
+            web_category_traffic_shaping(str): Name of the web category traffic shaping policy to apply
+            block_quic(str): Enable/Disable QUIC blocking
+            scan_virus(str): Enable/Disable virus scanning
+            proxy_mode(str): Enable/Disable proxy mode
+            decrypt_https(str): Enable/Disable HTTPS decryption
+            source_security_heartbeat(str): Enable/Disable source security heartbeat
+            minimum_source_hb_permitted(str): Minimum source heartbeat permitted
+            dest_security_heartbeat(str): Enable/Disable destination security heartbeat
+            minimum_dest_hb_permitted(str): Minimum destination heartbeat permitted
+            application_control(str): Enable/Disable application control
+            application_base_qos_policy(str): Name of the application base QoS policy to apply
+            intrusion_prevention(str): Enable/Disable intrusion prevention
+            qos_policy(str): Name of the QoS traffic shaping policy to apply
+            dscp_marking(str): DSCP marking value
+            scan_smtp(str): Enable/Disable SMTP scanning
+            scan_smtps(str): Enable/Disable SMTPS scanning
+            scan_imap(str): Enable/Disable IMAP scanning
+            scan_imaps(str): Enable/Disable IMAPS scanning
+            scan_pop3(str): Enable/Disable POP3 scanning
+            scan_pop3s(str): Enable/Disable POP3S scanning
         Returns:
             dict: XML response converted to Python dictionary
         """
@@ -1281,6 +1302,27 @@ class SophosFirewall:
             src_networks(list): Name(s) of the source network(s)
             dst_networks(list): Name(s) of the destination network(s)
             service_list(list): Name(s) of service(s)
+            web_filter(str): Name of the web filter policy to apply
+            web_category_traffic_shaping(str): Name of the web category traffic shaping policy to apply
+            block_quic(str): Enable/Disable QUIC blocking
+            scan_virus(str): Enable/Disable virus scanning
+            proxy_mode(str): Enable/Disable proxy mode
+            decrypt_https(str): Enable/Disable HTTPS decryption
+            source_security_heartbeat(str): Enable/Disable source security heartbeat
+            minimum_source_hb_permitted(str): Minimum source heartbeat permitted
+            dest_security_heartbeat(str): Enable/Disable destination security heartbeat
+            minimum_dest_hb_permitted(str): Minimum destination heartbeat permitted
+            application_control(str): Enable/Disable application control
+            application_base_qos_policy(str): Name of the application base QoS policy to apply
+            intrusion_prevention(str): Enable/Disable intrusion prevention
+            qos_policy(str): Name of the QoS traffic shaping policy to apply
+            dscp_marking(str): DSCP marking value
+            scan_smtp(str): Enable/Disable SMTP scanning
+            scan_smtps(str): Enable/Disable SMTPS scanning
+            scan_imap(str): Enable/Disable IMAP scanning
+            scan_imaps(str): Enable/Disable IMAPS scanning
+            scan_pop3(str): Enable/Disable POP3 scanning
+            scan_pop3s(str): Enable/Disable POP3S scanning
         Returns:
             dict: XML response converted to Python dictionary
         """

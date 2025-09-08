@@ -242,11 +242,11 @@ def test_create_rule(setup):
 
     rule_params = dict(
         rulename="FUNC_TESTRULE1",
-        after_rulename="Block.green.sophos",
+        # after_rulename="Block.green.sophos",
         action="Accept",
         description="Test rule created by functional testing.",
         log="Enable",
-        src_zones=["TestLab"],
+        src_zones=["WAN"],
         dst_zones=["LAN"],
         src_networks=["FUNC_TESTNETWORK1"],
         dst_networks=["FUNC_TESTNETWORK2"],
