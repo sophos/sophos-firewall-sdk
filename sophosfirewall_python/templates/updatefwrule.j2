@@ -61,6 +61,69 @@
                 {% endfor %}
             </Services>
             {% endif %}
+            {% if web_filter %}
+            <WebFilter>{{ web_filter }}</WebFilter>
+            {% endif %}
+            {% if web_category_traffic_shaping %}
+            <WebCategoryBaseQoSPolicy>{{ web_category_traffic_shaping }}</WebCategoryBaseQoSPolicy>
+            {% endif %}
+            {% if block_quic %}
+            <BlockQuickQuic>{{ block_quic }}</BlockQuickQuic>
+            {% endif %}
+            {% if scan_virus %}
+            <ScanVirus>{{ scan_virus }}</ScanVirus>
+            {% endif %}
+            {% if proxy_mode %}
+            <ProxyMode>{{ proxy_mode }}</ProxyMode>
+            {% endif %}
+            {% if decrypt_https %}
+            <DecryptHTTPS>{{ decrypt_https }}</DecryptHTTPS>
+            {% endif %}
+            {% if source_security_heartbeat %}
+            <SourceSecurityHeartbeat>{{ source_security_heartbeat }}</SourceSecurityHeartbeat>
+            {% endif %}
+            {% if minimum_source_hb_permitted %}
+            <MinimumSourceHBPermitted>{{ minimum_source_hb_permitted }}</MinimumSourceHBPermitted>
+            {% endif %}
+            {% if dest_security_heartbeat %}
+            <DestSecurityHeartbeat>{{ dest_security_heartbeat }}</DestSecurityHeartbeat>
+            {% endif %}
+            {% if minimum_dest_hb_permitted %}
+            <MinimumDestHBPermitted>{{ minimum_dest_hb_permitted }}</MinimumDestHBPermitted>
+            {% endif %}
+            {% if application_control %}
+            <ApplicationControl>{{ application_control }}</ApplicationControl>
+            {% endif %}
+            {% if application_base_qos_policy %}
+            <ApplicationBaseQoSPolicy>{{ application_base_qos_policy }}</ApplicationBaseQoSPolicy>
+            {% endif %}
+            {% if intrusion_prevention %}
+            <IntrusionPrevention>{{ intrusion_prevention }}</IntrusionPrevention>
+            {% endif %}
+            {% if qos_policy %}
+            <TrafficShappingPolicy>{{ qos_policy }}</TrafficShappingPolicy>
+            {% endif %}
+            {% if dscp_marking %}
+            <DSCPMarking>{{ dscp_marking }}</DSCPMarking>
+            {% endif %}
+            {% if scan_smtp %}
+            <ScanSMTP>{{ scan_smtp }}</ScanSMTP>
+            {% endif %}
+            {% if scan_smtps %}
+            <ScanSMTPS>{{ scan_smtps }}</ScanSMTPS>
+            {% endif %}
+            {% if scan_imap %}
+            <ScanIMAP>{{ scan_imap }}</ScanIMAP>
+            {% endif %}
+            {% if scan_imaps %}
+            <ScanIMAPS>{{ scan_imaps }}</ScanIMAPS>
+            {% endif %}
+            {% if scan_pop3 %}
+            <ScanPOP3>{{ scan_pop3 }}</ScanPOP3>
+            {% endif %}
+            {% if scan_pop3s %}
+            <ScanPOP3S>{{ scan_pop3s }}</ScanPOP3S>
+            {% endif %}
         </NetworkPolicy>
       </FirewallRule>
     </Set>
