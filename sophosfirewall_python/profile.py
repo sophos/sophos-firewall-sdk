@@ -215,7 +215,7 @@ class AdminProfile:
             "other_guest_user_settings": kwargs.get("other_guest_user_settings", exist_profile["Identity"]["OtherGuestUserSettings"]),
             "policy": kwargs.get("policy", exist_profile["Identity"]["Policy"]),
             "test_external_server_connectivity": kwargs.get("test_external_server_connectivity", exist_profile["Identity"]["TestExternalServerConnectivity"]),
-            "disconnect_live_user": kwargs.get("disconnect_live_user", exist_profile["Identity"]["DisconnectLiveUser"]),
+            "disconnect_live_user": kwargs.get("disconnect_live_user", exist_profile["Identity"].get("DisconnectLiveUser")),
             "firewall": kwargs.get("network", exist_profile["Firewall"]),
             "set_vpn_profile": kwargs.get("set_vpn_profile"),
             "connect_tunnel": kwargs.get("connect_tunnel", exist_profile["VPN"]["ConnectTunnel"]),
