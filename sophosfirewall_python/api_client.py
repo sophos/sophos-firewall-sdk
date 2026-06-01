@@ -181,7 +181,7 @@ class APIClient:
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
         for key in resp_dict:
-            if "Status" in resp_dict[key]:
+            if "Status" in resp_dict[key] and isinstance(resp_dict[key]["Status"], dict):
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
@@ -239,7 +239,7 @@ class APIClient:
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
         for key in resp_dict:
-            if "Status" in resp_dict[key]:
+            if "Status" in resp_dict[key] and isinstance(resp_dict[key]["Status"], dict):
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
