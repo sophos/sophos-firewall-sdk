@@ -8,6 +8,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 permissions and limitations under the License.
 """
 import unittest
+import xml.etree.ElementTree as ET
 from unittest.mock import patch, Mock, MagicMock
 from sophosfirewall_python.firewallapi import SophosFirewall
 from sophosfirewall_python.api_client import (
@@ -323,6 +324,104 @@ class TestAPIClient(unittest.TestCase):
             )
             == expected_result
         )
+
+
+    def _auth_success_response(self):
+        """Return a Mock _post response with a valid, well-formed XML body."""
+        mock_response = Mock()
+        mock_response.content = (
+            '<?xml version="1.0" encoding="UTF-8"?>'
+            "<Response>"
+            "<Login><status>Authentication Successful</status></Login>"
+            "</Response>"
+        ).encode()
+        return mock_response
+
+    def _special_char_client(self):
+        """APIClient whose credentials contain XML special characters."""
+        return APIClient(
+            username="user<1>",
+            password="p@ss<w>&'\"end",
+            hostname="fakehostname",
+            port=4444,
+            verify=False,
+        )
+
+    def test_escape_xml(self):
+        """_escape_xml() converts XML special characters to entities."""
+        assert self.fw._escape_xml("a<b>c&d") == "a&lt;b&gt;c&amp;d"
+        assert self.fw._escape_xml(123) == "123"
+
+    @patch.object(APIClient, "_post")
+    def test_login_escapes_credentials(self, mocked_post):
+        """Credentials with special characters are escaped and payload is valid XML."""
+        mocked_post.return_value = self._auth_success_response()
+        fw = self._special_char_client()
+
+        fw.login(output_format="xml")
+
+        payload = mocked_post.call_args.kwargs["xmldata"]
+        assert "<Username>user&lt;1&gt;</Username>" in payload
+        assert "p@ss&lt;w&gt;&amp;" in payload
+        assert "<w>" not in payload
+        ET.fromstring(payload)  # raises if payload is malformed
+
+    @patch.object(APIClient, "_error_check")
+    @patch.object(APIClient, "_post")
+    def test_get_tag_escapes_credentials(self, mocked_post, _mocked_error_check):
+        """get_tag() escapes credentials and produces valid XML."""
+        mocked_post.return_value = self._auth_success_response()
+        fw = self._special_char_client()
+
+        fw.get_tag(xml_tag="IPHost", output_format="xml")
+
+        payload = mocked_post.call_args.kwargs["xmldata"]
+        assert "<Username>user&lt;1&gt;</Username>" in payload
+        assert "p@ss&lt;w&gt;&amp;" in payload
+        ET.fromstring(payload)
+
+    @patch.object(APIClient, "_error_check")
+    @patch.object(APIClient, "_post")
+    def test_get_tag_with_filter_escapes_value(self, mocked_post, _mocked_error_check):
+        """get_tag_with_filter() escapes the filter value and credentials."""
+        mocked_post.return_value = self._auth_success_response()
+        fw = self._special_char_client()
+
+        fw.get_tag_with_filter(
+            xml_tag="IPHost", key="Name", value="host<a>&b", output_format="xml"
+        )
+
+        payload = mocked_post.call_args.kwargs["xmldata"]
+        assert "host&lt;a&gt;&amp;b" in payload
+        assert "<Username>user&lt;1&gt;</Username>" in payload
+        ET.fromstring(payload)
+
+    @patch.object(APIClient, "_error_check")
+    @patch.object(APIClient, "_post")
+    def test_remove_escapes_name(self, mocked_post, _mocked_error_check):
+        """remove() escapes the object name and credentials."""
+        mocked_post.return_value = self._auth_success_response()
+        fw = self._special_char_client()
+
+        fw.remove(xml_tag="IPHost", name="host<a>&b", output_format="xml")
+
+        payload = mocked_post.call_args.kwargs["xmldata"]
+        assert "<Name>host&lt;a&gt;&amp;b</Name>" in payload
+        assert "<Username>user&lt;1&gt;</Username>" in payload
+        ET.fromstring(payload)
+
+    @patch.object(APIClient, "_post")
+    def test_submit_xml_escapes_credentials(self, mocked_post):
+        """submit_xml() escapes credentials via the autoescaping Jinja2 environment."""
+        mocked_post.return_value = self._auth_success_response()
+        fw = self._special_char_client()
+
+        fw.submit_xml(template_data="<IPHost><Name>TEST</Name></IPHost>")
+
+        payload = mocked_post.call_args.kwargs["xmldata"]
+        assert "<Username>user&lt;1&gt;</Username>" in payload
+        assert "p@ss&lt;w&gt;&amp;" in payload
+        ET.fromstring(payload)
 
 
 class TestSophosFirewall(unittest.TestCase):

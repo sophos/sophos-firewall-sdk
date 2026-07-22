@@ -8,6 +8,7 @@ permissions and limitations under the License.
 """
 import os
 import re
+from xml.sax.saxutils import escape
 import requests
 import xmltodict
 from jinja2 import Environment, FileSystemLoader, Template
@@ -43,6 +44,21 @@ class APIClient:
         self.port = port
         self.url = f"https://{hostname}:{port}/webconsole/APIController"
         self.verify = verify
+
+    def _escape_xml(self, value):
+        """Escape XML special characters (&, <, >) in a value.
+
+        Used to safely interpolate user-provided values (such as credentials
+        or filter values) into XML element text. Without this, characters like
+        <, >, or & produce a malformed payload that the firewall misinterprets.
+
+        Args:
+            value: The value to escape. Cast to str before escaping.
+
+        Returns:
+            str: The XML-escaped value.
+        """
+        return escape(str(value))
 
     def _dict_to_lower(self, target_dict):
         """Convert the keys of a dictionary to lower-case
@@ -130,8 +146,8 @@ class APIClient:
         payload = f"""
         <Request>
             <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
+                <Username>{self._escape_xml(self.username)}</Username>
+                <Password>{self._escape_xml(self.password)}</Password>
             </Login>
         </Request>
         """
@@ -217,8 +233,8 @@ class APIClient:
         template_string = f"""
             <Request>
                 <Login>
-                    <Username>{self.username}</Username>
-                    <Password>{self.password}</Password>
+                    <Username>{{{{ username }}}}</Username>
+                    <Password>{{{{ password }}}}</Password>
                 </Login>
             {{% if set_operation %}}
             <Set operation="{{{{ set_operation }}}}">
@@ -229,6 +245,8 @@ class APIClient:
             {{% endif %}}
             </Request>
         """
+        template_vars["username"] = self.username
+        template_vars["password"] = self.password
         template_vars["set_operation"] = set_operation
         template = environment.from_string(template_string)
         payload = template.render(**template_vars)
@@ -255,8 +273,8 @@ class APIClient:
         payload = f"""
         <Request>
             <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
+                <Username>{self._escape_xml(self.username)}</Username>
+                <Password>{self._escape_xml(self.password)}</Password>
             </Login>
             <Get>
                 <{xml_tag}>
@@ -297,13 +315,13 @@ class APIClient:
         payload = f"""
         <Request>
             <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
+                <Username>{self._escape_xml(self.username)}</Username>
+                <Password>{self._escape_xml(self.password)}</Password>
             </Login>
             <Get>
                 <{xml_tag}>
                     <Filter>
-                        <key name="{key}" criteria="{operator}">{value}</key>
+                        <key name="{key}" criteria="{operator}">{self._escape_xml(value)}</key>
                     </Filter>
                 </{xml_tag}>
             </Get>
@@ -328,12 +346,12 @@ class APIClient:
         payload = f"""
         <Request>
             <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
+                <Username>{self._escape_xml(self.username)}</Username>
+                <Password>{self._escape_xml(self.password)}</Password>
             </Login>
             <Remove>
               <{xml_tag}>
-                <{key}>{name}</{key}>
+                <{key}>{self._escape_xml(name)}</{key}>
               </{xml_tag}>
             </Remove>
         </Request>
@@ -383,10 +401,10 @@ class APIClient:
         payload = f"""
         <Request>
             <Login>
-                <Username>{self.username}</Username>
-                <Password>{self.password}</Password>
+                <Username>{self._escape_xml(self.username)}</Username>
+                <Password>{self._escape_xml(self.password)}</Password>
             </Login>
-            <Set operation="update"> 
+            <Set operation="update">
                 {xml_update_body}
             </Set>
         </Request>
