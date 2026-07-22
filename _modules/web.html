@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>web &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">sophosfirewall_python</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">web</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for web</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to manage Web configuration (Protect -&gt; Web) on Sophos Firewall. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sophosfirewall_python.api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">SophosFirewallAPIError</span>
+
+<div class="viewcode-block" id="WebFilterPolicy">
+<a class="viewcode-back" href="../web.html#web.WebFilterPolicy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">WebFilterPolicy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages Web Filter Policies</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span> <span class="o">=</span> <span class="n">api_client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span> <span class="o">=</span> <span class="s2">&quot;WebFilterPolicy&quot;</span>
+
+        <span class="c1"># Get categories for rules</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;WebFilterCategory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">category</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;WebFilterCategory&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;All web traffic&quot;</span><span class="p">)</span> <span class="c1"># Add default category</span>
+
+        <span class="c1"># Get URL Groups</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;WebFilterURLGroup&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># Get File Types</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;FileType&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_type</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">file_type</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;FileType&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># Get User Activities</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;UserActivity&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_activities</span> <span class="o">=</span> <span class="p">[</span><span class="n">activity</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">activity</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;UserActivity&#39;</span><span class="p">]]</span>
+
+<div class="viewcode-block" id="WebFilterPolicy.get">
+<a class="viewcode-back" href="../web.html#web.WebFilterPolicy.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves web filter policies.</span>
+<span class="sd">        If name is provided, filters by name. Otherwise, retrieves all policies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WebFilterPolicy.create">
+<a class="viewcode-back" href="../web.html#web.WebFilterPolicy.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default_action</span><span class="p">,</span> <span class="n">download_file_size_restriction</span><span class="p">,</span> 
+                 <span class="n">enable_reporting</span><span class="o">=</span><span class="s2">&quot;Enable&quot;</span><span class="p">,</span> <span class="n">download_file_size_restriction_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">goog_app_domain_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">goog_app_domain_list_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">youtube_filter_is_strict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">youtube_filter_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">enforce_safe_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enforce_image_licensing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">xff_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">office_365_tenants_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">office_365_directory_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">office_365_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">quota_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rules</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new web filter policy.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Specify a name for the Web Filter Policy. Max 50 chars.</span>
+<span class="sd">            default_action (str): Default action of the policy (&#39;Allow&#39; or &#39;Deny&#39;).</span>
+<span class="sd">            download_file_size_restriction (int): Specify maximum allowed file download size in MB (0-1536).</span>
+<span class="sd">            enable_reporting (str, optional): Select to enable reporting of policy. Defaults to &quot;Enable&quot;. (API Default: Enable)</span>
+<span class="sd">            download_file_size_restriction_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) checking for maximum allowed file download size. Defaults to None.</span>
+<span class="sd">            goog_app_domain_list (str, optional): Comma-separated list of domains allowed to access Google services. Max 256 chars. Defaults to None.</span>
+<span class="sd">            goog_app_domain_list_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) specifying domains for Google services. Defaults to None.</span>
+<span class="sd">            youtube_filter_is_strict (str, optional): Adjust the policy used for YouTube Restricted Mode (&#39;1&#39; for strict, &#39;0&#39; for moderate). Defaults to None.</span>
+<span class="sd">            youtube_filter_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) YouTube Restricted Mode. Defaults to None.</span>
+<span class="sd">            enforce_safe_search (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) blocking of pornography and explicit content in search results. Defaults to None.</span>
+<span class="sd">            enforce_image_licensing (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) limiting search results to Creative Commons licensed images. Defaults to None.</span>
+<span class="sd">            xff_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) X-Forwarded-For header. Defaults to None.</span>
+<span class="sd">            office_365_tenants_list (str, optional): Comma-separated list of domain names and domain IDs allowed to access Microsoft 365. Max 4096 chars. Defaults to None.</span>
+<span class="sd">            office_365_directory_id (str, optional): Domain ID allowed to access the Microsoft 365 service. Max 50 chars. Defaults to None.</span>
+<span class="sd">            office_365_enabled (str, optional): Turn on (&#39;1&#39;) or off (&#39;0&#39;) specifying domains/IDs for Microsoft 365. Defaults to None.</span>
+<span class="sd">            quota_limit (int, optional): Maximum allowed time (1-1440 minutes) for browsing restricted web content under quota policy action. Defaults to 60. (API Default: 60)</span>
+<span class="sd">            description (str, optional): Specify Policy description. Max 255 chars. Defaults to None.</span>
+<span class="sd">            rules (list of dict, optional): Specify the rules contained in this policy. Defaults to None. See rule list structure below:</span>
+<span class="sd">                - categories (list of dict): List of rule categories containing:</span>
+<span class="sd">                    - id (str): Category Name</span>
+<span class="sd">                    - type (str): Category type </span>
+<span class="sd">                - http_action (str, optional): HTTP action (Allow/Deny). Defaults to Deny.</span>
+<span class="sd">                - https_action (str, optional): HTTPS action (Allow/Deny). Defaults to Deny.</span>
+<span class="sd">                - follow_http_action (str, optional): &#39;1&#39; to enable, &#39;0&#39; to disable. Defaults to 1.</span>
+<span class="sd">                - schedule (str, optional): Schedule name. Defaults to &#39;All The Time&#39;</span>
+<span class="sd">                - policy_rule_enabled (str, optional): &#39;1&#39; to enable, &#39;0&#39; to disable. Defaults to 1.</span>
+<span class="sd">                - ccl_rule_enabled (str, optional): &#39;1&#39; to enable, &#39;0&#39; to disable. Defaults to 0.</span>
+<span class="sd">                - user_list (list of str, optional): List of users to apply this rule to. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure rules is a list, even if None is passed</span>
+        <span class="k">if</span> <span class="n">rules</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rules</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;categories&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;categories&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;WebCategory&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid Web Filter Category.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;FileType&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_types</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File Type &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid File Type.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;URLGroup&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_groups</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;URL Group &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid URL Group.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;UserActivity&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_activities</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User Activity &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid User Activity.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;WebCategory&quot;</span><span class="p">,</span> <span class="s2">&quot;FileType&quot;</span><span class="p">,</span> <span class="s2">&quot;URLGroup&quot;</span><span class="p">,</span> <span class="s2">&quot;UserActivity&quot;</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category type &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not valid. Must be &#39;WebCategory&#39;, &#39;FileType&#39;, &#39;URLGroup&#39;, or &#39;UserActivity&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;default_action&quot;</span><span class="p">:</span> <span class="n">default_action</span><span class="p">,</span>
+            <span class="s2">&quot;enable_reporting&quot;</span><span class="p">:</span> <span class="n">enable_reporting</span><span class="p">,</span>
+            <span class="s2">&quot;download_file_size_restriction&quot;</span><span class="p">:</span> <span class="n">download_file_size_restriction</span><span class="p">,</span>
+            <span class="s2">&quot;download_file_size_restriction_enabled&quot;</span><span class="p">:</span> <span class="n">download_file_size_restriction_enabled</span><span class="p">,</span>
+            <span class="s2">&quot;goog_app_domain_list&quot;</span><span class="p">:</span> <span class="n">goog_app_domain_list</span><span class="p">,</span>
+            <span class="s2">&quot;goog_app_domain_list_enabled&quot;</span><span class="p">:</span> <span class="n">goog_app_domain_list_enabled</span><span class="p">,</span>
+            <span class="s2">&quot;youtube_filter_is_strict&quot;</span><span class="p">:</span> <span class="n">youtube_filter_is_strict</span><span class="p">,</span>
+            <span class="s2">&quot;youtube_filter_enabled&quot;</span><span class="p">:</span> <span class="n">youtube_filter_enabled</span><span class="p">,</span>
+            <span class="s2">&quot;enforce_safe_search&quot;</span><span class="p">:</span> <span class="n">enforce_safe_search</span><span class="p">,</span>
+            <span class="s2">&quot;enforce_image_licensing&quot;</span><span class="p">:</span> <span class="n">enforce_image_licensing</span><span class="p">,</span>
+            <span class="s2">&quot;xff_enabled&quot;</span><span class="p">:</span> <span class="n">xff_enabled</span><span class="p">,</span>
+            <span class="s2">&quot;office_365_tenants_list&quot;</span><span class="p">:</span> <span class="n">office_365_tenants_list</span><span class="p">,</span>
+            <span class="s2">&quot;office_365_directory_id&quot;</span><span class="p">:</span> <span class="n">office_365_directory_id</span><span class="p">,</span>
+            <span class="s2">&quot;office_365_enabled&quot;</span><span class="p">:</span> <span class="n">office_365_enabled</span><span class="p">,</span>
+            <span class="s2">&quot;quota_limit&quot;</span><span class="p">:</span> <span class="n">quota_limit</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="n">rules</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;createwebfilterpolicy.j2&quot;</span><span class="p">,</span>
+            <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span>
+            <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WebFilterPolicy.update">
+<a class="viewcode-back" href="../web.html#web.WebFilterPolicy.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default_action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enable_reporting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">download_file_size_restriction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">download_file_size_restriction_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">goog_app_domain_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">goog_app_domain_list_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">youtube_filter_is_strict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">youtube_filter_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">enforce_safe_search</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enforce_image_licensing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">xff_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">office_365_tenants_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">office_365_directory_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">office_365_enabled</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">quota_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rules</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rule_action</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates an existing web filter policy.</span>
+<span class="sd">        Fetches the existing policy and applies changes only for provided arguments.</span>
+<span class="sd">        Handles &#39;add&#39; or &#39;replace&#39; actions for rules.</span>
+<span class="sd">        To remove specific rules, use rule_action=&#39;replace&#39; with the desired final list of rules.</span>
+<span class="sd">        The full policy object is sent in the update payload.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Specify a name for the Web Filter Policy. Max 50 chars. (Mandatory for identification)</span>
+<span class="sd">            default_action (str, optional): Default action of the policy (&#39;Allow&#39; or &#39;Deny&#39;).</span>
+<span class="sd">            enable_reporting (str, optional): Select to enable reporting of policy.</span>
+<span class="sd">            download_file_size_restriction (int, optional): Specify maximum allowed file download size in MB (0-1536).</span>
+<span class="sd">            download_file_size_restriction_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) checking for maximum allowed file download size.</span>
+<span class="sd">            goog_app_domain_list (str, optional): Comma-separated list of domains allowed to access Google services. Max 256 chars.</span>
+<span class="sd">            goog_app_domain_list_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) specifying domains for Google services.</span>
+<span class="sd">            youtube_filter_is_strict (str, optional): Adjust the policy used for YouTube Restricted Mode (&#39;1&#39; for strict, &#39;0&#39; for moderate).</span>
+<span class="sd">            youtube_filter_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) YouTube Restricted Mode.</span>
+<span class="sd">            enforce_safe_search (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) blocking of pornography and explicit content in search results.</span>
+<span class="sd">            enforce_image_licensing (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) limiting search results to Creative Commons licensed images.</span>
+<span class="sd">            xff_enabled (str, optional): Enable (&#39;1&#39;) or disable (&#39;0&#39;) X-Forwarded-For header.</span>
+<span class="sd">            office_365_tenants_list (str, optional): Comma-separated list of domain names and domain IDs allowed to access Microsoft 365. Max 4096 chars.</span>
+<span class="sd">            office_365_directory_id (str, optional): Domain ID allowed to access the Microsoft 365 service. Max 50 chars.</span>
+<span class="sd">            office_365_enabled (str, optional): Turn on (&#39;1&#39;) or off (&#39;0&#39;) specifying domains/IDs for Microsoft 365.</span>
+<span class="sd">            quota_limit (int, optional): Maximum allowed time (1-1440 minutes) for browsing restricted web content under quota policy action.</span>
+<span class="sd">            description (str, optional): Specify Policy description. Max 255 chars.</span>
+<span class="sd">            rules (list of dict, optional): Specify the rules contained in this policy. Defaults to None. See rule list structure below:</span>
+<span class="sd">                - categories (list of dict): List of rule categories containing:</span>
+<span class="sd">                    - id (str): Category Name</span>
+<span class="sd">                    - type (str): Category type. Valid options are &#39;WebCategory&#39;, &#39;FileType&#39;, &#39;URLGroup&#39;, or &#39;UserActivity&#39;.</span>
+<span class="sd">                - http_action (str, optional): HTTP action (Allow/Deny). Defaults to Deny.</span>
+<span class="sd">                - https_action (str, optional): HTTPS action (Allow/Deny). Defaults to Deny.</span>
+<span class="sd">                - follow_http_action (str, optional): &#39;1&#39; to enable, &#39;0&#39; to disable. Defaults to 1.</span>
+<span class="sd">                - schedule (str, optional): Schedule name. Defaults to &#39;All The Time&#39;</span>
+<span class="sd">                - policy_rule_enabled (str, optional): &#39;1&#39; to enable, &#39;0&#39; to disable. Defaults to 1.</span>
+<span class="sd">                - ccl_rule_enabled (str, optional): &#39;1&#39; to enable, &#39;0&#39; to disable. Defaults to 0.</span>
+<span class="sd">                - user_list (str, optional): List of users to apply this policy to. Defaults to &quot;None&quot;.</span>
+<span class="sd">            rule_action (str, optional): Action for rules (&#39;add&#39; or &#39;replace&#39;). Defaults to &quot;add&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">updated_policy_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span><span class="p">]</span>
+
+        <span class="c1"># Update scalar fields if new values are provided</span>
+        <span class="k">if</span> <span class="n">default_action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;DefaultAction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_action</span>
+        <span class="k">if</span> <span class="n">enable_reporting</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;EnableReporting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enable_reporting</span>
+        <span class="k">if</span> <span class="n">download_file_size_restriction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;DownloadFileSizeRestriction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">download_file_size_restriction</span>
+        <span class="k">if</span> <span class="n">download_file_size_restriction_enabled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;DownloadFileSizeRestrictionEnabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">download_file_size_restriction_enabled</span>
+        <span class="k">if</span> <span class="n">goog_app_domain_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;GoogAppDomainList&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">goog_app_domain_list</span>
+        <span class="k">if</span> <span class="n">goog_app_domain_list_enabled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;GoogAppDomainListEnabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">goog_app_domain_list_enabled</span>
+        <span class="k">if</span> <span class="n">youtube_filter_is_strict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;YoutubeFilterIsStrict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">youtube_filter_is_strict</span>
+        <span class="k">if</span> <span class="n">youtube_filter_enabled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;YoutubeFilterEnabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">youtube_filter_enabled</span>
+        <span class="k">if</span> <span class="n">enforce_safe_search</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;EnforceSafeSearch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enforce_safe_search</span>
+        <span class="k">if</span> <span class="n">enforce_image_licensing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;EnforceImageLicensing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enforce_image_licensing</span>
+        <span class="k">if</span> <span class="n">xff_enabled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;XFFEnabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xff_enabled</span>
+        <span class="k">if</span> <span class="n">office_365_tenants_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;Office365TenantsList&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">office_365_tenants_list</span>
+        <span class="k">if</span> <span class="n">office_365_directory_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;Office365DirectoryId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">office_365_directory_id</span>
+        <span class="k">if</span> <span class="n">office_365_enabled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;Office365Enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">office_365_enabled</span>
+        <span class="k">if</span> <span class="n">quota_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;QuotaLimit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_limit</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;Description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+
+        <span class="c1"># Rules handling</span>
+        <span class="n">rule_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;RuleList&quot;</span> <span class="ow">in</span> <span class="n">updated_policy_data</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rule_action</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span> <span class="c1"># If we are not replacing, keep existing rules</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;RuleList&quot;</span><span class="p">][</span><span class="s2">&quot;Rule&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">rule_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;RuleList&quot;</span><span class="p">][</span><span class="s2">&quot;Rule&quot;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;RuleList&quot;</span><span class="p">][</span><span class="s2">&quot;Rule&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">rule_list</span> <span class="o">=</span> <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;RuleList&quot;</span><span class="p">][</span><span class="s2">&quot;Rule&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rules</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule_action</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span> <span class="ow">or</span> <span class="n">rule_action</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+                <span class="n">category_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;categories&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;WebCategory&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid Web Filter Category.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;FileType&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_types</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File Type &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid File Type.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;URLGroup&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_groups</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;URL Group &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid URL Group.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;UserActivity&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_activities</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User Activity &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid User Activity.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;WebCategory&quot;</span><span class="p">,</span> <span class="s2">&quot;FileType&quot;</span><span class="p">,</span> <span class="s2">&quot;URLGroup&quot;</span><span class="p">,</span> <span class="s2">&quot;UserActivity&quot;</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category type &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not valid. Must be &#39;WebCategory&#39;, &#39;FileType&#39;, &#39;URLGroup&#39;, or &#39;UserActivity&#39;.&quot;</span><span class="p">)</span>
+                    <span class="n">category_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="p">})</span>
+                <span class="n">rule_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;CategoryList&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Category&quot;</span><span class="p">:</span> <span class="n">category_list</span><span class="p">},</span>
+                    <span class="s2">&quot;HTTPAction&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http_action&quot;</span><span class="p">,</span> <span class="s2">&quot;Deny&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;HTTPSAction&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https_action&quot;</span><span class="p">,</span> <span class="s2">&quot;Deny&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;FollowHTTPAction&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;follow_http_action&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;Schedule&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schedule&quot;</span><span class="p">,</span> <span class="s2">&quot;All The Time&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;PolicyRuleEnabled&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;policy_rule_enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;CCLRuleEnabled&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ccl_rule_enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;UserList&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;User&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_list&quot;</span><span class="p">,</span> <span class="p">[])}</span>
+                <span class="p">})</span>        
+
+        <span class="k">if</span> <span class="n">rule_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">updated_policy_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RuleList&quot;</span><span class="p">):</span>
+                <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;RuleList&quot;</span><span class="p">][</span><span class="s2">&quot;Rule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rule_list</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">updated_policy_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RuleList&quot;</span><span class="p">):</span>
+                <span class="n">updated_policy_data</span><span class="p">[</span><span class="s2">&quot;RuleList&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Rule&quot;</span><span class="p">:</span> <span class="n">rule_list</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;updatewebfilterpolicy.j2&quot;</span><span class="p">,</span>
+            <span class="n">template_vars</span><span class="o">=</span><span class="n">updated_policy_data</span><span class="p">,</span> 
+            <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="UserActivity">
+<a class="viewcode-back" href="../web.html#web.UserActivity">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserActivity</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages User Activities.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span> <span class="o">=</span> <span class="n">api_client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span> <span class="o">=</span> <span class="s2">&quot;UserActivity&quot;</span>
+
+        <span class="c1"># Get categories</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;WebFilterCategory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">category</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;WebFilterCategory&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;All web traffic&quot;</span><span class="p">)</span> <span class="c1"># Add default category</span>
+
+        <span class="c1"># Get URL Groups</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;WebFilterURLGroup&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;WebFilterURLGroup&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># Get File Types</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;FileType&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_type</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">file_type</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;FileType&#39;</span><span class="p">]]</span>
+
+        
+<div class="viewcode-block" id="UserActivity.get">
+<a class="viewcode-back" href="../web.html#web.UserActivity.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves User Activities.</span>
+<span class="sd">        If name is provided, filters by name. Otherwise, retrieves all policies.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str, optional): Name of the User Activity to filter by. Defaults to None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag_with_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml_tag</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserActivity.create">
+<a class="viewcode-back" href="../web.html#web.UserActivity.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new User Activity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Specify a name for the User Activity. Max 50 chars.</span>
+<span class="sd">            description (str, optional): Specify a description for the User Activity. Defaults to None.</span>
+<span class="sd">            category_list (list of dict, optional): List of categories to apply to this User Activity. Defaults to None. Category dict format below:</span>
+<span class="sd">                </span>
+<span class="sd">                Each category dict should contain:</span>
+<span class="sd">                    - id (str): Category Name</span>
+<span class="sd">                    - type (str): Category type. Supports &#39;web category&#39;, &#39;file type&#39;, or &#39;url group&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">category_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">category_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;web category&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid Web Filter Category.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;file type&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_types</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File Type &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid File Type.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;url group&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_groups</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;URL Group &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not a valid URL Group.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;web category&quot;</span><span class="p">,</span> <span class="s2">&quot;file type&quot;</span><span class="p">,</span> <span class="s2">&quot;url group&quot;</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="n">SophosFirewallAPIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category type &#39;</span><span class="si">{</span><span class="n">category</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; is not valid. Must be &#39;web category&#39;, &#39;file type&#39;, or &#39;url group&#39;.&quot;</span><span class="p">)</span>
+       
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="s2">&quot;category_list&quot;</span><span class="p">:</span> <span class="n">category_list</span> <span class="k">if</span> <span class="n">category_list</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">submit_template</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;createuseractivity.j2&quot;</span><span class="p">,</span>
+            <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span>
+            <span class="n">debug</span><span class="o">=</span><span class="n">debug</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
