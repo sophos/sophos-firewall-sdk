@@ -137,11 +137,44 @@ class APIClient:
                 raise SophosFirewallAuthFailure("Login failed!")
         return resp
 
+    def _login_check(self, api_response):
+        """Raise an exception unless the firewall confirmed the login.
+
+        _post() only raises for the API access errors 534 and 532 and for an explicit
+        "Authentication Failure". Any other answer was returned as if the login had
+        succeeded, for example <Status code="529">Input request file is Invalid</Status>
+        without a <Login> element.
+
+        Args:
+            api_response (Requests.response): The response object returned from the requests module
+
+        Raises:
+            SophosFirewallAPIError: Error raised when the firewall answers with a non-2xx status or without a login status
+            SophosFirewallAuthFailure: Error raised when the login status is not "Authentication Successful"
+        """
+        response = xmltodict.parse(api_response.content.decode())["Response"] or {}
+        status = response.get("Status")
+        if isinstance(status, dict) and not status.get("@code", "").startswith("2"):
+            raise SophosFirewallAPIError(
+                f"{status.get('@code')}: {status.get('#text')}"
+            )
+        login = response.get("Login")
+        if not isinstance(login, dict) or "status" not in login:
+            raise SophosFirewallAPIError(
+                "Login response did not contain a login status"
+            )
+        if login["status"] != "Authentication Successful":
+            raise SophosFirewallAuthFailure(f"Login failed: {login['status']}")
+
     def login(self, output_format):
         """Test login credentials.
 
         Args:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+
+        Raises:
+            SophosFirewallAPIError: Error raised when the firewall answers with a non-2xx status or without a login status
+            SophosFirewallAuthFailure: Error raised when the login is not successful
         """
         payload = f"""
         <Request>
@@ -152,6 +185,7 @@ class APIClient:
         </Request>
         """
         resp = self._post(xmldata=payload)
+        self._login_check(resp)
         if output_format == "xml":
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())

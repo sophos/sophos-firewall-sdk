@@ -423,6 +423,57 @@ class TestAPIClient(unittest.TestCase):
         assert "p@ss&lt;w&gt;&amp;" in payload
         ET.fromstring(payload)
 
+    def _login_response(self, body, attributes=' APIVersion="2200.1" IPS_CAT_VER="0"'):
+        """Return a Mock _post response whose Response element contains body."""
+        mock_response = Mock()
+        mock_response.content = (
+            '<?xml version="1.0" encoding="UTF-8"?>'
+            f"<Response{attributes}>{body}</Response>"
+        ).encode()
+        return mock_response
+
+    @patch.object(APIClient, "_post")
+    def test_login_raises_on_error_status(self, mocked_post):
+        """login() raises when the firewall answers with a non-2xx status and no login.
+
+        This is the answer of SFOS 22.0 to a login request that is not valid XML.
+        """
+        mocked_post.return_value = self._login_response(
+            '<Status code="529">Input request file is Invalid</Status>', attributes=""
+        )
+
+        for output_format in ("dict", "xml"):
+            with self.assertRaises(SophosFirewallAPIError) as ctx:
+                self.fw.login(output_format=output_format)
+            assert "529" in str(ctx.exception)
+
+    @patch.object(APIClient, "_post")
+    def test_login_raises_without_login_status(self, mocked_post):
+        """login() raises when the response contains no login status."""
+        mocked_post.return_value = self._login_response("")
+
+        with self.assertRaises(SophosFirewallAPIError):
+            self.fw.login(output_format="dict")
+
+    @patch.object(APIClient, "_post")
+    def test_login_raises_on_unexpected_login_status(self, mocked_post):
+        """login() raises unless the login status is "Authentication Successful"."""
+        mocked_post.return_value = self._login_response(
+            "<Login><status>Unexpected status</status></Login>"
+        )
+
+        with self.assertRaises(SophosFirewallAuthFailure):
+            self.fw.login(output_format="dict")
+
+    @patch.object(APIClient, "_post")
+    def test_login_success(self, mocked_post):
+        """login() returns the response when the login is confirmed."""
+        mocked_post.return_value = self._auth_success_response()
+
+        result = self.fw.login(output_format="dict")
+
+        assert result["Response"]["Login"]["status"] == "Authentication Successful"
+
 
 class TestSophosFirewall(unittest.TestCase):
     """Tests for SophosFirewall module"""
