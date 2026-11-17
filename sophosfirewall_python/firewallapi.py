@@ -65,6 +65,10 @@ class SophosFirewall:
 
         Args:
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
+
+        Raises:
+            SophosFirewallAPIError: Error raised when the firewall answers with a non-2xx status or without a login status
+            SophosFirewallAuthFailure: Error raised when the login is not successful
         """
         return self.client.login(output_format)
 
