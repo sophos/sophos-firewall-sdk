@@ -7,6 +7,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
 permissions and limitations under the License.
 """
+import io
+import sys
 import unittest
 import xml.etree.ElementTree as ET
 from unittest.mock import patch, Mock, MagicMock
@@ -16,6 +18,7 @@ from sophosfirewall_python.api_client import (
     SophosFirewallZeroRecords,
     SophosFirewallAuthFailure,
     SophosFirewallAPIError,
+    SophosFirewallInvalidArgument,
 )
 from sophosfirewall_python.backup import Backup
 from sophosfirewall_python.admin import AclRule
@@ -412,7 +415,7 @@ class TestAPIClient(unittest.TestCase):
 
     @patch.object(APIClient, "_post")
     def test_submit_xml_escapes_credentials(self, mocked_post):
-        """submit_xml() escapes credentials via the autoescaping Jinja2 environment."""
+        """submit_xml() XML-escapes credentials in the Login block."""
         mocked_post.return_value = self._auth_success_response()
         fw = self._special_char_client()
 
@@ -1085,3 +1088,68 @@ class TestSophosFirewall(unittest.TestCase):
             )
             == expected_result
         )
+
+class TestSecurityMitigations(unittest.TestCase):
+    """Regression tests for SEC-01 / SEC-02 / SEC-03."""
+
+    def _client(self):
+        return APIClient("admin", "SecretPass!", "fw.example", 4444, False)
+
+    def _ok_response(self):
+        mock_response = MagicMock()
+        mock_response.content = (
+            b'<?xml version="1.0"?><Response>'
+            b'<IPHost><Status code="200">OK</Status></IPHost>'
+            b"</Response>"
+        )
+        return mock_response
+
+    @patch.object(APIClient, "_post")
+    def test_sec01_debug_redacts_password(self, mocked_post):
+        """debug=True must not print the cleartext password."""
+        mocked_post.return_value = self._ok_response()
+        buf = io.StringIO()
+        old = sys.stdout
+        sys.stdout = buf
+        try:
+            self._client().submit_xml(
+                "<IPHost><Name>x</Name></IPHost>", debug=True
+            )
+        finally:
+            sys.stdout = old
+        out = buf.getvalue()
+        self.assertNotIn("SecretPass!", out)
+        self.assertIn("***REDACTED***", out)
+
+    @patch.object(APIClient, "_post")
+    def test_sec02_submit_xml_password_not_in_caller_template(self, mocked_post):
+        """Caller template must not receive password in Jinja context."""
+        mocked_post.return_value = self._ok_response()
+        self._client().submit_xml("<Leak>{{ password }}</Leak>")
+        payload = mocked_post.call_args.kwargs["xmldata"]
+        leak = payload.split("<Leak>", 1)[1].split("</Leak>", 1)[0]
+        self.assertNotIn("SecretPass!", leak)
+
+    @patch.object(APIClient, "_error_check")
+    @patch.object(APIClient, "_post")
+    def test_sec03_rejects_invalid_xml_tag(self, mocked_post, _mocked_error):
+        """Malformed xml_tag names must raise SophosFirewallInvalidArgument."""
+        mocked_post.return_value = self._ok_response()
+        with self.assertRaises(SophosFirewallInvalidArgument):
+            self._client().get_tag(
+                xml_tag="IPHost/><Injected/><IPHost", output_format="xml"
+            )
+
+    @patch.object(APIClient, "_error_check")
+    @patch.object(APIClient, "_post")
+    def test_sec03_rejects_invalid_filter_key(self, mocked_post, _mocked_error):
+        """Malformed filter key names must raise SophosFirewallInvalidArgument."""
+        mocked_post.return_value = self._ok_response()
+        with self.assertRaises(SophosFirewallInvalidArgument):
+            self._client().get_tag_with_filter(
+                xml_tag="IPHost",
+                key='Name" criteria="="></key><evil/><key name="x',
+                value="v",
+                operator="=",
+                output_format="xml",
+            )
