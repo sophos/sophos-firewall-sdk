@@ -1085,3 +1085,30 @@ class TestSophosFirewall(unittest.TestCase):
             )
             == expected_result
         )
+
+
+class TestNormalBugMitigations(unittest.TestCase):
+    """Regression tests for bug mitigations."""
+
+    def test_bug01_portal_custom_hostname_template_var(self):
+        """admin.update_webadmin_settings template must use portal_custom_hostname."""
+        import inspect
+        from jinja2 import Environment
+        from sophosfirewall_python.admin import AdminSettings
+
+        src = inspect.getsource(AdminSettings.update_webadmin_settings)
+        self.assertIn("{{ portal_custom_hostname }}", src)
+        self.assertNotIn("port_custom_hostname", src)
+
+        start = src.index('template_data = """') + len('template_data = """')
+        end = src.index('"""', start)
+        template_data = src[start:end]
+        rendered = Environment(autoescape=True).from_string(template_data).render(
+            certificate="c",
+            https_port="443",
+            userportal_https_port="444",
+            vpnportal_https_port="445",
+            portal_redirect_mode="ip",
+            portal_custom_hostname="portal.example.com",
+        )
+        self.assertIn("portal.example.com", rendered)

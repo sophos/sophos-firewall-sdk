@@ -1,13 +1,20 @@
 name: Docs
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
 permissions:
-    contents: write
+  contents: write
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Install dependencies
         run: |
           pip install sphinx sphinx-rtd-theme
@@ -16,9 +23,10 @@ jobs:
       - name: Sphinx build
         run: |
           sphinx-build docs _build
+      # Only deploy from pushes to main on this repo (not fork PRs).
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'sophos/sophos-firewall-sdk'
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
