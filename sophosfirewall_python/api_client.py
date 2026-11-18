@@ -6,6 +6,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing
 permissions and limitations under the License.
 """
+
 import os
 import re
 from xml.sax.saxutils import escape
@@ -60,6 +61,25 @@ class APIClient:
         """
         return escape(str(value))
 
+    _XML_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
+
+    def _validate_xml_name(self, value, arg_name):
+        """Reject values unsafe as XML element or attribute names."""
+        if not isinstance(value, str) or not self._XML_NAME_RE.match(value):
+            raise SophosFirewallInvalidArgument(
+                f"Invalid {arg_name} '{value}': must match {self._XML_NAME_RE.pattern}"
+            )
+        return value
+
+    def _redact_debug_payload(self, payload):
+        """Remove password element text before debug printing."""
+        return re.sub(
+            r"(<Password\s*>)(.*?)(</Password>)",
+            r"\1***REDACTED***\3",
+            payload,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+
     def _dict_to_lower(self, target_dict):
         """Convert the keys of a dictionary to lower-case
 
@@ -102,7 +122,7 @@ class APIClient:
                 str(xmltodict.parse(api_response.content.decode()))
             )
 
-    def _post(self, xmldata: str, timeout: int=30) -> requests.Response:
+    def _post(self, xmldata: str, timeout: int = 30) -> requests.Response:
         """Post XML request to the firewall returning response as a dict object
 
         Args:
@@ -191,13 +211,15 @@ class APIClient:
         template_vars["password"] = self.password
         payload = template.render(**template_vars)
         if debug:
-            print(f"REQUEST: {payload}")
+            print(f"REQUEST: {self._redact_debug_payload(payload)}")
         resp = self._post(xmldata=payload, timeout=timeout)
 
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
         for key in resp_dict:
-            if "Status" in resp_dict[key] and isinstance(resp_dict[key]["Status"], dict):
+            if "Status" in resp_dict[key] and isinstance(
+                resp_dict[key]["Status"], dict
+            ):
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
@@ -211,15 +233,20 @@ class APIClient:
         debug: bool = False,
     ) -> dict:
         """Submits XML payload as a string to the API.
-        
+
         Args:
             template_data (str): A string containing the XML payload. Variables can be optionally passed in the string using Jinja2 (ex. {{ some_var }})
-            template_vars (dict, optional): Dictionary of variables to inject into the XML string. 
+            template_vars (dict, optional): Dictionary of variables to inject into the XML string.
             set_operation (str): Specify 'add' or 'update' set operation. Default is add. Specify None to exclude the set operation XML block.
             timeout(int): Request timeout in seconds. Defaults to 30 seconds.
 
         Returns:
             dict
+
+        Security:
+            Credentials are never placed in the Jinja context used to render
+            ``template_data``. They are XML-escaped and inserted into the Login
+            block after the caller template is rendered.
         """
         if not template_vars:
             template_vars = {}
@@ -230,34 +257,41 @@ class APIClient:
             autoescape=True,
         )
 
-        template_string = f"""
+        # Render caller XML without credentials in the Jinja context (SEC-02).
+        rendered_body = environment.from_string(template_data).render(**template_vars)
+
+        if set_operation:
+            payload = f"""
             <Request>
                 <Login>
-                    <Username>{{{{ username }}}}</Username>
-                    <Password>{{{{ password }}}}</Password>
+                    <Username>{self._escape_xml(self.username)}</Username>
+                    <Password>{self._escape_xml(self.password)}</Password>
                 </Login>
-            {{% if set_operation %}}
-            <Set operation="{{{{ set_operation }}}}">
-            {{% endif %}}
-                {template_data}
-            {{% if set_operation %}}
+            <Set operation="{self._escape_xml(set_operation)}">
+                {rendered_body}
             </Set>
-            {{% endif %}}
             </Request>
-        """
-        template_vars["username"] = self.username
-        template_vars["password"] = self.password
-        template_vars["set_operation"] = set_operation
-        template = environment.from_string(template_string)
-        payload = template.render(**template_vars)
+            """
+        else:
+            payload = f"""
+            <Request>
+                <Login>
+                    <Username>{self._escape_xml(self.username)}</Username>
+                    <Password>{self._escape_xml(self.password)}</Password>
+                </Login>
+                {rendered_body}
+            </Request>
+            """
         if debug:
-            print(f"REQUEST: {payload}")
+            print(f"REQUEST: {self._redact_debug_payload(payload)}")
         resp = self._post(xmldata=payload, timeout=timeout)
 
         resp_dict = xmltodict.parse(resp.content.decode())["Response"]
         success_pattern = "2[0-9][0-9]"
         for key in resp_dict:
-            if "Status" in resp_dict[key] and isinstance(resp_dict[key]["Status"], dict):
+            if "Status" in resp_dict[key] and isinstance(
+                resp_dict[key]["Status"], dict
+            ):
                 if not re.search(success_pattern, resp_dict[key]["Status"]["@code"]):
                     raise SophosFirewallAPIError(resp_dict[key])
         return xmltodict.parse(resp.content.decode())
@@ -270,6 +304,7 @@ class APIClient:
             timeout(int): Request timeout in seconds. Defaults to 30 seconds.
             output_format(str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
+        xml_tag = self._validate_xml_name(xml_tag, "xml_tag")
         payload = f"""
         <Request>
             <Login>
@@ -295,7 +330,7 @@ class APIClient:
         value: str,
         operator: str = "like",
         timeout: int = 30,
-        output_format: str = dict,
+        output_format: str = "dict",
     ):
         """Execute a get for a specified XML tag with filter criteria.
 
@@ -312,6 +347,8 @@ class APIClient:
             raise SophosFirewallOperatorError(
                 f"Invalid operator '{operator}'!  Supported operators: [ {', '.join(valid_operators)} ]"
             )
+        xml_tag = self._validate_xml_name(xml_tag, "xml_tag")
+        key = self._validate_xml_name(key, "key")
         payload = f"""
         <Request>
             <Login>
@@ -333,7 +370,14 @@ class APIClient:
             return resp.content.decode()
         return xmltodict.parse(resp.content.decode())
 
-    def remove(self, xml_tag: str, name: str, key: str = "Name", timeout: int = 30, output_format: str = "dict"):
+    def remove(
+        self,
+        xml_tag: str,
+        name: str,
+        key: str = "Name",
+        timeout: int = 30,
+        output_format: str = "dict",
+    ):
         """Remove an object from the firewall.
 
         Args:
@@ -343,6 +387,8 @@ class APIClient:
             timeout(int): Request timeout in seconds. Defaults to 30 seconds.
             output_format (str): Output format. Valid options are "dict" or "xml". Defaults to dict.
         """
+        xml_tag = self._validate_xml_name(xml_tag, "xml_tag")
+        key = self._validate_xml_name(key, "key")
         payload = f"""
         <Request>
             <Login>
@@ -383,6 +429,9 @@ class APIClient:
             timeout (int): Request timeout in seconds. Defaults to 30 seconds.
             debug (bool): Displays the XML payload that was submitted
         """
+        xml_tag = self._validate_xml_name(xml_tag, "xml_tag")
+        if lookup_key:
+            lookup_key = self._validate_xml_name(lookup_key, "lookup_key")
         if name:
             resp = self.get_tag_with_filter(
                 xml_tag=xml_tag, key=lookup_key, value=name, operator="="
@@ -410,7 +459,7 @@ class APIClient:
         </Request>
         """
         if debug:
-            print(payload)
+            print(self._redact_debug_payload(payload))
         resp = self._post(xmldata=payload, timeout=timeout)
         self._error_check(resp, xml_tag)
         if output_format == "xml":
