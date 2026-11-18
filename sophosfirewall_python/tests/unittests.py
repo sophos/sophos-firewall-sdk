@@ -1085,3 +1085,38 @@ class TestSophosFirewall(unittest.TestCase):
             )
             == expected_result
         )
+
+
+class TestNormalBugMitigations(unittest.TestCase):
+    """Regression tests for bug mitigations."""
+
+    def test_bug02_simultaneous_logins_documented_kwarg(self):
+        """createuser.j2 must honor documented simultaneous_logins kwarg."""
+        import os
+        from jinja2 import Environment, FileSystemLoader
+
+        tdir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates")
+        env = Environment(loader=FileSystemLoader(tdir), autoescape=True)
+        tmpl = env.get_template("createuser.j2")
+        base = dict(
+            username="u",
+            password="p",
+            user="alice",
+            name="Alice",
+            user_password="x",
+            user_type="User",
+            group="g",
+            email="a@b.c",
+        )
+        r1 = tmpl.render(**base, simultaneous_logins="Enable")
+        self.assertIn(
+            "<SimultaneousLoginsGlobal>Enable</SimultaneousLoginsGlobal>", r1
+        )
+        r2 = tmpl.render(**base, simulataneous_login="Enable")
+        self.assertIn(
+            "<SimultaneousLoginsGlobal>Enable</SimultaneousLoginsGlobal>", r2
+        )
+        r3 = tmpl.render(**base)
+        self.assertIn(
+            "<SimultaneousLoginsGlobal>Disable</SimultaneousLoginsGlobal>", r3
+        )

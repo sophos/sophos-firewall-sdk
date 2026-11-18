@@ -31,7 +31,7 @@
             <MACBinding>{{ mac_binding | default('Disable') }}</MACBinding>
             <LoginRestriction>{{ login_restriction | default('UserGroupNode') }}</LoginRestriction>
             <IsEncryptCert>{{ isencryptcert | default('Disable') }}</IsEncryptCert>
-            <SimultaneousLoginsGlobal>{{ simulataneous_login | default('Disable') }}</SimultaneousLoginsGlobal>
+            <SimultaneousLoginsGlobal>{{ simultaneous_logins | default(simulataneous_login) | default('Disable') }}</SimultaneousLoginsGlobal>
             <SurfingQuotaPolicy>{{ surfingquota_policy | default('Unlimited Internet Access') }}</SurfingQuotaPolicy>
             {% if user_type == "Administrator" %}
             <ScheduleForApplianceAccess>{{ applianceaccess_schedule | default('All The Time') }}</ScheduleForApplianceAccess>
