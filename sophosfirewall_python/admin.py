@@ -252,7 +252,7 @@ class AdminSettings:
             <UserPortalHTTPSPort>{{ userportal_https_port }}</UserPortalHTTPSPort>
             <VPNPortalHTTPSPort>{{ vpnportal_https_port }}</VPNPortalHTTPSPort>
             <PortalRedirectMode>{{ portal_redirect_mode }}</PortalRedirectMode>
-            <PortalCustomHostname>{{ port_custom_hostname }}</PortalCustomHostname>
+            <PortalCustomHostname>{{ portal_custom_hostname }}</PortalCustomHostname>
           </WebAdminSettings>
         </AdminSettings>
         """
