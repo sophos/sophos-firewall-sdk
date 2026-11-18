@@ -85,7 +85,7 @@ class SophosFirewall:
         value: str,
         operator: str = "like",
         timeout: int = 30,
-        output_format: str = dict,
+        output_format: str = "dict",
     ):
         """Execute a get for a specified XML tag with filter criteria.
 

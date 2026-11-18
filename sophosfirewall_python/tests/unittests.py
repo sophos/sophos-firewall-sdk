@@ -1085,3 +1085,22 @@ class TestSophosFirewall(unittest.TestCase):
             )
             == expected_result
         )
+
+
+class TestNormalBugMitigations(unittest.TestCase):
+    """Regression tests for bug mitigations."""
+
+    def test_bug03_output_format_default_is_string(self):
+        """get_tag_with_filter output_format default must be the string 'dict'."""
+        import inspect
+
+        d1 = inspect.signature(APIClient.get_tag_with_filter).parameters[
+            "output_format"
+        ].default
+        d2 = inspect.signature(SophosFirewall.get_tag_with_filter).parameters[
+            "output_format"
+        ].default
+        self.assertEqual(d1, "dict")
+        self.assertEqual(d2, "dict")
+        self.assertIsInstance(d1, str)
+        self.assertIsInstance(d2, str)
