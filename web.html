@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>web module &mdash; sophosfirewall-python 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="system module" href="system.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sophosfirewall-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">sophosfirewall_python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="firewallapi.html">firewallapi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_client.html">api_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html">admin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authen.html">authen module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">backup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewallrule.html">firewallrule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">host module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ips.html">ips module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profile.html">profile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service.html">service module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">web module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web.UserActivity"><code class="docutils literal notranslate"><span class="pre">UserActivity</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web.UserActivity.create"><code class="docutils literal notranslate"><span class="pre">UserActivity.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#web.UserActivity.get"><code class="docutils literal notranslate"><span class="pre">UserActivity.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#web.WebFilterPolicy"><code class="docutils literal notranslate"><span class="pre">WebFilterPolicy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web.WebFilterPolicy.create"><code class="docutils literal notranslate"><span class="pre">WebFilterPolicy.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#web.WebFilterPolicy.get"><code class="docutils literal notranslate"><span class="pre">WebFilterPolicy.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#web.WebFilterPolicy.update"><code class="docutils literal notranslate"><span class="pre">WebFilterPolicy.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sophosfirewall-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">sophosfirewall_python</a></li>
+      <li class="breadcrumb-item active">web module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-web">
+<span id="web-module"></span><h1>web module<a class="headerlink" href="#module-web" title="Link to this heading"></a></h1>
+<p>Module to manage Web configuration (Protect -&gt; Web) on Sophos Firewall.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="web.UserActivity">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">web.</span></span><span class="sig-name descname"><span class="pre">UserActivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#UserActivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.UserActivity" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages User Activities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web.UserActivity.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#UserActivity.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.UserActivity.create" title="Link to this definition"></a></dt>
+<dd><p>Creates a new User Activity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Specify a name for the User Activity. Max 50 chars.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify a description for the User Activity. Defaults to None.</p></li>
+<li><p><strong>category_list</strong> (<em>list</em><em> of </em><em>dict</em><em>, </em><em>optional</em>) – <p>List of categories to apply to this User Activity. Defaults to None. Category dict format below:</p>
+<dl class="simple">
+<dt>Each category dict should contain:</dt><dd><ul>
+<li><p>id (str): Category Name</p></li>
+<li><p>type (str): Category type. Supports ‘web category’, ‘file type’, or ‘url group’.</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web.UserActivity.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#UserActivity.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.UserActivity.get" title="Link to this definition"></a></dt>
+<dd><p>Retrieves User Activities.
+If name is provided, filters by name. Otherwise, retrieves all policies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the User Activity to filter by. Defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="web.WebFilterPolicy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">web.</span></span><span class="sig-name descname"><span class="pre">WebFilterPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#WebFilterPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.WebFilterPolicy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages Web Filter Policies</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web.WebFilterPolicy.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_file_size_restriction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_reporting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Enable'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_file_size_restriction_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goog_app_domain_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goog_app_domain_list_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">youtube_filter_is_strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">youtube_filter_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_safe_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_image_licensing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xff_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">office_365_tenants_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">office_365_directory_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">office_365_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quota_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#WebFilterPolicy.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.WebFilterPolicy.create" title="Link to this definition"></a></dt>
+<dd><p>Creates a new web filter policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Specify a name for the Web Filter Policy. Max 50 chars.</p></li>
+<li><p><strong>default_action</strong> (<em>str</em>) – Default action of the policy (‘Allow’ or ‘Deny’).</p></li>
+<li><p><strong>download_file_size_restriction</strong> (<em>int</em>) – Specify maximum allowed file download size in MB (0-1536).</p></li>
+<li><p><strong>enable_reporting</strong> (<em>str</em><em>, </em><em>optional</em>) – Select to enable reporting of policy. Defaults to “Enable”. (API Default: Enable)</p></li>
+<li><p><strong>download_file_size_restriction_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) checking for maximum allowed file download size. Defaults to None.</p></li>
+<li><p><strong>goog_app_domain_list</strong> (<em>str</em><em>, </em><em>optional</em>) – Comma-separated list of domains allowed to access Google services. Max 256 chars. Defaults to None.</p></li>
+<li><p><strong>goog_app_domain_list_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) specifying domains for Google services. Defaults to None.</p></li>
+<li><p><strong>youtube_filter_is_strict</strong> (<em>str</em><em>, </em><em>optional</em>) – Adjust the policy used for YouTube Restricted Mode (‘1’ for strict, ‘0’ for moderate). Defaults to None.</p></li>
+<li><p><strong>youtube_filter_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) YouTube Restricted Mode. Defaults to None.</p></li>
+<li><p><strong>enforce_safe_search</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) blocking of pornography and explicit content in search results. Defaults to None.</p></li>
+<li><p><strong>enforce_image_licensing</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) limiting search results to Creative Commons licensed images. Defaults to None.</p></li>
+<li><p><strong>xff_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) X-Forwarded-For header. Defaults to None.</p></li>
+<li><p><strong>office_365_tenants_list</strong> (<em>str</em><em>, </em><em>optional</em>) – Comma-separated list of domain names and domain IDs allowed to access Microsoft 365. Max 4096 chars. Defaults to None.</p></li>
+<li><p><strong>office_365_directory_id</strong> (<em>str</em><em>, </em><em>optional</em>) – Domain ID allowed to access the Microsoft 365 service. Max 50 chars. Defaults to None.</p></li>
+<li><p><strong>office_365_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Turn on (‘1’) or off (‘0’) specifying domains/IDs for Microsoft 365. Defaults to None.</p></li>
+<li><p><strong>quota_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum allowed time (1-1440 minutes) for browsing restricted web content under quota policy action. Defaults to 60. (API Default: 60)</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify Policy description. Max 255 chars. Defaults to None.</p></li>
+<li><p><strong>rules</strong> (<em>list</em><em> of </em><em>dict</em><em>, </em><em>optional</em>) – <p>Specify the rules contained in this policy. Defaults to None. See rule list structure below:
+- categories (list of dict): List of rule categories containing:</p>
+<blockquote>
+<div><ul>
+<li><p>id (str): Category Name</p></li>
+<li><p>type (str): Category type</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>http_action (str, optional): HTTP action (Allow/Deny). Defaults to Deny.</p></li>
+<li><p>https_action (str, optional): HTTPS action (Allow/Deny). Defaults to Deny.</p></li>
+<li><p>follow_http_action (str, optional): ‘1’ to enable, ‘0’ to disable. Defaults to 1.</p></li>
+<li><p>schedule (str, optional): Schedule name. Defaults to ‘All The Time’</p></li>
+<li><p>policy_rule_enabled (str, optional): ‘1’ to enable, ‘0’ to disable. Defaults to 1.</p></li>
+<li><p>ccl_rule_enabled (str, optional): ‘1’ to enable, ‘0’ to disable. Defaults to 0.</p></li>
+<li><p>user_list (list of str, optional): List of users to apply this rule to. Defaults to None.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web.WebFilterPolicy.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#WebFilterPolicy.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.WebFilterPolicy.get" title="Link to this definition"></a></dt>
+<dd><p>Retrieves web filter policies.
+If name is provided, filters by name. Otherwise, retrieves all policies.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web.WebFilterPolicy.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_reporting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_file_size_restriction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_file_size_restriction_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goog_app_domain_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goog_app_domain_list_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">youtube_filter_is_strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">youtube_filter_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_safe_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforce_image_licensing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xff_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">office_365_tenants_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">office_365_directory_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">office_365_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quota_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'add'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/web.html#WebFilterPolicy.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#web.WebFilterPolicy.update" title="Link to this definition"></a></dt>
+<dd><p>Updates an existing web filter policy.
+Fetches the existing policy and applies changes only for provided arguments.
+Handles ‘add’ or ‘replace’ actions for rules.
+To remove specific rules, use rule_action=’replace’ with the desired final list of rules.
+The full policy object is sent in the update payload.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Specify a name for the Web Filter Policy. Max 50 chars. (Mandatory for identification)</p></li>
+<li><p><strong>default_action</strong> (<em>str</em><em>, </em><em>optional</em>) – Default action of the policy (‘Allow’ or ‘Deny’).</p></li>
+<li><p><strong>enable_reporting</strong> (<em>str</em><em>, </em><em>optional</em>) – Select to enable reporting of policy.</p></li>
+<li><p><strong>download_file_size_restriction</strong> (<em>int</em><em>, </em><em>optional</em>) – Specify maximum allowed file download size in MB (0-1536).</p></li>
+<li><p><strong>download_file_size_restriction_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) checking for maximum allowed file download size.</p></li>
+<li><p><strong>goog_app_domain_list</strong> (<em>str</em><em>, </em><em>optional</em>) – Comma-separated list of domains allowed to access Google services. Max 256 chars.</p></li>
+<li><p><strong>goog_app_domain_list_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) specifying domains for Google services.</p></li>
+<li><p><strong>youtube_filter_is_strict</strong> (<em>str</em><em>, </em><em>optional</em>) – Adjust the policy used for YouTube Restricted Mode (‘1’ for strict, ‘0’ for moderate).</p></li>
+<li><p><strong>youtube_filter_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) YouTube Restricted Mode.</p></li>
+<li><p><strong>enforce_safe_search</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) blocking of pornography and explicit content in search results.</p></li>
+<li><p><strong>enforce_image_licensing</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) limiting search results to Creative Commons licensed images.</p></li>
+<li><p><strong>xff_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Enable (‘1’) or disable (‘0’) X-Forwarded-For header.</p></li>
+<li><p><strong>office_365_tenants_list</strong> (<em>str</em><em>, </em><em>optional</em>) – Comma-separated list of domain names and domain IDs allowed to access Microsoft 365. Max 4096 chars.</p></li>
+<li><p><strong>office_365_directory_id</strong> (<em>str</em><em>, </em><em>optional</em>) – Domain ID allowed to access the Microsoft 365 service. Max 50 chars.</p></li>
+<li><p><strong>office_365_enabled</strong> (<em>str</em><em>, </em><em>optional</em>) – Turn on (‘1’) or off (‘0’) specifying domains/IDs for Microsoft 365.</p></li>
+<li><p><strong>quota_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum allowed time (1-1440 minutes) for browsing restricted web content under quota policy action.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Specify Policy description. Max 255 chars.</p></li>
+<li><p><strong>rules</strong> (<em>list</em><em> of </em><em>dict</em><em>, </em><em>optional</em>) – <p>Specify the rules contained in this policy. Defaults to None. See rule list structure below:
+- categories (list of dict): List of rule categories containing:</p>
+<blockquote>
+<div><ul>
+<li><p>id (str): Category Name</p></li>
+<li><p>type (str): Category type. Valid options are ‘WebCategory’, ‘FileType’, ‘URLGroup’, or ‘UserActivity’.</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>http_action (str, optional): HTTP action (Allow/Deny). Defaults to Deny.</p></li>
+<li><p>https_action (str, optional): HTTPS action (Allow/Deny). Defaults to Deny.</p></li>
+<li><p>follow_http_action (str, optional): ‘1’ to enable, ‘0’ to disable. Defaults to 1.</p></li>
+<li><p>schedule (str, optional): Schedule name. Defaults to ‘All The Time’</p></li>
+<li><p>policy_rule_enabled (str, optional): ‘1’ to enable, ‘0’ to disable. Defaults to 1.</p></li>
+<li><p>ccl_rule_enabled (str, optional): ‘1’ to enable, ‘0’ to disable. Defaults to 0.</p></li>
+<li><p>user_list (str, optional): List of users to apply this policy to. Defaults to “None”.</p></li>
+</ul>
+</p></li>
+<li><p><strong>rule_action</strong> (<em>str</em><em>, </em><em>optional</em>) – Action for rules (‘add’ or ‘replace’). Defaults to “add”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="system.html" class="btn btn-neutral float-left" title="system module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sophos Ltd. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
